@@ -21,7 +21,10 @@ module.exports = {
     },
     plugins: [
         // uglify(),
-        serve(),
+        serve({
+            contentBase: '',
+            port: 5556
+        }),
         // livereload(),
         resolve(),
         flow(
