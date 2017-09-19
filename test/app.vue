@@ -1,10 +1,9 @@
 <template>
     <div>
-        <ecology-header
-            siteName='看房团管理后台'
-            userName='罗比塔'
-            @changeCity='changeCity'
-            ></ecology-header>
+        <validate-form>
+            <input v-id="input" v-validate min="5" max="10" trigger="blur" />
+            <input v-id="input2" v-validate min="5" max="10" trigger="$input.blur" />
+        </validate-form>
     </div>
 </template>
 <style scoped>
@@ -13,11 +12,7 @@
     }
 </style>
 <script>
-    import ecologyHeader from '../dist/header';
     export default {
-        components: {
-            ecologyHeader
-        },
         methods: {
             changeCity (city) {
                 console.log(city);

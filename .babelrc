@@ -4,6 +4,5 @@
             "es2015"
         ],
         "flow"
-    ],
-    "plugins": ["external-helpers"]
+    ]
 }

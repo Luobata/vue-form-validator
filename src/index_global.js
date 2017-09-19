@@ -1,7 +1,15 @@
-import app from './header.vue';
+import validate from './form-validate';
+
+let installed = false;
 
 const install = (Vue) => {
-    Vue.component(app.name, app);
+    if (installed) {
+        console.log('installed already');
+        return;
+    }
+
+    validate.install(Vue);
+    installed = true;
 };
 
 /* istanbul ignore if */

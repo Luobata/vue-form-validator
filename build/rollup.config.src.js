@@ -9,6 +9,7 @@ import css from 'rollup-plugin-css-only';
 import vue from 'rollup-plugin-vue';
 import image from 'rollup-plugin-img';
 import url from 'rollup-plugin-url';
+import flow from 'rollup-plugin-flow';
 
 const root = path.resolve(__dirname, './');
 
@@ -17,7 +18,7 @@ module.exports = {
     name: 'ecologyHeader',
     sourcemap: true,
     output: {
-        file: 'dist/bundle.js',
+        file: 'dist/validate.js',
         format: 'umd'
     },
     plugins: [
@@ -29,6 +30,11 @@ module.exports = {
             //css: 'dist/header.css'
         }),
         url(),
+        flow(
+            {
+                all: true
+            }
+        ),
         babel({
             exclude: 'node_modules/**',
             presets: [
