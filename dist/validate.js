@@ -6,6 +6,13 @@
 
 var __vue_module__ = {
     name: 'validate-form',
+    //directives: {
+    //    validate: {
+    //        inserted: function (el) {
+    //            console.log(el);
+    //        }
+    //    }
+    //},
     data: function data() {
         return {};
     }
@@ -25,15 +32,27 @@ var __vue_module__ = {
 
 
 var __$__vue_module__ = Object.assign(__vue_module__, { render: function render() {
-        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div');
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', [_vm._t("default")], 2);
     }, staticRenderFns: [] });
 __$__vue_module__.prototype = __vue_module__.prototype;
 
 var validate = {
     install: function install(Vue) {
-        Vue.directive('validate', {});
-        //Vue.component(validate.name, validate);
-        Vue.component('validate-form', __$__vue_module__);
+        Vue.directive('validate', {
+            //params: ['validate-name']
+            bind: function bind(el, binding, vnode, oldVnode) {
+                console.log(el);
+                debugger;
+                console.log(el.attributes['trigger']);
+                el.addEventListener('blur', function (e) {
+                    console.log(e.target.value);
+                });
+            },
+            update: function update(el) {
+                console.log(1, el);
+            }
+        });
+        Vue.component(__$__vue_module__.name, __$__vue_module__);
     }
 };
 
