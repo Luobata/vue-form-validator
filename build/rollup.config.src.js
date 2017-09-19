@@ -5,15 +5,16 @@ import alias from 'rollup-plugin-alias';
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import path from 'path';
-import flow from 'rollup-plugin-flow';
-import serve from 'rollup-plugin-serve';
-import livereload from 'rollup-plugin-livereload';
+import css from 'rollup-plugin-css-only';
+import vue from 'rollup-plugin-vue';
+import image from 'rollup-plugin-img';
+import url from 'rollup-plugin-url';
 
 const root = path.resolve(__dirname, './');
 
 module.exports = {
-    input: 'src/index.js',
-    name: 'vueFormValidator',
+    input: 'src/index_global.js',
+    name: 'ecologyHeader',
     sourcemap: true,
     output: {
         file: 'dist/bundle.js',
@@ -21,26 +22,22 @@ module.exports = {
     },
     plugins: [
         // uglify(),
-        serve({
-            contentBase: '',
-            port: 5556
-        }),
-        // livereload(),
         resolve(),
-        flow(
-            {
-                all: true
-            }
-        ),
         commonjs(),
+        vue({
+            css: true
+            //css: 'dist/header.css'
+        }),
+        url(),
         babel({
             exclude: 'node_modules/**',
-            presets: [ 
+            presets: [
                 [ 'es2015', { "modules": false } ]
             ],
         }),
         alias({
-            ASSETS: path.resolve(__dirname, '../assets')
+            UI: path.resolve(__dirname, '../src/ui'),
+            EVENT: path.resolve(__dirname, '../src/event')
         })
     ]
 // output format - 'amd', 'cjs', 'es6', 'iife', 'umd'
