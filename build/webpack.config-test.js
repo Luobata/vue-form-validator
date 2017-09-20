@@ -10,6 +10,7 @@ var cssSourceMap = true;
 var webpackConfig = {
     entry : {
         app : [
+            "./build/dev-client",
             "./test/index.js"
         ]
     },
