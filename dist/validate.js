@@ -15,6 +15,9 @@ var __vue_module__ = {
     //},
     data: function data() {
         return {};
+    },
+    mounted: function mounted() {
+        debugger;
     }
 };
 
@@ -94,51 +97,40 @@ var init = function init(el) {
     var name = el.getAttribute('validate-name');
 };
 
-var validate = {
-    install: function install(Vue) {
-        Vue.directive('validate', {
-            //params: ['validate-name']
-            bind: function bind(el, binding, vnode, oldVnode) {
-                var data = init(el);
-                _bind(el);
-                // v-model el.__vue__.value;
-                el.addEventListener('blur', function (e) {
-                    console.log(e.target.value);
-                });
-                console.log(el.__vue__);
-                //console.log(el.__vue__.value);
-            },
-            componentUpdated: function componentUpdated(el) {
-                // console.log(2, el);
-            },
-            update: function update(el) {
-                // console.log(1, el);
-            }
-        });
-        Vue.component(__$__vue_module__.name, __$__vue_module__);
-    }
-};
-
-var installed = false;
-
-var install = function install(Vue) {
-    if (installed) {
-        console.log('installed already');
+function plugin(Vue) {
+    if (plugin.installed) {
+        console.log('installed');
         return;
     }
-
-    validate.install(Vue);
-    installed = true;
-};
-
-/* istanbul ignore if */
-if (typeof window !== 'undefined' && window.Vue) {
-    install(window.Vue);
+    //console.log(Vue.options);
+    //console.log(Vue.config);
+    Vue.directive('validate', {
+        bind: function bind(el, binding, vnode, oldVnode) {
+            var data = init(el);
+            _bind(el);
+            // v-model el.__vue__.value;
+            // v-model vnode.data.directives[0]
+            el.addEventListener('blur', function (e) {
+                console.log(e.target.value);
+            });
+            console.log(el.__vue__);
+            console.log(vnode.data.directives);
+        },
+        componentUpdated: function componentUpdated(el) {
+            // console.log(2, el);
+        },
+        update: function update(el) {
+            // console.log(1, el);
+        }
+    });
+    Vue.component(__$__vue_module__.name, __$__vue_module__);
 }
 
-module.exports = {
-    install: install
-};
+if (typeof window !== 'undefined' && window.Vue) {
+    window.Vue.use(plugin);
+}
+
+module.exports = plugin;
 
 })));
 //# sourceMappingURL=validate.js.map

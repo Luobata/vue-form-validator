@@ -1,22 +1,8 @@
-import validate from './form-validate';
-
-let installed = false;
-
-const install = (Vue) => {
-    if (installed) {
-        console.log('installed already');
-        return;
-    }
-
-    validate.install(Vue);
-    installed = true;
-};
+import plugin from './form-validate';
 
 /* istanbul ignore if */
 if (typeof window !== 'undefined' && window.Vue) {
-    install(window.Vue);
+    window.Vue.use(plugin);
 };
 
-module.exports = {
-    install
-};
+module.exports = plugin;
