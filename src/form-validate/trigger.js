@@ -25,7 +25,7 @@ const triggerAnalyse = (triggerStr) => {
 };
 
 export default (el) => {
-    const trigger = el.getAttribute('trigger');
+    const trigger = el.trigger;
     const triggerArr = triggerAnalyse(trigger);
     console.log(triggerArr);
 }
