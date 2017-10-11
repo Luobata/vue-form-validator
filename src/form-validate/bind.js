@@ -1,5 +1,5 @@
 import trigger from './trigger.js';
 
 export default (el) => {
-    trigger(el);
+    return trigger(el);
 };

@@ -1,4 +1,4 @@
-import bind from './bind.js';
+import Field from './fileld.js';
 
 export default {
     name: 'validate-form',
@@ -11,21 +11,12 @@ export default {
     //},
     data () {
         return {
+            filed: ''
         };
     },
     mounted () {
         const components = this.$slots.default;
+        this.field = new Field(components);
         console.log(components);
-        for (let i of components) {
-            if (!i.data) continue;
-            const dir = i.data.directives;
-            for (let j of dir) {
-                if (j.name === 'validate') {
-                    console.log(j);
-                    bind(i.data.attrs);
-                }
-            }
-        }
-        //components[0].
     }
 };
