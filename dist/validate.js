@@ -282,6 +282,12 @@ var directive = (function (Vue) {
     });
 });
 
+function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function _class(el) {
+    _classCallCheck$1(this, _class);
+};
+
 var mixin = (function (Vue) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -290,6 +296,7 @@ var mixin = (function (Vue) {
 
     mixin.beforeCreate = function () {
         console.log(this);
+        this.$validator = new _class(this);
     };
 
     mixin.created = function () {};
