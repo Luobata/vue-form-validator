@@ -64,10 +64,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Field = function () {
-    function Field(components) {
+    function Field(components, el) {
         _classCallCheck(this, Field);
 
         this.item = [];
+        this.el = el;
         this.init(components);
 
         this.events();
@@ -162,6 +163,10 @@ var Field = function () {
                         for (var _iterator4 = i.trigger[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
                             var j = _step4.value;
 
+                            if (j.eve === 'change') {
+                                console.log(i.com);
+                                this.addWatcher(i);
+                            }
                             if (j.eve === 'blur') {
                                 if (!j.el) {
                                     console.log(i.com.elm);
@@ -198,6 +203,13 @@ var Field = function () {
                 }
             }
         }
+    }, {
+        key: 'addWatcher',
+        value: function addWatcher() {
+            var $parent = this.el.$parent;
+            debugger;
+            console.log($parent);
+        }
     }]);
 
     return Field;
@@ -219,7 +231,8 @@ var __vue_module__ = {
     },
     mounted: function mounted() {
         var components = this.$slots.default;
-        this.field = new Field(components);
+        this.field = new Field(components, this);
+        debugger;
         console.log(components);
     }
 };
@@ -246,18 +259,12 @@ var init = function init(el) {
     var name = el.getAttribute('validate-name');
 };
 
-function plugin(Vue) {
-    if (plugin.installed) {
-        console.log('installed');
-        return;
-    }
-    //console.log(Vue.options);
-    //console.log(Vue.config);
+var directive = (function (Vue) {
     Vue.directive('validate', {
-        bind: function bind$$1(el, binding, vnode, oldVnode) {
+        bind: function bind(el, binding, vnode, oldVnode) {
             var data = init(el);
-            //bind(el);
             console.log(el);
+            console.log(vnode.context.$validator);
             // v-model el.__vue__.value;
             // v-model vnode.data.directives[0]
             //el.addEventListener('blur', function (e) {
@@ -273,6 +280,34 @@ function plugin(Vue) {
             // console.log(1, el);
         }
     });
+});
+
+var mixin = (function (Vue) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    var mixin = {};
+    console.log(Vue.util);
+
+    mixin.beforeCreate = function () {
+        console.log(this);
+    };
+
+    mixin.created = function () {};
+
+    mixin.beforeDestory = function () {};
+
+    Vue.mixin(mixin);
+});
+
+function plugin(Vue) {
+    if (plugin.installed) {
+        console.log('installed');
+        return;
+    }
+    //console.log(Vue.options);
+    //console.log(Vue.config);
+    directive(Vue);
+    mixin(Vue);
     Vue.component(__$__vue_module__.name, __$__vue_module__);
 }
 

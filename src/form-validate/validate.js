@@ -16,7 +16,8 @@ export default {
     },
     mounted () {
         const components = this.$slots.default;
-        this.field = new Field(components);
+        this.field = new Field(components, this);
+        debugger;
         console.log(components);
     }
 };

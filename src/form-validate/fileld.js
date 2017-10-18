@@ -2,9 +2,11 @@ import bind from './bind.js';
 
 export default class Field {
     item: Array;
+    el: Vue;
 
-    constructor(components) {
+    constructor(components, el) {
         this.item = [];
+        this.el = el;
         this.init(components);
 
         this.events();
@@ -40,6 +42,10 @@ export default class Field {
     events() {
         for (let i of this.item) {
             for (let j of i.trigger) {
+                if (j.eve === 'change') {
+                    console.log(i.com);
+                    this.addWatcher(i);
+                }
                 if (j.eve === 'blur') {
                     if (!j.el) {
                         console.log(i.com.elm);
@@ -47,5 +53,11 @@ export default class Field {
                 }
             }
         }
+    };
+
+    addWatcher () {
+        const $parent = this.el.$parent;
+        debugger;
+        console.log($parent);
     };
 };
