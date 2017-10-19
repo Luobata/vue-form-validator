@@ -1,4 +1,5 @@
 import bind from './bind.js';
+import Watcher from './watcher.js';
 
 export default class Field {
     item: Array;
@@ -23,7 +24,7 @@ export default class Field {
                     item.trigger = bind(i.data.attrs);
                     item.name = i.data.attrs['validate-name'];
 
-                    console.log(item);
+                    // console.log(item);
                 }
 
                 if (j.name === 'model') {
@@ -34,6 +35,7 @@ export default class Field {
                 }
             }
             if (item.com) {
+                item.validate = this.getValidate();
                 this.item.push(item);
             }
         }
@@ -43,21 +45,32 @@ export default class Field {
         for (let i of this.item) {
             for (let j of i.trigger) {
                 if (j.eve === 'change') {
-                    console.log(i.com);
                     this.addWatcher(i);
                 }
                 if (j.eve === 'blur') {
                     if (!j.el) {
-                        console.log(i.com.elm);
+                        this.addBlur(i);
                     }
                 }
             }
         }
     };
 
-    addWatcher () {
+    addWatcher (item) {
+        // change 事件
         const $parent = this.el.$parent;
-        debugger;
-        console.log($parent);
+        $parent.$watch(item.model.expression, item.validate);
+    };
+
+    addBlur (item) {
+        // blur 事件触法条件 input textarea 或者contenteditable元素
+        const elm = item.com.elm;
+        console.log(elm);
+    };
+
+    getValidate () {
+        return () => {
+            console.log(111);
+        };
     };
 };

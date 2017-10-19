@@ -16,6 +16,11 @@
     import selects from './selects/selecter.vue';
 
     export default {
+        watch: {
+            data: function (val) {
+                console.log(val);
+            }
+        },
         components: {
             selects
         },

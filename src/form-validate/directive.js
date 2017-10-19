@@ -7,7 +7,7 @@ export default (Vue) => {
         bind: function (el, binding, vnode, oldVnode) {
             const data = init(el);
             console.log(el);
-            console.log(vnode.context.$validator);
+            //console.log(vnode.context.$validator);
             // v-model el.__vue__.value;
             // v-model vnode.data.directives[0]
             //el.addEventListener('blur', function (e) {

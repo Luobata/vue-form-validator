@@ -101,7 +101,7 @@ var Field = function () {
                                 item.trigger = bind(i.data.attrs);
                                 item.name = i.data.attrs['validate-name'];
 
-                                console.log(item);
+                                // console.log(item);
                             }
 
                             if (j.name === 'model') {
@@ -127,6 +127,7 @@ var Field = function () {
                     }
 
                     if (item.com) {
+                        item.validate = this.getValidate();
                         this.item.push(item);
                     }
                 }
@@ -164,12 +165,11 @@ var Field = function () {
                             var j = _step4.value;
 
                             if (j.eve === 'change') {
-                                console.log(i.com);
                                 this.addWatcher(i);
                             }
                             if (j.eve === 'blur') {
                                 if (!j.el) {
-                                    console.log(i.com.elm);
+                                    this.addBlur(i);
                                 }
                             }
                         }
@@ -205,10 +205,24 @@ var Field = function () {
         }
     }, {
         key: 'addWatcher',
-        value: function addWatcher() {
+        value: function addWatcher(item) {
+            // change 事件
             var $parent = this.el.$parent;
-            debugger;
-            console.log($parent);
+            $parent.$watch(item.model.expression, item.validate);
+        }
+    }, {
+        key: 'addBlur',
+        value: function addBlur(item) {
+            // blur 事件触法条件 input textarea 或者contenteditable元素
+            var elm = item.com.elm;
+            console.log(elm);
+        }
+    }, {
+        key: 'getValidate',
+        value: function getValidate() {
+            return function () {
+                console.log(111);
+            };
         }
     }]);
 
@@ -217,13 +231,6 @@ var Field = function () {
 
 var __vue_module__ = {
     name: 'validate-form',
-    //directives: {
-    //    validate: {
-    //        inserted: function (el) {
-    //            console.log(el);
-    //        }
-    //    }
-    //},
     data: function data() {
         return {
             filed: ''
@@ -232,8 +239,6 @@ var __vue_module__ = {
     mounted: function mounted() {
         var components = this.$slots.default;
         this.field = new Field(components, this);
-        debugger;
-        console.log(components);
     }
 };
 
@@ -264,7 +269,7 @@ var directive = (function (Vue) {
         bind: function bind(el, binding, vnode, oldVnode) {
             var data = init(el);
             console.log(el);
-            console.log(vnode.context.$validator);
+            //console.log(vnode.context.$validator);
             // v-model el.__vue__.value;
             // v-model vnode.data.directives[0]
             //el.addEventListener('blur', function (e) {
@@ -282,10 +287,10 @@ var directive = (function (Vue) {
     });
 });
 
-function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _class = function _class(el) {
-    _classCallCheck$1(this, _class);
+    _classCallCheck$2(this, _class);
 };
 
 var mixin = (function (Vue) {
@@ -295,7 +300,6 @@ var mixin = (function (Vue) {
     console.log(Vue.util);
 
     mixin.beforeCreate = function () {
-        console.log(this);
         this.$validator = new _class(this);
     };
 

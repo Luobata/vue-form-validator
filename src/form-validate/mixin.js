@@ -5,8 +5,7 @@ export default (Vue, options = {}) => {
     console.log(Vue.util);
 
     mixin.beforeCreate = function () {
-        console.log(this);
-        this.$validator = new Validator(this)
+        this.$validator = new Validator(this);
     };
 
     mixin.created = function () {
