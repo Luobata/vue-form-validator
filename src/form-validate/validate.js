@@ -4,7 +4,7 @@ export default {
     name: 'validate-form',
     data () {
         return {
-            filed: ''
+            filed: '',
         };
     },
     mounted () {

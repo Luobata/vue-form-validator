@@ -72,5 +72,8 @@
   "bugs": {
     "url": "https://github.com/Luobata/vue-form-validator/issues"
   },
-  "homepage": "https://github.com/Luobata/vue-form-validator#readme"
+  "homepage": "https://github.com/Luobata/vue-form-validator#readme",
+  "dependencies": {
+    "vee-validate": "^2.0.0-rc.19"
+  }
 }

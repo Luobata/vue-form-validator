@@ -11,6 +11,7 @@ export default class Field {
         this.init(components);
 
         this.events();
+        this.el.$set(this.el.$parent, 'errors', '1');
     };
 
     init(components) {

@@ -72,6 +72,7 @@ var Field = function () {
         this.init(components);
 
         this.events();
+        this.el.$set(this.el.$parent, 'errors', '1');
     }
 
     _createClass(Field, [{
@@ -300,10 +301,22 @@ var mixin = (function (Vue) {
     console.log(Vue.util);
 
     mixin.beforeCreate = function () {
+        // children中有validate-form才添加
+        debugger;
         this.$validator = new _class(this);
+        if (!this.$options.computed) {
+            this.$options.computed = {};
+        }
+
+        this.$options.computed['errors'] = function errorBagGetter() {
+            return new Set();
+            return this.$validator.errors;
+        };
     };
 
-    mixin.created = function () {};
+    mixin.created = function () {
+        console.log(this.$options.name);
+    };
 
     mixin.beforeDestory = function () {};
 
