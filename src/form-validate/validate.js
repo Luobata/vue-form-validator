@@ -4,11 +4,16 @@ export default {
     name: 'validate-form',
     data () {
         return {
-            filed: '',
+            field: '',
         };
+    },
+    methods: {
+        validateAll () {
+            this.field.validateAll();
+        },
     },
     mounted () {
         const components = this.$slots.default;
         this.field = new Field(components, this);
-    }
+    },
 };

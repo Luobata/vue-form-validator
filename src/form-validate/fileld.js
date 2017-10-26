@@ -20,12 +20,11 @@ export default class Field {
             const dir = i.data.directives;
             const item = {};
             for (let j of dir) {
+
                 if (j.name === 'validate') {
                     item.com = i;
                     item.trigger = bind(i.data.attrs);
                     item.name = i.data.attrs['validate-name'];
-
-                    // console.log(item);
                 }
 
                 if (j.name === 'model') {
@@ -36,7 +35,7 @@ export default class Field {
                 }
             }
             if (item.com) {
-                item.validate = this.getValidate();
+                item.validate = this.getValidate(item);
                 this.item.push(item);
             }
         }
@@ -48,9 +47,9 @@ export default class Field {
                 if (j.eve === 'change') {
                     this.addWatcher(i);
                 }
-                if (j.eve === 'blur') {
+                if (j.eve === 'blur' || j.eve === 'input') {
                     if (!j.el) {
-                        this.addBlur(i);
+                        this.addInputWatcher(i, j.eve);
                     }
                 }
             }
@@ -63,21 +62,36 @@ export default class Field {
         $parent.$watch(item.model.expression, item.validate);
     };
 
-    addBlur (item) {
+    addInputWatcher (item, eve) {
         // blur 事件触法条件 input textarea 或者contenteditable元素
         const elm = item.com.elm;
         const blurElm = check(elm);
         if (blurElm) {
-            blurElm.addEventListener('blur', function (e) {
+            blurElm.addEventListener(eve, function (e) {
                 item.validate();
                 console.log(e, this);
             });
         }
     };
 
-    getValidate () {
+    getValidate (item) {
         return () => {
             console.log(111);
         };
+    };
+
+    validateAll () {
+        for (let i of this.item) {
+            i.validate();
+        }
+    };
+
+    validateItem(name) {
+        for (let i of this.item) {
+            if (name === i.name) {
+                i.validate();
+                break;
+            }
+        }
     };
 };

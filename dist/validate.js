@@ -136,12 +136,11 @@ var Field = function () {
                         for (var _iterator2 = dir[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                             var j = _step2.value;
 
+
                             if (j.name === 'validate') {
                                 item.com = i;
                                 item.trigger = bind(i.data.attrs);
                                 item.name = i.data.attrs['validate-name'];
-
-                                // console.log(item);
                             }
 
                             if (j.name === 'model') {
@@ -167,7 +166,7 @@ var Field = function () {
                     }
 
                     if (item.com) {
-                        item.validate = this.getValidate();
+                        item.validate = this.getValidate(item);
                         this.item.push(item);
                     }
                 }
@@ -207,9 +206,9 @@ var Field = function () {
                             if (j.eve === 'change') {
                                 this.addWatcher(i);
                             }
-                            if (j.eve === 'blur') {
+                            if (j.eve === 'blur' || j.eve === 'input') {
                                 if (!j.el) {
-                                    this.addBlur(i);
+                                    this.addInputWatcher(i, j.eve);
                                 }
                             }
                         }
@@ -251,13 +250,13 @@ var Field = function () {
             $parent.$watch(item.model.expression, item.validate);
         }
     }, {
-        key: 'addBlur',
-        value: function addBlur(item) {
+        key: 'addInputWatcher',
+        value: function addInputWatcher(item, eve) {
             // blur 事件触法条件 input textarea 或者contenteditable元素
             var elm = item.com.elm;
             var blurElm = check(elm);
             if (blurElm) {
-                blurElm.addEventListener('blur', function (e) {
+                blurElm.addEventListener(eve, function (e) {
                     item.validate();
                     console.log(e, this);
                 });
@@ -265,10 +264,69 @@ var Field = function () {
         }
     }, {
         key: 'getValidate',
-        value: function getValidate() {
+        value: function getValidate(item) {
             return function () {
                 console.log(111);
             };
+        }
+    }, {
+        key: 'validateAll',
+        value: function validateAll() {
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
+
+            try {
+                for (var _iterator5 = this.item[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var i = _step5.value;
+
+                    i.validate();
+                }
+            } catch (err) {
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
+                    }
+                } finally {
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'validateItem',
+        value: function validateItem(name) {
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+                for (var _iterator6 = this.item[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var i = _step6.value;
+
+                    if (name === i.name) {
+                        i.validate();
+                        break;
+                    }
+                }
+            } catch (err) {
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
+                    }
+                } finally {
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
+                    }
+                }
+            }
         }
     }]);
 
@@ -279,8 +337,14 @@ var __vue_module__ = {
     name: 'validate-form',
     data: function data() {
         return {
-            filed: ''
+            field: ''
         };
+    },
+
+    methods: {
+        validateAll: function validateAll() {
+            this.field.validateAll();
+        }
     },
     mounted: function mounted() {
         var components = this.$slots.default;
