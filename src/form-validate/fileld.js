@@ -1,5 +1,6 @@
 import bind from './bind.js';
 import Watcher from './watcher.js';
+import { check } from './util/index.js';
 
 export default class Field {
     item: Array;
@@ -11,7 +12,6 @@ export default class Field {
         this.init(components);
 
         this.events();
-        this.el.$set(this.el.$parent, 'errors', '1');
     };
 
     init(components) {
@@ -66,7 +66,13 @@ export default class Field {
     addBlur (item) {
         // blur 事件触法条件 input textarea 或者contenteditable元素
         const elm = item.com.elm;
-        console.log(elm);
+        const blurElm = check(elm);
+        if (blurElm) {
+            blurElm.addEventListener('blur', function (e) {
+                item.validate();
+                console.log(e, this);
+            });
+        }
     };
 
     getValidate () {

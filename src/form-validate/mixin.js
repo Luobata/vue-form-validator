@@ -6,16 +6,15 @@ export default (Vue, options = {}) => {
 
     mixin.beforeCreate = function () {
         // children中有validate-form才添加
-        debugger;
         this.$validator = new Validator(this);
-        if (! this.$options.computed) {
-            this.$options.computed = {};
-        }
+        //if (! this.$options.computed) {
+        //    this.$options.computed = {};
+        //}
 
-        this.$options.computed['errors'] = function errorBagGetter () {
-            return new Set();
-            return this.$validator.errors;
-        };
+        //this.$options.computed['errors'] = function errorBagGetter () {
+        //    return new Set();
+        //    return this.$validator.errors;
+        //};
     };
 
     mixin.created = function () {

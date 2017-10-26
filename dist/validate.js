@@ -59,6 +59,46 @@ var bind = (function (el) {
     return trigger(el);
 });
 
+var check = function check(elm) {
+    var elements = ['input', 'textarea'];
+    var dom = null;
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var i = _step.value;
+
+            var els = elm.tagName.toLowerCase(i) === i ? elm : elm.querySelectorAll(i)[0];
+            if (els) {
+                dom = els;
+                break;
+            }
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+
+    if (!dom) {
+        console.error('event blur must has input or textarea');
+    }
+
+    return dom;
+};
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -72,7 +112,6 @@ var Field = function () {
         this.init(components);
 
         this.events();
-        this.el.$set(this.el.$parent, 'errors', '1');
     }
 
     _createClass(Field, [{
@@ -216,7 +255,13 @@ var Field = function () {
         value: function addBlur(item) {
             // blur 事件触法条件 input textarea 或者contenteditable元素
             var elm = item.com.elm;
-            console.log(elm);
+            var blurElm = check(elm);
+            if (blurElm) {
+                blurElm.addEventListener('blur', function (e) {
+                    item.validate();
+                    console.log(e, this);
+                });
+            }
         }
     }, {
         key: 'getValidate',
@@ -302,16 +347,15 @@ var mixin = (function (Vue) {
 
     mixin.beforeCreate = function () {
         // children中有validate-form才添加
-        debugger;
         this.$validator = new _class(this);
-        if (!this.$options.computed) {
-            this.$options.computed = {};
-        }
+        //if (! this.$options.computed) {
+        //    this.$options.computed = {};
+        //}
 
-        this.$options.computed['errors'] = function errorBagGetter() {
-            return new Set();
-            return this.$validator.errors;
-        };
+        //this.$options.computed['errors'] = function errorBagGetter () {
+        //    return new Set();
+        //    return this.$validator.errors;
+        //};
     };
 
     mixin.created = function () {

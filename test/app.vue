@@ -36,6 +36,7 @@
         },
         data () {
             return {
+                errors: new Set(),
                 text: 123,
                 a: true,
                 options: [
