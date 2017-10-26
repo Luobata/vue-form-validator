@@ -126,6 +126,7 @@ var Field = function () {
                     var i = _step.value;
 
                     if (!i.data) continue;
+                    debugger;
                     var dir = i.data.directives;
                     var item = {};
                     var _iteratorNormalCompletion2 = true;
@@ -140,6 +141,7 @@ var Field = function () {
                             if (j.name === 'validate') {
                                 item.com = i;
                                 item.trigger = bind(i.data.attrs);
+                                item.validateContext = anlyse(i.data.attrs);
                                 item.name = i.data.attrs['validate-name'];
                             }
 

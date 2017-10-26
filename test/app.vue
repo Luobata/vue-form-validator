@@ -1,9 +1,9 @@
 <template>
     <div>
         <validate-form ref="form">
+            <input validate-name="input2" v-validate min="5" max="10" required trigger="$input.blur" />
             <selects v-model="data" :options="options" v-validate trigger="change" v-if="a" v-bind:min="data"></selects>
             <input validate-name="input" v-model="text" v-validate min="5" max="10" trigger="blur" />
-            <input validate-name="input2" v-validate min="5" max="10" trigger="$input.blur" />
             <span v-show="errors.has('data')">123</span>
         </validate-form>
         <!--

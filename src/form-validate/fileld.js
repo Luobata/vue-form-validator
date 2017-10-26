@@ -1,4 +1,5 @@
 import bind from './bind.js';
+import anlyse from './anlyse.js';
 import Watcher from './watcher.js';
 import { check } from './util/index.js';
 
@@ -17,6 +18,7 @@ export default class Field {
     init(components) {
         for (let i of components) {
             if (!i.data) continue;
+            debugger;
             const dir = i.data.directives;
             const item = {};
             for (let j of dir) {
@@ -24,6 +26,7 @@ export default class Field {
                 if (j.name === 'validate') {
                     item.com = i;
                     item.trigger = bind(i.data.attrs);
+                    item.validateContext = anlyse(i);
                     item.name = i.data.attrs['validate-name'];
                 }
 
