@@ -59,6 +59,25 @@ var bind = (function (el) {
     return trigger(el);
 });
 
+var anlyse = (function (vNode) {
+    var attrs = vNode.data.attrs;
+    var validate = {};
+
+    if (attrs.hasOwnProperty('min')) {
+        validate['min'] = attrs['min'];
+    }
+
+    if (attrs.hasOwnProperty('max')) {
+        validate['max'] = attrs['max'];
+    }
+
+    if (attrs.hasOwnProperty('required')) {
+        validate['required'] = true;
+    }
+
+    return validate;
+});
+
 var check = function check(elm) {
     var elements = ['input', 'textarea'];
     var dom = null;
@@ -141,7 +160,7 @@ var Field = function () {
                             if (j.name === 'validate') {
                                 item.com = i;
                                 item.trigger = bind(i.data.attrs);
-                                item.validateContext = anlyse(i.data.attrs);
+                                item.validateContext = anlyse(i);
                                 item.name = i.data.attrs['validate-name'];
                             }
 
@@ -445,6 +464,7 @@ function plugin(Vue) {
     Vue.component(__$__vue_module__.name, __$__vue_module__);
 }
 
+/* istanbul ignore if */
 if (typeof window !== 'undefined' && window.Vue) {
     window.Vue.use(plugin);
 }
