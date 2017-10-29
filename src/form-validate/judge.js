@@ -15,7 +15,7 @@ class Error {
     };
 };
 
-const getTarget = (item) => (item.com.elm)
+const getTarget = (item) => (item.com.elm);
 
 
 export default (validate, value, item) => {
