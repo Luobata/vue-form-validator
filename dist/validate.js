@@ -131,19 +131,25 @@ var Error =
 //    actual: '', // actual value
 //};
 
-function Error(key, value, actual) {
+function Error(key, value, actual, target) {
     _classCallCheck$1(this, Error);
 
     this.key = key;
     this.value = value;
     this.actual = actual;
+    this.target = target;
 };
 
 
 
-var judge = (function (validate, value) {
+var getTarget = function getTarget(item) {
+    return item.com.elm;
+};
+
+var judge = (function (validate, value, item) {
     var type = void 0;
     var val = void 0;
+    var target = getTarget(item);
     var errors = {
         type: '',
         detail: []
@@ -156,7 +162,7 @@ var judge = (function (validate, value) {
     switch (type) {
         case 'number':
             val = parseFloat(value, 10);
-            if (isNaN(val)) {
+            if (value !== '' && value !== undefined && isNaN(val)) {
                 errors.type = 'wrong type';
             }
             break;
@@ -166,18 +172,53 @@ var judge = (function (validate, value) {
         return errors;
     }
 
-    if (has(validate, 'min') && val < min) {
-        errors.detail.push(new Error('min', validate['min'], value));
+    if (has(validate, 'min') && val < validate['min']) {
+        errors.detail.push(new Error('min', validate['min'], value, target));
     }
 
-    if (has(validate, 'max') && val > max) {
-        errors.detail.push(new Error('max', validate['max'], value));
+    if (has(validate, 'max') && val > validate['max']) {
+        errors.detail.push(new Error('max', validate['max'], value, target));
     }
+
+    return errors;
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var find = function find(items) {
+    return function (name) {
+        if (!name) return undefined;
+
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = items[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var i = _step.value;
+
+                if (i.name == name) {
+                    return i;
+                }
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+    };
+};
 
 var Field = function () {
     function Field(components, el) {
@@ -186,6 +227,7 @@ var Field = function () {
         this.item = [];
         this.el = el;
         this.init(components);
+        find = find(this.items);
 
         this.events();
     }
@@ -193,24 +235,24 @@ var Field = function () {
     _createClass(Field, [{
         key: 'init',
         value: function init(components) {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
             try {
-                for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var i = _step.value;
+                for (var _iterator2 = components[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var i = _step2.value;
 
                     if (!i.data) continue;
                     var dir = i.data.directives;
                     var item = {};
-                    var _iteratorNormalCompletion2 = true;
-                    var _didIteratorError2 = false;
-                    var _iteratorError2 = undefined;
+                    var _iteratorNormalCompletion3 = true;
+                    var _didIteratorError3 = false;
+                    var _iteratorError3 = undefined;
 
                     try {
-                        for (var _iterator2 = dir[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                            var j = _step2.value;
+                        for (var _iterator3 = dir[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                            var j = _step3.value;
 
 
                             if (j.name === 'validate') {
@@ -228,16 +270,16 @@ var Field = function () {
                             }
                         }
                     } catch (err) {
-                        _didIteratorError2 = true;
-                        _iteratorError2 = err;
+                        _didIteratorError3 = true;
+                        _iteratorError3 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                                _iterator2.return();
+                            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                                _iterator3.return();
                             }
                         } finally {
-                            if (_didIteratorError2) {
-                                throw _iteratorError2;
+                            if (_didIteratorError3) {
+                                throw _iteratorError3;
                             }
                         }
                     }
@@ -248,16 +290,16 @@ var Field = function () {
                     }
                 }
             } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
                     }
                 } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
                     }
                 }
             }
@@ -265,56 +307,56 @@ var Field = function () {
     }, {
         key: 'events',
         value: function events() {
-            var _iteratorNormalCompletion3 = true;
-            var _didIteratorError3 = false;
-            var _iteratorError3 = undefined;
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
 
             try {
-                for (var _iterator3 = this.item[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var i = _step3.value;
-                    var _iteratorNormalCompletion4 = true;
-                    var _didIteratorError4 = false;
-                    var _iteratorError4 = undefined;
+                for (var _iterator4 = this.item[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var i = _step4.value;
+                    var _iteratorNormalCompletion5 = true;
+                    var _didIteratorError5 = false;
+                    var _iteratorError5 = undefined;
 
                     try {
-                        for (var _iterator4 = i.trigger[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                            var j = _step4.value;
+                        for (var _iterator5 = i.trigger[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                            var j = _step5.value;
 
                             if (j.eve === 'change') {
-                                this.addWatcher(i);
+                                this.addWatcher(i, j.el);
                             }
                             if (j.eve === 'blur' || j.eve === 'input') {
                                 if (!j.el) {
-                                    this.addInputWatcher(i, j.eve);
+                                    this.addInputWatcher(i, j.eve, j.el);
                                 }
                             }
                         }
                     } catch (err) {
-                        _didIteratorError4 = true;
-                        _iteratorError4 = err;
+                        _didIteratorError5 = true;
+                        _iteratorError5 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                                _iterator4.return();
+                            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                                _iterator5.return();
                             }
                         } finally {
-                            if (_didIteratorError4) {
-                                throw _iteratorError4;
+                            if (_didIteratorError5) {
+                                throw _iteratorError5;
                             }
                         }
                     }
                 }
             } catch (err) {
-                _didIteratorError3 = true;
-                _iteratorError3 = err;
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                        _iterator3.return();
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
                     }
                 } finally {
-                    if (_didIteratorError3) {
-                        throw _iteratorError3;
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
                     }
                 }
             }
@@ -328,14 +370,14 @@ var Field = function () {
         }
     }, {
         key: 'addInputWatcher',
-        value: function addInputWatcher(item, eve) {
+        value: function addInputWatcher(item, eve, el) {
             // blur 事件触法条件 input textarea 或者contenteditable元素
-            var elm = item.com.elm;
+            var element = find(el) || item;
+            var elm = element.com.elm;
             var blurElm = check(elm);
             if (blurElm) {
                 blurElm.addEventListener(eve, function (e) {
-                    item.validate();
-                    console.log(e, this);
+                    item.validate(this.value);
                 });
             }
         }
@@ -344,41 +386,13 @@ var Field = function () {
         value: function getValidate(item) {
             var validate = item.validateContext;
             return function (value) {
-                var error = judge(validate, value);
-                console.log(validate);
+                var error = judge(validate, value, item);
+                console.log(error);
             };
         }
     }, {
         key: 'validateAll',
         value: function validateAll() {
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
-
-            try {
-                for (var _iterator5 = this.item[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var i = _step5.value;
-
-                    i.validate();
-                }
-            } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
-                    }
-                } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'validateItem',
-        value: function validateItem(name) {
             var _iteratorNormalCompletion6 = true;
             var _didIteratorError6 = false;
             var _iteratorError6 = undefined;
@@ -387,10 +401,7 @@ var Field = function () {
                 for (var _iterator6 = this.item[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
                     var i = _step6.value;
 
-                    if (name === i.name) {
-                        i.validate();
-                        break;
-                    }
+                    i.validate();
                 }
             } catch (err) {
                 _didIteratorError6 = true;
@@ -406,6 +417,12 @@ var Field = function () {
                     }
                 }
             }
+        }
+    }, {
+        key: 'validateItem',
+        value: function validateItem(name) {
+            var item = find(name);
+            if (item) item.validate();
         }
     }]);
 
@@ -502,7 +519,7 @@ var mixin = (function (Vue) {
     };
 
     mixin.created = function () {
-        console.log(this.$options.name);
+        // console.log(this.$options.name);
     };
 
     mixin.beforeDestory = function () {};

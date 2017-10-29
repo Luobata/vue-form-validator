@@ -59,7 +59,7 @@
         },
         mounted () {
             const form = this.$refs['form'];
-            form.validateAll();
+            // form.validateAll();
         },
     };
 </script>

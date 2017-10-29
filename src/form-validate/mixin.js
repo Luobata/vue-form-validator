@@ -18,7 +18,7 @@ export default (Vue, options = {}) => {
     };
 
     mixin.created = function () {
-        console.log(this.$options.name);
+        // console.log(this.$options.name);
     };
 
     mixin.beforeDestory = function () {

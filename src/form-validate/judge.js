@@ -7,17 +7,21 @@ class Error {
     //    actual: '', // actual value
     //};
 
-    constructor (key, value, actual) {
+    constructor (key, value, actual, target) {
         this.key = key;
         this.value = value;
         this.actual = actual;
+        this.target = target;
     };
 };
 
+const getTarget = (item) => (item.com.elm)
 
-export default (validate, value) => {
+
+export default (validate, value, item) => {
     let type;
     let val;
+    let target = getTarget(item);
     let errors = {
         type: '',
         detail: []
@@ -30,7 +34,9 @@ export default (validate, value) => {
     switch (type) {
         case 'number':
         val = parseFloat(value, 10);
-            if (isNaN(val)) {
+            if (value !== '' 
+                && value !== undefined
+                && isNaN(val)) {
                 errors.type = 'wrong type';
             }
             break;
@@ -40,12 +46,14 @@ export default (validate, value) => {
         return errors;
     }
 
-    if (has(validate, 'min') && val < min) {
-        errors.detail.push(new Error('min', validate['min'], value));
+    if (has(validate, 'min') && val < validate['min']) {
+        errors.detail.push(new Error('min', validate['min'], value, target));
     }
 
-    if (has(validate, 'max') && val > max) {
-        errors.detail.push(new Error('max', validate['max'], value));
+    if (has(validate, 'max') && val > validate['max']) {
+        errors.detail.push(new Error('max', validate['max'], value, target));
     }
 
+
+    return errors;
 };

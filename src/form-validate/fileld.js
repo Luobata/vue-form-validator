@@ -4,6 +4,18 @@ import judge from './judge.js';
 import Watcher from './watcher.js';
 import { check } from './util/index.js';
 
+let find = (items) => {
+    return (name) => {
+        if (!name) return undefined;
+
+        for (let i of items) {
+            if (i.name == name) {
+                return i;
+            }
+        }
+    }
+};
+
 export default class Field {
     item: Array;
     el: Vue;
@@ -12,6 +24,7 @@ export default class Field {
         this.item = [];
         this.el = el;
         this.init(components);
+        find = find(this.items);
 
         this.events();
     };
@@ -48,11 +61,11 @@ export default class Field {
         for (let i of this.item) {
             for (let j of i.trigger) {
                 if (j.eve === 'change') {
-                    this.addWatcher(i);
+                    this.addWatcher(i, j.el);
                 }
                 if (j.eve === 'blur' || j.eve === 'input') {
                     if (!j.el) {
-                        this.addInputWatcher(i, j.eve);
+                        this.addInputWatcher(i, j.eve, j.el);
                     }
                 }
             }
@@ -65,14 +78,14 @@ export default class Field {
         $parent.$watch(item.model.expression, item.validate);
     };
 
-    addInputWatcher (item, eve) {
+    addInputWatcher (item, eve, el) {
         // blur 事件触法条件 input textarea 或者contenteditable元素
-        const elm = item.com.elm;
+        const element = (find(el) || item);
+        const elm = element.com.elm;
         const blurElm = check(elm);
         if (blurElm) {
             blurElm.addEventListener(eve, function (e) {
-                item.validate();
-                console.log(e, this);
+                item.validate(this.value);
             });
         }
     };
@@ -80,8 +93,8 @@ export default class Field {
     getValidate (item) {
         const validate = item.validateContext;
         return (value) => {
-            const error = judge(validate, value);
-            console.log(validate);
+            const error = judge(validate, value, item);
+            console.log(error);
         };
     };
 
@@ -91,12 +104,8 @@ export default class Field {
         }
     };
 
-    validateItem(name) {
-        for (let i of this.item) {
-            if (name === i.name) {
-                i.validate();
-                break;
-            }
-        }
+    validateItem (name) {
+        const item = find(name);
+        if (item) item.validate();
     };
 };
