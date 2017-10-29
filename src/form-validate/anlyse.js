@@ -1,16 +1,18 @@
+import { has } from './util/index.js';
+
 export default (vNode) => {
     const attrs = vNode.data.attrs;
     const validate = {};
 
-    if (attrs.hasOwnProperty('min')) {
+    if (has(attrs, 'min')) {
         validate['min'] = attrs['min'];
     }
 
-    if (attrs.hasOwnProperty('max')) {
+    if (has(attrs, 'max')) {
         validate['max'] = attrs['max'];
     }
 
-    if (attrs.hasOwnProperty('required')) {
+    if (has(attrs, 'required')) {
         validate['required'] = true;
     }
 

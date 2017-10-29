@@ -1,5 +1,6 @@
 import bind from './bind.js';
 import anlyse from './anlyse.js';
+import judge from './judge.js';
 import Watcher from './watcher.js';
 import { check } from './util/index.js';
 
@@ -18,7 +19,6 @@ export default class Field {
     init(components) {
         for (let i of components) {
             if (!i.data) continue;
-            debugger;
             const dir = i.data.directives;
             const item = {};
             for (let j of dir) {
@@ -78,8 +78,10 @@ export default class Field {
     };
 
     getValidate (item) {
-        return () => {
-            console.log(111);
+        const validate = item.validateContext;
+        return (value) => {
+            const error = judge(validate, value);
+            console.log(validate);
         };
     };
 

@@ -59,25 +59,6 @@ var bind = (function (el) {
     return trigger(el);
 });
 
-var anlyse = (function (vNode) {
-    var attrs = vNode.data.attrs;
-    var validate = {};
-
-    if (attrs.hasOwnProperty('min')) {
-        validate['min'] = attrs['min'];
-    }
-
-    if (attrs.hasOwnProperty('max')) {
-        validate['max'] = attrs['max'];
-    }
-
-    if (attrs.hasOwnProperty('required')) {
-        validate['required'] = true;
-    }
-
-    return validate;
-});
-
 var check = function check(elm) {
     var elements = ['input', 'textarea'];
     var dom = null;
@@ -118,6 +99,82 @@ var check = function check(elm) {
     return dom;
 };
 
+var has = function has(obj, key) {
+    return obj.hasOwnProperty(key);
+};
+
+var anlyse = (function (vNode) {
+    var attrs = vNode.data.attrs;
+    var validate = {};
+
+    if (has(attrs, 'min')) {
+        validate['min'] = attrs['min'];
+    }
+
+    if (has(attrs, 'max')) {
+        validate['max'] = attrs['max'];
+    }
+
+    if (has(attrs, 'required')) {
+        validate['required'] = true;
+    }
+
+    return validate;
+});
+
+function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Error =
+//errorTpl = {
+//    key: '', // error key like min max
+//    value: '', // key value
+//    actual: '', // actual value
+//};
+
+function Error(key, value, actual) {
+    _classCallCheck$1(this, Error);
+
+    this.key = key;
+    this.value = value;
+    this.actual = actual;
+};
+
+
+
+var judge = (function (validate, value) {
+    var type = void 0;
+    var val = void 0;
+    var errors = {
+        type: '',
+        detail: []
+    };
+
+    if (has(validate, 'min') || has(validate, 'max')) {
+        type = 'number';
+    }
+
+    switch (type) {
+        case 'number':
+            val = parseFloat(value, 10);
+            if (isNaN(val)) {
+                errors.type = 'wrong type';
+            }
+            break;
+    }
+
+    if (errors.type) {
+        return errors;
+    }
+
+    if (has(validate, 'min') && val < min) {
+        errors.detail.push(new Error('min', validate['min'], value));
+    }
+
+    if (has(validate, 'max') && val > max) {
+        errors.detail.push(new Error('max', validate['max'], value));
+    }
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -145,7 +202,6 @@ var Field = function () {
                     var i = _step.value;
 
                     if (!i.data) continue;
-                    debugger;
                     var dir = i.data.directives;
                     var item = {};
                     var _iteratorNormalCompletion2 = true;
@@ -286,8 +342,10 @@ var Field = function () {
     }, {
         key: 'getValidate',
         value: function getValidate(item) {
-            return function () {
-                console.log(111);
+            var validate = item.validateContext;
+            return function (value) {
+                var error = judge(validate, value);
+                console.log(validate);
             };
         }
     }, {
@@ -418,10 +476,10 @@ var directive = (function (Vue) {
     });
 });
 
-function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _class = function _class(el) {
-    _classCallCheck$2(this, _class);
+    _classCallCheck$3(this, _class);
 };
 
 var mixin = (function (Vue) {
@@ -464,7 +522,6 @@ function plugin(Vue) {
     Vue.component(__$__vue_module__.name, __$__vue_module__);
 }
 
-/* istanbul ignore if */
 if (typeof window !== 'undefined' && window.Vue) {
     window.Vue.use(plugin);
 }
