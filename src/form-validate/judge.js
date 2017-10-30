@@ -54,6 +54,14 @@ export default (validate, value, item) => {
         errors.detail.push(new Error('max', validate['max'], value, target));
     }
 
+    if (has(validate, 'required') &&
+        (val === undefined ||
+        val === null ||
+        val === '')
+    ) {
+        errors.detail.push(new Error('require', '', value, target));
+    }
+
 
     return errors;
 };
