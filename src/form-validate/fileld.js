@@ -23,6 +23,7 @@ export default class Field {
     constructor(components, el) {
         this.item = [];
         this.el = el;
+        this.config = el.config;
         this.init(components);
         find = find(this.items);
 

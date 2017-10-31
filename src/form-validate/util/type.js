@@ -17,3 +17,7 @@ export const check = (elm) => {
 
     return dom;
 };
+
+export const isNum = (val) => Object.prototype.toString.call(val) === '[object Number]';
+
+export const isStr = (val) => Object.prototype.toString.call(val) === '[object String]';
