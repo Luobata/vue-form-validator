@@ -43,10 +43,10 @@ export default (validate, value, item) => {
         type = 'number';
     }
 
-    if (has(validate, 'minlength') || 
-        has(validate, 'maxlength') ||
-        has(validate, 'Minlength') ||
-        has(validate, 'Maxlength')
+    if (has(validate, 'min-length') || 
+        has(validate, 'max-length') ||
+        has(validate, 'Min-length') ||
+        has(validate, 'Max-length')
     ) {
         length = getLength(value);
     }
@@ -85,20 +85,20 @@ export default (validate, value, item) => {
         errors.detail.push(new Error('Max', validate['Max'], value, target));
     }
 
-    if (has(validate, 'minlength') && length <= validate['minlength']) {
-        errors.detail.push(new Error('minlength', validate['minlength'], length, target));
+    if (has(validate, 'min-length') && length <= validate['min-length']) {
+        errors.detail.push(new Error('min-length', validate['min-length'], length, target));
     }
 
-    if (has(validate, 'maxlength') && length >= validate['maxlength']) {
-        errors.detail.push(new Error('maxlength', validate['maxlength'], length, target));
+    if (has(validate, 'max-length') && length >= validate['max-length']) {
+        errors.detail.push(new Error('max-length', validate['max-length'], length, target));
     }
 
-    if (has(validate, 'Minlength') && length < validate['Minlength']) {
-        errors.detail.push(new Error('Minlength', validate['Minlength'], length, target));
+    if (has(validate, 'Min-length') && length < validate['Min-length']) {
+        errors.detail.push(new Error('Min-length', validate['Min-length'], length, target));
     }
 
-    if (has(validate, 'Maxlength') && length > validate['Maxlength']) {
-        errors.detail.push(new Error('Maxlength', validate['Maxlength'], length, target));
+    if (has(validate, 'Max-length') && length > validate['Max-length']) {
+        errors.detail.push(new Error('Max-length', validate['Max-length'], length, target));
     }
 
     if (has(validate, 'required') &&

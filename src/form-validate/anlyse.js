@@ -23,21 +23,21 @@ export default (vNode) => {
     }
 
     // 最小长度 必须是数字
-    if (has(attrs, 'minlength')) {
-        validate['minlength'] = attrs['minlength'];
+    if (has(attrs, 'min-length')) {
+        validate['min-length'] = attrs['min-length'];
     }
 
     // 最大长度 必须是数字
-    if (has(attrs, 'maxlength')) {
-        validate['maxlength'] = attrs['maxlength'];
+    if (has(attrs, 'max-length')) {
+        validate['max-length'] = attrs['max-length'];
     }
 
-    if (has(attrs, 'Minlength')) {
-        validate['Minlength'] = attrs['Minlength'];
+    if (has(attrs, 'Min-length')) {
+        validate['Min-length'] = attrs['Min-length'];
     }
 
-    if (has(attrs, 'Maxlength')) {
-        validate['Maxlength'] = attrs['Maxlength'];
+    if (has(attrs, 'Max-length')) {
+        validate['Max-length'] = attrs['Max-length'];
     }
 
     // 必填
@@ -56,20 +56,20 @@ export default (vNode) => {
         validate['Number'] = attrs['Number'] || 'int';
     }
 
-    if (has(attrs, 'maxfloatlength')) {
-        validate['maxfloatlength'] = attrs['maxfloatlength'];
+    if (has(attrs, 'max-float-length')) {
+        validate['max-float-length'] = attrs['max-float-length'];
     }
 
-    if (has(attrs, 'minfloatlength')) {
-        validate['minfloatlength'] = attrs['minfloatlength'];
+    if (has(attrs, 'min-float-length')) {
+        validate['min-float-length'] = attrs['min-float-length'];
     }
 
-    if (has(attrs, 'Maxfloatlength')) {
-        validate['Maxfloatlength'] = attrs['Maxfloatlength'];
+    if (has(attrs, 'Max-float-length')) {
+        validate['Max-float-length'] = attrs['Max-float-length'];
     }
 
-    if (has(attrs, 'Minfloatlength')) {
-        validate['Minfloatlength'] = attrs['Minfloatlength'];
+    if (has(attrs, 'Min-float-length')) {
+        validate['Min-float-length'] = attrs['Min-float-length'];
     }
 
     return validate;

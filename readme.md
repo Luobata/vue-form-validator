@@ -10,8 +10,8 @@
     1. min must number
     2. max must number
     3. required
-    4. maxlength must number
-    5. minlength must number
+    4. max-length must number
+    5. min-length must number
     6. lengthtype global-config or rule in the validate-form or exact dom
     7. number
     8. float value is the length of the number
