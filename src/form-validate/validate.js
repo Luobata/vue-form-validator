@@ -8,13 +8,17 @@ export default {
                 'length-type': 'eng'
             },
             field: '',
+            rule: '',
         };
     },
     methods: {
-        configInit () {
-            const attrs = this.$vnode.data.attrs;
+        configInit (attrs) {
             const lengthType = attrs['length-type'];
             this.config['length-type'] = lengthType || this.config['length-type'];
+        },
+        ruleInit (attrs) {
+            const rule = attrs.rule;
+            this.rule = rule;
         },
         validateAll () {
             this.field.validateAll();
@@ -22,7 +26,9 @@ export default {
     },
     mounted () {
         const components = this.$slots.default;
-        this.configInit();
+        const attrs = this.$vnode.data.attrs;
+        this.configInit(attrs);
+        this.ruleInit(attrs);
         this.field = new Field(components, this);
     },
 };

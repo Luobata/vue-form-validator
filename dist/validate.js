@@ -103,6 +103,12 @@ var isNum = function isNum(val) {
     return Object.prototype.toString.call(val) === '[object Number]';
 };
 
+
+
+var isObj = function isObj(val) {
+    return Object.prototype.toString.call(val) === '[object Object]';
+};
+
 var has = function has(obj, key) {
     return obj.hasOwnProperty(key);
 };
@@ -124,6 +130,12 @@ var isFloat = function isFloat(val) {
     return (/^(-?\d+)(\.\d+)?$/.test(val)
     );
 };
+
+var rule = (function (rule) {
+    if (!isObj(rule)) return {};
+
+    var errorText = rule.text || '';
+});
 
 var anlyse = (function (vNode) {
     var attrs = vNode.data.attrs;
@@ -148,21 +160,21 @@ var anlyse = (function (vNode) {
     }
 
     // 最小长度 必须是数字
-    if (has(attrs, 'minlength')) {
-        validate['minlength'] = attrs['minlength'];
+    if (has(attrs, 'min-length')) {
+        validate['min-length'] = attrs['min-length'];
     }
 
     // 最大长度 必须是数字
-    if (has(attrs, 'maxlength')) {
-        validate['maxlength'] = attrs['maxlength'];
+    if (has(attrs, 'max-length')) {
+        validate['max-length'] = attrs['max-length'];
     }
 
-    if (has(attrs, 'Minlength')) {
-        validate['Minlength'] = attrs['Minlength'];
+    if (has(attrs, 'Min-length')) {
+        validate['Min-length'] = attrs['Min-length'];
     }
 
-    if (has(attrs, 'Maxlength')) {
-        validate['Maxlength'] = attrs['Maxlength'];
+    if (has(attrs, 'Max-length')) {
+        validate['Max-length'] = attrs['Max-length'];
     }
 
     // 必填
@@ -181,20 +193,20 @@ var anlyse = (function (vNode) {
         validate['Number'] = attrs['Number'] || 'int';
     }
 
-    if (has(attrs, 'maxfloatlength')) {
-        validate['maxfloatlength'] = attrs['maxfloatlength'];
+    if (has(attrs, 'max-float-length')) {
+        validate['max-float-length'] = attrs['max-float-length'];
     }
 
-    if (has(attrs, 'minfloatlength')) {
-        validate['minfloatlength'] = attrs['minfloatlength'];
+    if (has(attrs, 'min-float-length')) {
+        validate['min-float-length'] = attrs['min-float-length'];
     }
 
-    if (has(attrs, 'Maxfloatlength')) {
-        validate['Maxfloatlength'] = attrs['Maxfloatlength'];
+    if (has(attrs, 'Max-float-length')) {
+        validate['Max-float-length'] = attrs['Max-float-length'];
     }
 
-    if (has(attrs, 'Minfloatlength')) {
-        validate['Minfloatlength'] = attrs['Minfloatlength'];
+    if (has(attrs, 'Min-float-length')) {
+        validate['Min-float-length'] = attrs['Min-float-length'];
     }
 
     return validate;
@@ -240,7 +252,7 @@ var judge = (function (validate, value, item) {
         type = 'number';
     }
 
-    if (has(validate, 'minlength') || has(validate, 'maxlength') || has(validate, 'Minlength') || has(validate, 'Maxlength')) {
+    if (has(validate, 'min-length') || has(validate, 'max-length') || has(validate, 'Min-length') || has(validate, 'Max-length')) {
         length = getLength(value);
     }
 
@@ -275,20 +287,20 @@ var judge = (function (validate, value, item) {
         errors.detail.push(new Error('Max', validate['Max'], value, target));
     }
 
-    if (has(validate, 'minlength') && length <= validate['minlength']) {
-        errors.detail.push(new Error('minlength', validate['minlength'], length, target));
+    if (has(validate, 'min-length') && length <= validate['min-length']) {
+        errors.detail.push(new Error('min-length', validate['min-length'], length, target));
     }
 
-    if (has(validate, 'maxlength') && length >= validate['maxlength']) {
-        errors.detail.push(new Error('maxlength', validate['maxlength'], length, target));
+    if (has(validate, 'max-length') && length >= validate['max-length']) {
+        errors.detail.push(new Error('max-length', validate['max-length'], length, target));
     }
 
-    if (has(validate, 'Minlength') && length < validate['Minlength']) {
-        errors.detail.push(new Error('Minlength', validate['Minlength'], length, target));
+    if (has(validate, 'Min-length') && length < validate['Min-length']) {
+        errors.detail.push(new Error('Min-length', validate['Min-length'], length, target));
     }
 
-    if (has(validate, 'Maxlength') && length > validate['Maxlength']) {
-        errors.detail.push(new Error('Maxlength', validate['Maxlength'], length, target));
+    if (has(validate, 'Max-length') && length > validate['Max-length']) {
+        errors.detail.push(new Error('Max-length', validate['Max-length'], length, target));
     }
 
     if (has(validate, 'required') && (val === undefined || val === null || val === '')) {
@@ -362,6 +374,7 @@ var Field = function () {
         this.item = [];
         this.el = el;
         this.config = el.config;
+        this.rule = rule(el.rule);
         this.init(components);
         find = find(this.items);
 
@@ -572,15 +585,19 @@ var __vue_module__ = {
             config: {
                 'length-type': 'eng'
             },
-            field: ''
+            field: '',
+            rule: ''
         };
     },
 
     methods: {
-        configInit: function configInit() {
-            var attrs = this.$vnode.data.attrs;
+        configInit: function configInit(attrs) {
             var lengthType = attrs['length-type'];
             this.config['length-type'] = lengthType || this.config['length-type'];
+        },
+        ruleInit: function ruleInit(attrs) {
+            var rule = attrs.rule;
+            this.rule = rule;
         },
         validateAll: function validateAll() {
             this.field.validateAll();
@@ -588,7 +605,9 @@ var __vue_module__ = {
     },
     mounted: function mounted() {
         var components = this.$slots.default;
-        this.configInit();
+        var attrs = this.$vnode.data.attrs;
+        this.configInit(attrs);
+        this.ruleInit(attrs);
         this.field = new Field(components, this);
     }
 };

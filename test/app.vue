@@ -1,7 +1,7 @@
 <template>
     <div>
-        <validate-form ref="form" length-type="eng">
-            <input validate-name="input2" v-validate min="5" max="10" required trigger="$input.blur" />
+        <validate-form ref="form" length-type="eng" :rule="rule">
+            <input validate-name="input2" v-validate min="5" max="10" required />
             <selects v-model="data" :options="options" v-validate trigger="change" v-if="a" v-bind:min="data"></selects>
             <input validate-name="input" v-model="text" v-validate min="5" max="10" trigger="blur" />
             <span v-show="errors.has('data')">123</span>
@@ -37,6 +37,22 @@
         data () {
             return {
                 errors: new Set(),
+                rule: {
+                    text: '这是一句默认的错误提示',
+                    validate: {
+                        input2: {
+                            min: 6, // 可以是int or string
+                            max: 9,
+                            required: '',
+                            maxlength: {
+                                value: 4,
+                                text: '超过最大长度'
+                            },
+                            minlength: 'dd' // 错误的值
+                        }
+                    },
+                    trigger: '$input.blur'
+                },
                 text: 123,
                 a: true,
                 options: [

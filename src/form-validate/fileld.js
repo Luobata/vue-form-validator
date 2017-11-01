@@ -1,4 +1,5 @@
 import bind from './bind.js';
+import rule from './rule.js';
 import anlyse from './anlyse.js';
 import judge from './judge.js';
 import Watcher from './watcher.js';
@@ -19,11 +20,13 @@ let find = (items) => {
 export default class Field {
     item: Array;
     el: Vue;
+    rule: Object;
 
     constructor(components, el) {
         this.item = [];
         this.el = el;
         this.config = el.config;
+        this.rule = rule(el.rule);
         this.init(components);
         find = find(this.items);
 
