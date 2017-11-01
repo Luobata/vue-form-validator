@@ -95,7 +95,9 @@ export default class Field {
     };
 
     getValidate (item) {
-        const validate = item.validateContext;
+        let validate = item.validateContext;
+        validate = Object.assign(this.rule[item.name] || {}, validate);
+        console.log(validate);
         return (value) => {
             const error = judge(validate, value, item);
             console.log(error);

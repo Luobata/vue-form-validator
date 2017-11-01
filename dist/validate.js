@@ -131,19 +131,55 @@ var isFloat = function isFloat(val) {
     );
 };
 
+var covert = function covert(str) {
+    var key = void 0;
+    switch (str) {
+        case 'minlength':
+            key = 'min-length';
+    }
+    key = str.replace(/([min|max|Min|Max])(length)/, '$1-$2');
+    return key;
+};
+
 var rule = (function (rule) {
     if (!isObj(rule)) return {};
 
     var errorText = rule.text || '';
+    var validate = rule.validate || {};
+    var trigger = rule.trigger || '';
+    var rules = {};
+
+    for (var i in validate) {
+        var item = validate[i];
+        rules[i] = {};
+        for (var j in item) {
+            var value = item[j];
+            var key = covert(j);
+            if (isObj(value)) {
+                rules[i][key] = value;
+            } else {
+                rules[i][key] = {
+                    value: value,
+                    text: errorText
+                };
+            }
+        }
+    }
+
+    return rules;
 });
 
 var anlyse = (function (vNode) {
     var attrs = vNode.data.attrs;
     var validate = {};
+    var text = attrs['text'] || '';
 
     // 最小值 必须是数字 大写为不包括边界值
     if (has(attrs, 'min')) {
-        validate['min'] = attrs['min'];
+        validate['min'] = {
+            value: attrs['min'],
+            text: text
+        };
     }
 
     if (has(attrs, 'Min')) {
@@ -534,6 +570,8 @@ var Field = function () {
         key: 'getValidate',
         value: function getValidate(item) {
             var validate = item.validateContext;
+            validate = Object.assign(this.rule[item.name] || {}, validate);
+            console.log(validate);
             return function (value) {
                 var error = judge(validate, value, item);
                 console.log(error);

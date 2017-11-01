@@ -3,10 +3,14 @@ import { has } from './util/index.js';
 export default (vNode) => {
     const attrs = vNode.data.attrs;
     const validate = {};
+    const text = attrs['text'] || '';
 
     // 最小值 必须是数字 大写为不包括边界值
     if (has(attrs, 'min')) {
-        validate['min'] = attrs['min'];
+        validate['min'] = {
+            value: attrs['min'],
+            text,
+        };
     }
 
     if (has(attrs, 'Min')) {
