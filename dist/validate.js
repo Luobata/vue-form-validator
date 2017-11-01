@@ -183,66 +183,108 @@ var anlyse = (function (vNode) {
     }
 
     if (has(attrs, 'Min')) {
-        validate['Min'] = attrs['Min'];
+        validate['Min'] = {
+            value: attrs['Min'],
+            text: text
+        };
     }
 
     // 最大值 必须是数字
     if (has(attrs, 'max')) {
-        validate['max'] = attrs['max'];
+        validate['max'] = {
+            value: attrs['max'],
+            text: text
+        };
     }
 
     if (has(attrs, 'Max')) {
-        validate['Max'] = attrs['Max'];
+        validate['Max'] = {
+            value: attrs['Max'],
+            text: text
+        };
     }
 
     // 最小长度 必须是数字
     if (has(attrs, 'min-length')) {
-        validate['min-length'] = attrs['min-length'];
+        validate['min-length'] = {
+            value: attrs['min-length'],
+            text: text
+        };
     }
 
     // 最大长度 必须是数字
     if (has(attrs, 'max-length')) {
-        validate['max-length'] = attrs['max-length'];
+        validate['max-length'] = {
+            value: attrs['max-length'],
+            text: text
+        };
     }
 
     if (has(attrs, 'Min-length')) {
-        validate['Min-length'] = attrs['Min-length'];
+        validate['Min-length'] = {
+            value: attrs['Min-length'],
+            text: text
+        };
     }
 
     if (has(attrs, 'Max-length')) {
-        validate['Max-length'] = attrs['Max-length'];
+        validate['Max-length'] = {
+            value: attrs['Max-length'],
+            text: text
+        };
     }
 
     // 必填
     if (has(attrs, 'required')) {
-        validate['required'] = true;
+        validate['required'] = {
+            value: true,
+            text: text
+        };
     }
 
     // 数字 可以是字符串数字
     // int or float
     if (has(attrs, 'number')) {
-        validate['number'] = attrs['number'] || 'int';
+        validate['number'] = {
+            value: attrs['number'] || 'int',
+            text: text
+        };
     }
 
     // 数字 不能是字符串数字
     if (has(attrs, 'Number')) {
-        validate['Number'] = attrs['Number'] || 'int';
+        validate['Number'] = {
+            value: attrs['Number'] || 'int',
+            text: text
+        };
     }
 
     if (has(attrs, 'max-float-length')) {
-        validate['max-float-length'] = attrs['max-float-length'];
+        validate['max-float-length'] = {
+            value: attrs['max-float-length'],
+            text: text
+        };
     }
 
     if (has(attrs, 'min-float-length')) {
-        validate['min-float-length'] = attrs['min-float-length'];
+        validate['min-float-length'] = {
+            value: attrs['min-float-length'],
+            text: text
+        };
     }
 
     if (has(attrs, 'Max-float-length')) {
-        validate['Max-float-length'] = attrs['Max-float-length'];
+        validate['Max-float-length'] = {
+            value: attrs['Max-float-length'],
+            text: text
+        };
     }
 
     if (has(attrs, 'Min-float-length')) {
-        validate['Min-float-length'] = attrs['Min-float-length'];
+        validate['Min-float-length'] = {
+            value: attrs['Min-float-length'],
+            text: text
+        };
     }
 
     return validate;
