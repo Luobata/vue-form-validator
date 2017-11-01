@@ -144,13 +144,15 @@ var covert = function covert(str) {
 var rule = (function (rule) {
     if (!isObj(rule)) return {};
 
-    var errorText = rule.text || '';
+    var errorText = void 0;
     var validate = rule.validate || {};
-    var trigger = rule.trigger || '';
+    var trigger = void 0;
     var rules = {};
 
     for (var i in validate) {
         var item = validate[i];
+        errorText = item.text || '';
+        trigger = item.trigger || '';
         rules[i] = {};
         for (var j in item) {
             var value = item[j];

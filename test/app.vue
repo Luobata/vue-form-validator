@@ -38,9 +38,10 @@
             return {
                 errors: new Set(),
                 rule: {
-                    text: '这是一句默认的错误提示',
                     validate: {
                         input2: {
+                            text: '这是一句默认的错误提示',
+                            trigger: '$input.blur',
                             min: 6, // 可以是int or string
                             max: 9,
                             required: '',
@@ -51,7 +52,6 @@
                             minlength: 'dd' // 错误的值
                         }
                     },
-                    trigger: '$input.blur'
                 },
                 text: 123,
                 a: true,
