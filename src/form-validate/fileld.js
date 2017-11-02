@@ -102,13 +102,14 @@ export default class Field {
         console.log(validate);
         return (value) => {
             const error = judge(validate, value, item, this.el.$parent);
-            const errorObj = {};
-            error.detail.forEach((data) => {
-                errorObj[item.name] = true;
-                errorObj[item.name + 'Error'] = data.text;
-            });
+            if (error.detail.length > 0) {
+                $parent.$set($parent.errors, item.name, true);
+                $parent.$set($parent.errors, item.name + 'Error', error.detail[0].text);
+            } else {
+                $parent.$set($parent.errors, item.name, false);
+                $parent.$set($parent.errors, item.name + 'Error', '');
+            }
             console.log(error);
-            $parent.errors = errorObj;
         };
     };
 
