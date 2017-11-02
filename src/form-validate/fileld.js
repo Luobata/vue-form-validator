@@ -68,16 +68,18 @@ export default class Field {
         for (let i in datas) {
             const item = {};
             const value = datas[i];
-            item.name = '$$data-' + i;
-            item.trigger = bind(value.trigger);
+            item.name = i;
+            item.trigger = bind(value);
             //item.validateContext = anlyse('', value);
             item.model = {
                 value: '',
                 expression: i,
             };
+            // 用于target选择不报错
+            item.com = '';
             item.validate = this.getValidate(item, 'data');
             this.item.push(item);
-        console.log(item);
+            console.log(item);
         }
     };
 
@@ -88,9 +90,9 @@ export default class Field {
                     this.addWatcher(i, j.el);
                 }
                 if (j.eve === 'blur' || j.eve === 'input') {
-                    if (!j.el) {
+                    //if (!j.el) {
                         this.addInputWatcher(i, j.eve, j.el);
-                    }
+                    //}
                 }
             }
         }

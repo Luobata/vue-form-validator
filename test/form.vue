@@ -55,7 +55,7 @@
                     data: {
                         b: {
                             text: '这是一句无关dom的错误提示',
-                            trigger: '$input.blur',
+                            trigger: '$input2.blur',
                             min: 5,
                             max: 10,
                         },
