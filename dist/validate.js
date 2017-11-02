@@ -292,7 +292,29 @@ var anlyse = (function (vNode) {
     return validate;
 });
 
-function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
 
 var Error =
 //errorTpl = {
@@ -302,7 +324,7 @@ var Error =
 //};
 
 function Error(key, value, actual, target) {
-    _classCallCheck$1(this, Error);
+    classCallCheck(this, Error);
 
     this.key = key;
     this.value = value;
@@ -410,10 +432,6 @@ var judge = (function (validate, value, item) {
     return errors;
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 var find = function find(items) {
     return function (name) {
         if (!name) return undefined;
@@ -448,8 +466,12 @@ var find = function find(items) {
 };
 
 var Field = function () {
+    //item: Array;
+    //el: Vue;
+    //rule: Object;
+
     function Field(components, el) {
-        _classCallCheck(this, Field);
+        classCallCheck(this, Field);
 
         this.item = [];
         this.el = el;
@@ -461,7 +483,7 @@ var Field = function () {
         this.events();
     }
 
-    _createClass(Field, [{
+    createClass(Field, [{
         key: 'init',
         value: function init(components) {
             var _iteratorNormalCompletion2 = true;
@@ -656,7 +678,6 @@ var Field = function () {
             if (item) item.validate();
         }
     }]);
-
     return Field;
 }();
 
@@ -739,10 +760,8 @@ var directive = (function (Vue) {
     });
 });
 
-function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 var _class = function _class(el) {
-    _classCallCheck$3(this, _class);
+    classCallCheck(this, _class);
 };
 
 var mixin = (function (Vue) {
@@ -785,6 +804,7 @@ function plugin(Vue) {
     Vue.component(__$__vue_module__.name, __$__vue_module__);
 }
 
+/* istanbul ignore if */
 if (typeof window !== 'undefined' && window.Vue) {
     window.Vue.use(plugin);
 }

@@ -18,9 +18,9 @@ let find = (items) => {
 };
 
 export default class Field {
-    item: Array;
-    el: Vue;
-    rule: Object;
+    //item: Array;
+    //el: Vue;
+    //rule: Object;
 
     constructor(components, el) {
         this.item = [];

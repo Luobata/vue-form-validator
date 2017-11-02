@@ -1,11 +1,14 @@
 {
     "presets": [
         [
-            "es2015",
+            "env",
             {
                 "modules": false
             }
         ],
         "flow"
+    ],
+    "plugins": [
+        "external-helpers"
     ]
 }
