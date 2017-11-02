@@ -1,8 +1,8 @@
 <template>
     <div>
         <validate-form ref="form" length-type="eng" :rule="rule">
-            <input validate-name="input2" v-validate min="5" max="10" required />
-            <selects v-model="data" :options="options" v-validate trigger="change" v-if="a" v-bind:min="data"></selects>
+            <input validate-name="input2" v-validate min="5" required trigger="blur;$sel.change"/>
+            <selects validate-name="sel" v-model="data" :options="options" v-validate trigger="change" v-if="a" v-bind:min="data"></selects>
             <input validate-name="input" v-model="text" v-validate min="5" max="10" trigger="blur" />
             <span v-show="errors.has('data')">123</span>
         </validate-form>
@@ -43,7 +43,16 @@
                             text: '这是一句默认的错误提示',
                             trigger: '$input.blur',
                             min: 6, // 可以是int or string
-                            max: 9,
+                            max: {
+                                text: '超过最大值',
+                                value: function () {
+                                    if (this.d > 30) {
+                                        return 10;
+                                    } else {
+                                        return 15;
+                                    }
+                                }
+                            },
                             required: '',
                             maxlength: {
                                 value: 4,
@@ -52,9 +61,26 @@
                             minlength: 'dd' // 错误的值
                         }
                     },
+                    data: {
+                        b: {
+                            text: '这是一句无关dom的错误提示',
+                            trigger: '$input.blur',
+                            type: 'int',
+                            min: 5,
+                            max: 10,
+                        },
+                        c: {
+                            text: '关于c的错误提示',
+                            trigger: '$$data.change',
+                            max: 20,
+                        }
+                    }
                 },
                 text: 123,
                 a: true,
+                b: 11,
+                c: 22,
+                d: 33,
                 options: [
                     {
                         key: 1,

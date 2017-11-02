@@ -2,6 +2,7 @@ import {
     has,
     isInt,
     isFloat,
+    isFun,
 } from './util/index.js';
 
 class Error {
@@ -25,7 +26,8 @@ const getLength = () => {
 };
 
 
-export default (validate, value, item) => {
+
+export default (validate, value, item, $parent) => {
     let type;
     let val;
     let length;
@@ -33,6 +35,13 @@ export default (validate, value, item) => {
     let errors = {
         type: '',
         detail: []
+    };
+    const cal = (val) => {
+        if (isFun(val)) {
+            return val.call($parent);
+        } else {
+            return val;
+        }
     };
 
     if (has(validate, 'min') || 
@@ -69,11 +78,11 @@ export default (validate, value, item) => {
         return errors;
     }
 
-    if (has(validate, 'min') && val <= validate['min']) {
+    if (has(validate, 'min') && val <= cal(validate['min'])) {
         errors.detail.push(new Error('min', validate['min'], value, target));
     }
 
-    if (has(validate, 'max') && val >= validate['max']) {
+    if (has(validate, 'max') && val >= cal(validate['max'])) {
         errors.detail.push(new Error('max', validate['max'], value, target));
     }
 

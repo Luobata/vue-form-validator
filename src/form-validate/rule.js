@@ -29,6 +29,12 @@ export default (rule) => {
         for (let j in item) {
             const value = item[j];
             const key = covert(j);
+
+            if (key === 'text' || key === 'trigger') {
+                rules[i][key] = value;
+                continue;
+            }
+
             if (isObj(value)) {
                 rules[i][key] = value;
             } else {

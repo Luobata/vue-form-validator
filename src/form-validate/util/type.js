@@ -24,6 +24,8 @@ export const isStr = (val) => Object.prototype.toString.call(val) === '[object S
 
 export const isObj = (val) => Object.prototype.toString.call(val) === '[object Object]';
 
+export const isFun = (val) => Object.prototype.toString.call(val) === '[object Function]';
+
 export const isEmptyObj = (obj) => {
     if (!isObj(obj)) return false;
 

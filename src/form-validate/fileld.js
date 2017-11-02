@@ -65,6 +65,7 @@ export default class Field {
         for (let i of this.item) {
             for (let j of i.trigger) {
                 if (j.eve === 'change') {
+                    debugger;
                     this.addWatcher(i, j.el);
                 }
                 if (j.eve === 'blur' || j.eve === 'input') {
@@ -99,7 +100,7 @@ export default class Field {
         validate = Object.assign(this.rule[item.name] || {}, validate);
         console.log(validate);
         return (value) => {
-            const error = judge(validate, value, item);
+            const error = judge(validate, value, item, this.el.$parent);
             console.log(error);
         };
     };

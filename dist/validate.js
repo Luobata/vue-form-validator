@@ -109,6 +109,10 @@ var isObj = function isObj(val) {
     return Object.prototype.toString.call(val) === '[object Object]';
 };
 
+var isFun = function isFun(val) {
+    return Object.prototype.toString.call(val) === '[object Function]';
+};
+
 var has = function has(obj, key) {
     return obj.hasOwnProperty(key);
 };
@@ -157,6 +161,12 @@ var rule = (function (rule) {
         for (var j in item) {
             var value = item[j];
             var key = covert(j);
+
+            if (key === 'text' || key === 'trigger') {
+                rules[i][key] = value;
+                continue;
+            }
+
             if (isObj(value)) {
                 rules[i][key] = value;
             } else {
@@ -340,7 +350,7 @@ var getTarget = function getTarget(item) {
 
 var getLength = function getLength() {};
 
-var judge = (function (validate, value, item) {
+var judge = (function (validate, value, item, $parent) {
     var type = void 0;
     var val = void 0;
     var length = void 0;
@@ -348,6 +358,13 @@ var judge = (function (validate, value, item) {
     var errors = {
         type: '',
         detail: []
+    };
+    var cal = function cal(val) {
+        if (isFun(val)) {
+            return val.call($parent);
+        } else {
+            return val;
+        }
     };
 
     if (has(validate, 'min') || has(validate, 'max') || has(validate, 'Min') || has(validate, 'Max')) {
@@ -373,11 +390,11 @@ var judge = (function (validate, value, item) {
         return errors;
     }
 
-    if (has(validate, 'min') && val <= validate['min']) {
+    if (has(validate, 'min') && val <= cal(validate['min'])) {
         errors.detail.push(new Error('min', validate['min'], value, target));
     }
 
-    if (has(validate, 'max') && val >= validate['max']) {
+    if (has(validate, 'max') && val >= cal(validate['max'])) {
         errors.detail.push(new Error('max', validate['max'], value, target));
     }
 
@@ -574,6 +591,7 @@ var Field = function () {
                             var j = _step5.value;
 
                             if (j.eve === 'change') {
+                                debugger;
                                 this.addWatcher(i, j.el);
                             }
                             if (j.eve === 'blur' || j.eve === 'input') {
@@ -635,11 +653,13 @@ var Field = function () {
     }, {
         key: 'getValidate',
         value: function getValidate(item) {
+            var _this = this;
+
             var validate = item.validateContext;
             validate = Object.assign(this.rule[item.name] || {}, validate);
             console.log(validate);
             return function (value) {
-                var error = judge(validate, value, item);
+                var error = judge(validate, value, item, _this.el.$parent);
                 console.log(error);
             };
         }
@@ -804,7 +824,6 @@ function plugin(Vue) {
     Vue.component(__$__vue_module__.name, __$__vue_module__);
 }
 
-/* istanbul ignore if */
 if (typeof window !== 'undefined' && window.Vue) {
     window.Vue.use(plugin);
 }
