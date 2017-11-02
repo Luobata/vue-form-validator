@@ -37,10 +37,10 @@ export default (validate, value, item, $parent) => {
         detail: []
     };
     const cal = (val) => {
-        if (isFun(val)) {
-            return val.call($parent);
+        if (isFun(val.value)) {
+            return val.value.call($parent);
         } else {
-            return val;
+            return val.value;
         }
     };
 
@@ -79,60 +79,61 @@ export default (validate, value, item, $parent) => {
     }
 
     if (has(validate, 'min') && val <= cal(validate['min'])) {
-        errors.detail.push(new Error('min', validate['min'], value, target));
+        errors.detail.push(new Error('min', cal(validate['min']), value, target));
     }
 
     if (has(validate, 'max') && val >= cal(validate['max'])) {
-        errors.detail.push(new Error('max', validate['max'], value, target));
+        errors.detail.push(new Error('max', cal(validate['max']), value, target));
     }
 
-    if (has(validate, 'Min') && val < validate['Min']) {
-        errors.detail.push(new Error('Min', validate['Min'], value, target));
+    if (has(validate, 'Min') && val < cal(validate['Min'])) {
+        errors.detail.push(new Error('Min', cal(validate['Min']), value, target));
     }
 
-    if (has(validate, 'Max') && val > validate['Max']) {
-        errors.detail.push(new Error('Max', validate['Max'], value, target));
+    if (has(validate, 'Max') && val > cal(validate['Max'])) {
+        errors.detail.push(new Error('Max', cal(validate['Max']), value, target));
     }
 
-    if (has(validate, 'min-length') && length <= validate['min-length']) {
-        errors.detail.push(new Error('min-length', validate['min-length'], length, target));
+    if (has(validate, 'min-length') && length <= cal(validate['min-length'])) {
+        errors.detail.push(new Error('min-length', cal(validate['min-length']), length, target));
     }
 
-    if (has(validate, 'max-length') && length >= validate['max-length']) {
-        errors.detail.push(new Error('max-length', validate['max-length'], length, target));
+    if (has(validate, 'max-length') && length >= cal(validate['max-length'])) {
+        errors.detail.push(new Error('max-length', cal(validate['max-length']), length, target));
     }
 
-    if (has(validate, 'Min-length') && length < validate['Min-length']) {
-        errors.detail.push(new Error('Min-length', validate['Min-length'], length, target));
+    if (has(validate, 'Min-length') && length < cal(validate['Min-length'])) {
+        errors.detail.push(new Error('Min-length', cal(validate['Min-length']), length, target));
     }
 
-    if (has(validate, 'Max-length') && length > validate['Max-length']) {
-        errors.detail.push(new Error('Max-length', validate['Max-length'], length, target));
+    if (has(validate, 'Max-length') && length > cal(validate['Max-length'])) {
+        errors.detail.push(new Error('Max-length', cal(validate['Max-length']), length, target));
     }
 
     if (has(validate, 'required') &&
         (val === undefined ||
         val === null ||
-        val === '')
+        val === '' ||
+        isNaN(val))
     ) {
         errors.detail.push(new Error('require', '', value, target));
     }
 
-    if (attrs('number') === 'int') {
+    if (validate['number'] === 'int') {
         if (isNaN(parseInt(val, 10))) {
             errors.detail.push(new Error('number', '', val, target));
         }
-    } else if (attrs['number'] === 'float')  {
+    } else if (validate['number'] === 'float')  {
         if (isNaN(parseFloat(val, 10))) {
             errors.detail.push(new Error('number', '', val, target));
         }
     }
 
-    if (attrs('Number') === 'int') {
+    if (validate['Number'] === 'int') {
         if (isInt(val)) {
             errors.detail.push(new Error('Number', '', val, target));
         }
-    } else if (attrs['Number'] === 'float')  {
+    } else if (validate['Number'] === 'float')  {
         if (isFloat(val)) {
             errors.detail.push(new Error('Number', '', val, target));
         }

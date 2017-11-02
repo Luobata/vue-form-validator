@@ -28,7 +28,7 @@ export default class Field {
         this.config = el.config;
         this.rule = rule(el.rule);
         this.init(components);
-        find = find(this.items);
+        find = find(this.item);
 
         this.events();
     };
@@ -65,7 +65,6 @@ export default class Field {
         for (let i of this.item) {
             for (let j of i.trigger) {
                 if (j.eve === 'change') {
-                    debugger;
                     this.addWatcher(i, j.el);
                 }
                 if (j.eve === 'blur' || j.eve === 'input') {
@@ -77,15 +76,16 @@ export default class Field {
         }
     };
 
-    addWatcher (item) {
+    addWatcher (item, el) {
         // change 事件
         const $parent = this.el.$parent;
-        $parent.$watch(item.model.expression, item.validate);
+        const element = find(el) || item;
+        $parent.$watch(element.model.expression, item.validate);
     };
 
     addInputWatcher (item, eve, el) {
         // blur 事件触法条件 input textarea 或者contenteditable元素
-        const element = (find(el) || item);
+        const element = find(el) || item;
         const elm = element.com.elm;
         const blurElm = check(elm);
         if (blurElm) {
