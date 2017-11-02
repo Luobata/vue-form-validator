@@ -56,15 +56,14 @@
                         b: {
                             text: '这是一句无关dom的错误提示',
                             trigger: '$input.blur',
-                            type: 'int',
                             min: 5,
                             max: 10,
                         },
-                        c: {
+                        /*c: {
                             text: '关于c的错误提示',
                             trigger: '$$data.change',
                             max: 20,
-                        }
+                        },*/
                     }
                 },
                 text: 123,

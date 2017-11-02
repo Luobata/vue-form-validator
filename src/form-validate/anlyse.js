@@ -1,7 +1,7 @@
 import { has } from './util/index.js';
 
-export default (vNode) => {
-    const attrs = vNode.data.attrs;
+export default (vNode, obj) => {
+    const attrs = obj || vNode.data.attrs;
     const validate = {};
     const text = attrs['text'] || '';
 

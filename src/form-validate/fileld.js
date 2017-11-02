@@ -5,7 +5,7 @@ import judge from './judge.js';
 import Watcher from './watcher.js';
 import { check } from './util/index.js';
 
-let find = (items) => {
+let finds = (items) => {
     return (name) => {
         if (!name) return undefined;
 
@@ -21,6 +21,7 @@ export default class Field {
     //item: Array;
     //el: Vue;
     //rule: Object;
+    //find: Function;
 
     constructor(components, el) {
         this.item = [];
@@ -28,7 +29,8 @@ export default class Field {
         this.config = el.config;
         this.rule = rule(el.rule);
         this.init(components);
-        find = find(this.item);
+        this.dataInit();
+        this.find = finds(this.item);
 
         this.events();
     };
@@ -55,13 +57,31 @@ export default class Field {
                 }
             }
             if (item.com) {
-                item.validate = this.getValidate(item);
+                item.validate = this.getValidate(item, 'validate');
                 this.item.push(item);
             }
         }
     };
 
-    events() {
+    dataInit () {
+        const datas = this.rule.data;
+        for (let i in datas) {
+            const item = {};
+            const value = datas[i];
+            item.name = '$$data-' + i;
+            item.trigger = bind(value.trigger);
+            //item.validateContext = anlyse('', value);
+            item.model = {
+                value: '',
+                expression: i,
+            };
+            item.validate = this.getValidate(item, 'data');
+            this.item.push(item);
+        console.log(item);
+        }
+    };
+
+    events () {
         for (let i of this.item) {
             for (let j of i.trigger) {
                 if (j.eve === 'change') {
@@ -79,13 +99,13 @@ export default class Field {
     addWatcher (item, el) {
         // change 事件
         const $parent = this.el.$parent;
-        const element = find(el) || item;
+        const element = this.find(el) || item;
         $parent.$watch(element.model.expression, item.validate);
     };
 
     addInputWatcher (item, eve, el) {
         // blur 事件触法条件 input textarea 或者contenteditable元素
-        const element = find(el) || item;
+        const element = this.find(el) || item;
         const elm = element.com.elm;
         const blurElm = check(elm);
         if (blurElm) {
@@ -95,10 +115,10 @@ export default class Field {
         }
     };
 
-    getValidate (item) {
-        let validate = item.validateContext;
+    getValidate (item, key) {
+        let validate = item.validateContext || {};
         const $parent = this.el.$parent;
-        validate = Object.assign(this.rule[item.name] || {}, validate);
+        validate = Object.assign(this.rule[key][item.name] || {}, validate);
         console.log(validate);
         return (value) => {
             const error = judge(validate, value, item, this.el.$parent);
@@ -120,7 +140,7 @@ export default class Field {
     };
 
     validateItem (name) {
-        const item = find(name);
+        const item = this.find(name);
         if (item) item.validate();
     };
 };

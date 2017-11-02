@@ -150,39 +150,49 @@ var rule = (function (rule) {
 
     var errorText = void 0;
     var validate = rule.validate || {};
+    var data = rule.data || {};
     var trigger = void 0;
-    var rules = {};
+    var rules = {
+        validate: {},
+        data: {}
+    };
+    var add = function add(obj, objStr) {
+        for (var i in obj) {
+            var item = obj[i];
+            var keyStr = objStr === 'data' ? '$$data-' + i : i;
+            errorText = item.text || '';
+            trigger = item.trigger || '';
+            rules[objStr][keyStr] = {};
+            for (var j in item) {
+                var value = item[j];
+                var key = covert(j, objStr);
 
-    for (var i in validate) {
-        var item = validate[i];
-        errorText = item.text || '';
-        trigger = item.trigger || '';
-        rules[i] = {};
-        for (var j in item) {
-            var value = item[j];
-            var key = covert(j);
+                if (key === 'text' || key === 'trigger') {
+                    rules[objStr][keyStr][key] = value;
+                    continue;
+                }
 
-            if (key === 'text' || key === 'trigger') {
-                rules[i][key] = value;
-                continue;
-            }
-
-            if (isObj(value)) {
-                rules[i][key] = value;
-            } else {
-                rules[i][key] = {
-                    value: value,
-                    text: errorText
-                };
+                if (isObj(value)) {
+                    rules[objStr][keyStr][key] = value;
+                } else {
+                    rules[objStr][keyStr][key] = {
+                        value: value,
+                        text: errorText
+                    };
+                }
             }
         }
-    }
+    };
+
+    add(validate, 'validate');
+    add(data, 'data');
+    console.log(rules);
 
     return rules;
 });
 
-var anlyse = (function (vNode) {
-    var attrs = vNode.data.attrs;
+var anlyse = (function (vNode, obj) {
+    var attrs = obj || vNode.data.attrs;
     var validate = {};
     var text = attrs['text'] || '';
 
@@ -451,7 +461,7 @@ var judge = (function (validate, value, item, $parent) {
     return errors;
 });
 
-var find = function find(items) {
+var finds = function finds(items) {
     return function (name) {
         if (!name) return undefined;
 
@@ -488,6 +498,7 @@ var Field = function () {
     //item: Array;
     //el: Vue;
     //rule: Object;
+    //find: Function;
 
     function Field(components, el) {
         classCallCheck(this, Field);
@@ -497,7 +508,8 @@ var Field = function () {
         this.config = el.config;
         this.rule = rule(el.rule);
         this.init(components);
-        find = find(this.item);
+        this.dataInit();
+        this.find = finds(this.item);
 
         this.events();
     }
@@ -555,7 +567,7 @@ var Field = function () {
                     }
 
                     if (item.com) {
-                        item.validate = this.getValidate(item);
+                        item.validate = this.getValidate(item, 'validate');
                         this.item.push(item);
                     }
                 }
@@ -572,6 +584,25 @@ var Field = function () {
                         throw _iteratorError2;
                     }
                 }
+            }
+        }
+    }, {
+        key: 'dataInit',
+        value: function dataInit() {
+            var datas = this.rule.data;
+            for (var i in datas) {
+                var item = {};
+                var value = datas[i];
+                item.name = '$$data-' + i;
+                item.trigger = bind(value.trigger);
+                //item.validateContext = anlyse('', value);
+                item.model = {
+                    value: '',
+                    expression: i
+                };
+                item.validate = this.getValidate(item, 'data');
+                this.item.push(item);
+                console.log(item);
             }
         }
     }, {
@@ -636,14 +667,14 @@ var Field = function () {
         value: function addWatcher(item, el) {
             // change 事件
             var $parent = this.el.$parent;
-            var element = find(el) || item;
+            var element = this.find(el) || item;
             $parent.$watch(element.model.expression, item.validate);
         }
     }, {
         key: 'addInputWatcher',
         value: function addInputWatcher(item, eve, el) {
             // blur 事件触法条件 input textarea 或者contenteditable元素
-            var element = find(el) || item;
+            var element = this.find(el) || item;
             var elm = element.com.elm;
             var blurElm = check(elm);
             if (blurElm) {
@@ -654,12 +685,12 @@ var Field = function () {
         }
     }, {
         key: 'getValidate',
-        value: function getValidate(item) {
+        value: function getValidate(item, key) {
             var _this = this;
 
-            var validate = item.validateContext;
+            var validate = item.validateContext || {};
             var $parent = this.el.$parent;
-            validate = Object.assign(this.rule[item.name] || {}, validate);
+            validate = Object.assign(this.rule[key][item.name] || {}, validate);
             console.log(validate);
             return function (value) {
                 var error = judge(validate, value, item, _this.el.$parent);
@@ -704,7 +735,7 @@ var Field = function () {
     }, {
         key: 'validateItem',
         value: function validateItem(name) {
-            var item = find(name);
+            var item = this.find(name);
             if (item) item.validate();
         }
     }]);
