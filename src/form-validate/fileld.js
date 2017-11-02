@@ -97,11 +97,18 @@ export default class Field {
 
     getValidate (item) {
         let validate = item.validateContext;
+        const $parent = this.el.$parent;
         validate = Object.assign(this.rule[item.name] || {}, validate);
         console.log(validate);
         return (value) => {
             const error = judge(validate, value, item, this.el.$parent);
+            const errorObj = {};
+            error.detail.forEach((data) => {
+                errorObj[item.name] = true;
+                errorObj[item.name + 'Error'] = data.text;
+            });
             console.log(error);
+            $parent.errors = errorObj;
         };
     };
 

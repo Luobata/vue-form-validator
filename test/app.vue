@@ -4,7 +4,7 @@
             <input validate-name="input2" v-validate min="5" required trigger="blur;$sel.change"/>
             <selects validate-name="sel" v-model="data" :options="options" v-validate trigger="change" v-if="a" v-bind:min="data"></selects>
             <input validate-name="input" v-model="text" v-validate min="5" max="10" trigger="blur" />
-            <span v-show="errors.has('data')">123</span>
+            <span v-show="errors.input2">{{ errors.input2Error }}</span>
         </validate-form>
         <!--
         <div class="column is-12">
@@ -36,7 +36,7 @@
         },
         data () {
             return {
-                errors: new Set(),
+                errors: {},
                 rule: {
                     validate: {
                         input2: {

@@ -5,20 +5,6 @@ import {
     isFun,
 } from './util/index.js';
 
-class Error {
-    //errorTpl = {
-    //    key: '', // error key like min max
-    //    value: '', // key value
-    //    actual: '', // actual value
-    //};
-
-    constructor (key, value, actual, target) {
-        this.key = key;
-        this.value = value;
-        this.actual = actual;
-        this.target = target;
-    };
-};
 
 const getTarget = (item) => (item.com.elm);
 
@@ -36,12 +22,29 @@ export default (validate, value, item, $parent) => {
         type: '',
         detail: []
     };
+    let text = validate.text || '';
     const cal = (val) => {
         if (isFun(val.value)) {
             return val.value.call($parent);
         } else {
             return val.value;
         }
+    };
+
+    class Error {
+        //errorTpl = {
+        //    key: '', // error key like min max
+        //    value: '', // key value
+        //    actual: '', // actual value
+        //};
+
+        constructor (key, value, actual, target) {
+            this.key = key;
+            this.value = value;
+            this.actual = actual;
+            this.target = target;
+            this.text = validate[key].text || text;
+        };
     };
 
     if (has(validate, 'min') || 
@@ -116,7 +119,7 @@ export default (validate, value, item, $parent) => {
         val === '' ||
         isNaN(val))
     ) {
-        errors.detail.push(new Error('require', '', value, target));
+        errors.detail.push(new Error('required', '', value, target));
     }
 
     if (validate['number'] === 'int') {

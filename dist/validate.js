@@ -326,24 +326,6 @@ var createClass = function () {
   };
 }();
 
-var Error =
-//errorTpl = {
-//    key: '', // error key like min max
-//    value: '', // key value
-//    actual: '', // actual value
-//};
-
-function Error(key, value, actual, target) {
-    classCallCheck(this, Error);
-
-    this.key = key;
-    this.value = value;
-    this.actual = actual;
-    this.target = target;
-};
-
-
-
 var getTarget = function getTarget(item) {
     return item.com.elm;
 };
@@ -359,6 +341,7 @@ var judge = (function (validate, value, item, $parent) {
         type: '',
         detail: []
     };
+    var text = validate.text || '';
     var cal = function cal(val) {
         if (isFun(val.value)) {
             return val.value.call($parent);
@@ -366,6 +349,25 @@ var judge = (function (validate, value, item, $parent) {
             return val.value;
         }
     };
+
+    var Error =
+    //errorTpl = {
+    //    key: '', // error key like min max
+    //    value: '', // key value
+    //    actual: '', // actual value
+    //};
+
+    function Error(key, value, actual, target) {
+        classCallCheck(this, Error);
+
+        this.key = key;
+        this.value = value;
+        this.actual = actual;
+        this.target = target;
+        this.text = validate[key].text || text;
+    };
+
+    
 
     if (has(validate, 'min') || has(validate, 'max') || has(validate, 'Min') || has(validate, 'Max')) {
         type = 'number';
@@ -423,7 +425,7 @@ var judge = (function (validate, value, item, $parent) {
     }
 
     if (has(validate, 'required') && (val === undefined || val === null || val === '' || isNaN(val))) {
-        errors.detail.push(new Error('require', '', value, target));
+        errors.detail.push(new Error('required', '', value, target));
     }
 
     if (validate['number'] === 'int') {
@@ -656,11 +658,18 @@ var Field = function () {
             var _this = this;
 
             var validate = item.validateContext;
+            var $parent = this.el.$parent;
             validate = Object.assign(this.rule[item.name] || {}, validate);
             console.log(validate);
             return function (value) {
                 var error = judge(validate, value, item, _this.el.$parent);
+                var errorObj = {};
+                error.detail.forEach(function (data) {
+                    errorObj[item.name] = true;
+                    errorObj[item.name + 'Error'] = data.text;
+                });
                 console.log(error);
+                $parent.errors = errorObj;
             };
         }
     }, {
