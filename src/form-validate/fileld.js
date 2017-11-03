@@ -73,7 +73,7 @@ export default class Field {
             //item.validateContext = anlyse('', value);
             item.model = {
                 value: '',
-                expression: i,
+                expression: i.replace('$$data-', ''),
             };
             // 用于target选择不报错
             item.com = '';
@@ -102,7 +102,7 @@ export default class Field {
         // change 事件
         const $parent = this.el.$parent;
         const element = this.find(el) || item;
-        $parent.$watch(element.model.expression, item.validate);
+        $parent.$watch(element.model.expression, element.validate);
     };
 
     addInputWatcher (item, eve, el) {
@@ -112,7 +112,8 @@ export default class Field {
         const blurElm = check(elm);
         if (blurElm) {
             blurElm.addEventListener(eve, function (e) {
-                item.validate(this.value);
+                //item.validate(this.value);
+                element.validate(item);
             });
         }
     };
@@ -122,7 +123,8 @@ export default class Field {
         const $parent = this.el.$parent;
         validate = Object.assign(this.rule[key][item.name] || {}, validate);
         console.log(validate);
-        return (value) => {
+        return (item) => {
+            const value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
             const error = judge(validate, value, item, this.el.$parent);
             if (error.detail.length > 0) {
                 $parent.$set($parent.errors, item.name, true);

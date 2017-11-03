@@ -598,7 +598,7 @@ var Field = function () {
                 //item.validateContext = anlyse('', value);
                 item.model = {
                     value: '',
-                    expression: i
+                    expression: i.replace('$$data-', '')
                 };
                 // 用于target选择不报错
                 item.com = '';
@@ -670,7 +670,7 @@ var Field = function () {
             // change 事件
             var $parent = this.el.$parent;
             var element = this.find(el) || item;
-            $parent.$watch(element.model.expression, item.validate);
+            $parent.$watch(element.model.expression, element.validate);
         }
     }, {
         key: 'addInputWatcher',
@@ -681,7 +681,8 @@ var Field = function () {
             var blurElm = check(elm);
             if (blurElm) {
                 blurElm.addEventListener(eve, function (e) {
-                    item.validate(this.value);
+                    //item.validate(this.value);
+                    element.validate(item);
                 });
             }
         }
@@ -694,7 +695,8 @@ var Field = function () {
             var $parent = this.el.$parent;
             validate = Object.assign(this.rule[key][item.name] || {}, validate);
             console.log(validate);
-            return function (value) {
+            return function (item) {
+                var value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
                 var error = judge(validate, value, item, _this.el.$parent);
                 if (error.detail.length > 0) {
                     $parent.$set($parent.errors, item.name, true);
