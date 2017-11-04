@@ -48,15 +48,15 @@ var triggerAnalyse = function triggerAnalyse(triggerStr) {
     return arr;
 };
 
-var trigger = (function (el) {
-    var trigger = el.trigger;
+var trigger = (function (trigger) {
+    //const trigger = el.trigger;
     var triggerArr = triggerAnalyse(trigger);
 
     return triggerArr;
 });
 
-var bind = (function (el) {
-    return trigger(el);
+var bind = (function (tri) {
+    return trigger(tri);
 });
 
 var check = function check(elm) {
@@ -539,9 +539,11 @@ var Field = function () {
 
                             if (j.name === 'validate') {
                                 item.com = i;
-                                item.trigger = bind(i.data.attrs);
-                                item.validateContext = anlyse(i);
                                 item.name = i.data.attrs['validate-name'];
+                                //item.trigger = Object.assign(this.rule['validate'][item.name] || {}, bind(i.data.attrs));
+                                item.trigger = bind(i.data.attrs.trigger || this.rule['validate'][item.name].trigger);
+                                console.log(item.trigger);
+                                item.validateContext = anlyse(i);
                             }
 
                             if (j.name === 'model') {
@@ -594,7 +596,7 @@ var Field = function () {
                 var item = {};
                 var value = datas[i];
                 item.name = i;
-                item.trigger = bind(value);
+                item.trigger = bind(value.trigger);
                 //item.validateContext = anlyse('', value);
                 item.model = {
                     value: '',
@@ -670,7 +672,6 @@ var Field = function () {
             // trigger 触法的对象
             var $parent = this.el.$parent;
             var element = this.find(trigger.el) || item;
-            //$parent.$watch(element.model.expression, item.validate);
             $parent.$watch(element.model.expression, function (val) {
                 item.validate(item);
             });

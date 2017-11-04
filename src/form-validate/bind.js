@@ -1,5 +1,5 @@
 import trigger from './trigger.js';
 
-export default (el) => {
-    return trigger(el);
+export default (tri) => {
+    return trigger(tri);
 };

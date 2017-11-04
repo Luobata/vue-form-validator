@@ -24,8 +24,8 @@ const triggerAnalyse = (triggerStr) => {
     return arr;
 };
 
-export default (el) => {
-    const trigger = el.trigger;
+export default (trigger) => {
+    //const trigger = el.trigger;
     const triggerArr = triggerAnalyse(trigger);
     
     return triggerArr;

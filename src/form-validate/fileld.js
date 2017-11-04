@@ -44,9 +44,11 @@ export default class Field {
 
                 if (j.name === 'validate') {
                     item.com = i;
-                    item.trigger = bind(i.data.attrs);
-                    item.validateContext = anlyse(i);
                     item.name = i.data.attrs['validate-name'];
+                    //item.trigger = Object.assign(this.rule['validate'][item.name] || {}, bind(i.data.attrs));
+                    item.trigger = bind(i.data.attrs.trigger || this.rule['validate'][item.name].trigger);
+                    console.log(item.trigger);
+                    item.validateContext = anlyse(i);
                 }
 
                 if (j.name === 'model') {
@@ -69,7 +71,7 @@ export default class Field {
             const item = {};
             const value = datas[i];
             item.name = i;
-            item.trigger = bind(value);
+            item.trigger = bind(value.trigger);
             //item.validateContext = anlyse('', value);
             item.model = {
                 value: '',
@@ -102,7 +104,6 @@ export default class Field {
         // trigger 触法的对象
         const $parent = this.el.$parent;
         const element = this.find(trigger.el) || item;
-        //$parent.$watch(element.model.expression, item.validate);
         $parent.$watch(element.model.expression, (val) => {
             item.validate(item);
         });
