@@ -103,7 +103,9 @@ var isNum = function isNum(val) {
     return Object.prototype.toString.call(val) === '[object Number]';
 };
 
-
+var isStr = function isStr(val) {
+    return Object.prototype.toString.call(val) === '[object String]';
+};
 
 var isObj = function isObj(val) {
     return Object.prototype.toString.call(val) === '[object Object]';
@@ -135,6 +137,17 @@ var isFloat = function isFloat(val) {
     );
 };
 
+var sysConfig = {
+    dataName: '$$data-'
+};
+
+/*
+ * @params lengthtype {String | Function} eng english-type chi chinese-type
+ */
+var userConfig = {
+    lengthType: 'eng'
+};
+
 var covert = function covert(str) {
     var key = void 0;
     switch (str) {
@@ -159,7 +172,7 @@ var rule = (function (rule) {
     var add = function add(obj, objStr) {
         for (var i in obj) {
             var item = obj[i];
-            var keyStr = objStr === 'data' ? '$$data-' + i : i;
+            var keyStr = objStr === 'data' ? sysConfig.dataName + i : i;
             errorText = item.text || '';
             trigger = item.trigger || '';
             rules[objStr][keyStr] = {};
@@ -340,7 +353,32 @@ var getTarget = function getTarget(item) {
     return item.com.elm;
 };
 
-var getLength = function getLength() {};
+var getLength = function getLength(val) {
+    var type = userConfig.lengthType;
+    var len = 0;
+    var getL = function getL(str) {
+        if (str == null) return 0;
+        if (typeof str != "string") {
+            str += "";
+        }
+        return str.replace(/[^\x00-\xff]/g, "01").length;
+    };
+
+    if (isStr(type)) {
+        switch (type) {
+            case 'eng':
+                len = val.length;
+                break;
+            case 'chi':
+                len = getL(val);
+                break;
+        }
+    } else if (isFun(type)) {
+        len = type(val);
+    }
+
+    return len;
+};
 
 var judge = (function (validate, value, item, $parent) {
     var type = void 0;
@@ -540,7 +578,6 @@ var Field = function () {
                             if (j.name === 'validate') {
                                 item.com = i;
                                 item.name = i.data.attrs['validate-name'];
-                                //item.trigger = Object.assign(this.rule['validate'][item.name] || {}, bind(i.data.attrs));
                                 item.trigger = bind(i.data.attrs.trigger || this.rule['validate'][item.name].trigger);
                                 console.log(item.trigger);
                                 item.validateContext = anlyse(i);
@@ -597,10 +634,9 @@ var Field = function () {
                 var value = datas[i];
                 item.name = i;
                 item.trigger = bind(value.trigger);
-                //item.validateContext = anlyse('', value);
                 item.model = {
                     value: '',
-                    expression: i.replace('$$data-', '')
+                    expression: i.replace(sysConfig.dataName, '')
                 };
                 // 用于target选择不报错
                 item.com = '';

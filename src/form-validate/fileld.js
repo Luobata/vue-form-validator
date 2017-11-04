@@ -4,6 +4,7 @@ import anlyse from './anlyse.js';
 import judge from './judge.js';
 import Watcher from './watcher.js';
 import { check } from './util/index.js';
+import { sysConfig } from './conf.js';
 
 let finds = (items) => {
     return (name) => {
@@ -45,7 +46,6 @@ export default class Field {
                 if (j.name === 'validate') {
                     item.com = i;
                     item.name = i.data.attrs['validate-name'];
-                    //item.trigger = Object.assign(this.rule['validate'][item.name] || {}, bind(i.data.attrs));
                     item.trigger = bind(i.data.attrs.trigger || this.rule['validate'][item.name].trigger);
                     console.log(item.trigger);
                     item.validateContext = anlyse(i);
@@ -72,10 +72,9 @@ export default class Field {
             const value = datas[i];
             item.name = i;
             item.trigger = bind(value.trigger);
-            //item.validateContext = anlyse('', value);
             item.model = {
                 value: '',
-                expression: i.replace('$$data-', ''),
+                expression: i.replace(sysConfig.dataName, ''),
             };
             // 用于target选择不报错
             item.com = '';

@@ -2,6 +2,7 @@ import {
     isEmptyObj,
     isObj,
 } from './util/index.js';
+import { sysConfig } from './conf.js';
 
 const covert = (str) => {
     let key;
@@ -27,7 +28,7 @@ export default (rule) => {
     const add = (obj, objStr) => {
         for (let i in obj) {
             const item = obj[i];
-            const keyStr = (objStr === 'data') ? '$$data-' + i : i;
+            const keyStr = (objStr === 'data') ? sysConfig.dataName + i : i;
             errorText = item.text || '';
             trigger = item.trigger || '';
             rules[objStr][keyStr] = {};

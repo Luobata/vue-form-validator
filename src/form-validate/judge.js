@@ -3,12 +3,38 @@ import {
     isInt,
     isFloat,
     isFun,
+    isStr,
 } from './util/index.js';
+import { userConfig } from './conf.js';
 
 
 const getTarget = (item) => (item.com.elm);
 
-const getLength = () => {
+const getLength = (val) => {
+    const type = userConfig.lengthType;
+    let len = 0;
+    const getL = (str) => {
+        if (str == null) return 0;  
+        if (typeof str != "string"){  
+            str += "";  
+        }  
+        return str.replace(/[^\x00-\xff]/g,"01").length;  
+    };
+
+    if (isStr(type)) {
+        switch (type) {
+            case 'eng':
+            len = val.length;
+            break;
+            case 'chi':
+            len = getL(val);
+            break;
+        }
+    } else if (isFun(type)) {
+        len = type(val);
+    }
+
+    return len;
 };
 
 
