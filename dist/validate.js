@@ -626,12 +626,10 @@ var Field = function () {
                             var j = _step5.value;
 
                             if (j.eve === 'change') {
-                                this.addWatcher(i, j.el);
+                                this.addWatcher(i, j);
                             }
                             if (j.eve === 'blur' || j.eve === 'input') {
-                                //if (!j.el) {
-                                this.addInputWatcher(i, j.eve, j.el);
-                                //}
+                                this.addInputWatcher(i, j);
                             }
                         }
                     } catch (err) {
@@ -666,38 +664,41 @@ var Field = function () {
         }
     }, {
         key: 'addWatcher',
-        value: function addWatcher(item, el) {
+        value: function addWatcher(item, trigger) {
             // change 事件
+            // item 要检验的对象
+            // trigger 触法的对象
             var $parent = this.el.$parent;
-            var element = this.find(el) || item;
-            $parent.$watch(element.model.expression, element.validate);
+            var element = this.find(trigger.el) || item;
+            //$parent.$watch(element.model.expression, item.validate);
+            $parent.$watch(element.model.expression, function (val) {
+                item.validate(item);
+            });
         }
     }, {
         key: 'addInputWatcher',
-        value: function addInputWatcher(item, eve, el) {
+        value: function addInputWatcher(item, trigger) {
             // blur 事件触法条件 input textarea 或者contenteditable元素
-            var element = this.find(el) || item;
+            var element = this.find(trigger.el) || item;
             var elm = element.com.elm;
             var blurElm = check(elm);
+            var $parent = this.el.$parent;
             if (blurElm) {
-                blurElm.addEventListener(eve, function (e) {
-                    //item.validate(this.value);
-                    element.validate(item);
+                blurElm.addEventListener(trigger.eve, function (e) {
+                    item.validate(item);
                 });
             }
         }
     }, {
         key: 'getValidate',
         value: function getValidate(item, key) {
-            var _this = this;
-
             var validate = item.validateContext || {};
             var $parent = this.el.$parent;
             validate = Object.assign(this.rule[key][item.name] || {}, validate);
             console.log(validate);
             return function (item) {
                 var value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
-                var error = judge(validate, value, item, _this.el.$parent);
+                var error = judge(validate, value, item, $parent);
                 if (error.detail.length > 0) {
                     $parent.$set($parent.errors, item.name, true);
                     $parent.$set($parent.errors, item.name + 'Error', error.detail[0].text);
@@ -806,7 +807,7 @@ var directive = (function (Vue) {
     Vue.directive('validate', {
         bind: function bind(el, binding, vnode, oldVnode) {
             var data = init(el);
-            console.log(el);
+            //console.log(el);
             //console.log(vnode.context.$validator);
             // v-model el.__vue__.value;
             // v-model vnode.data.directives[0]
@@ -833,7 +834,7 @@ var mixin = (function (Vue) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     var mixin = {};
-    console.log(Vue.util);
+    //console.log(Vue.util);
 
     mixin.beforeCreate = function () {
         // children中有validate-form才添加

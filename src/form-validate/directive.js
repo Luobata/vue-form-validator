@@ -6,7 +6,7 @@ export default (Vue) => {
     Vue.directive('validate', {
         bind: function (el, binding, vnode, oldVnode) {
             const data = init(el);
-            console.log(el);
+            //console.log(el);
             //console.log(vnode.context.$validator);
             // v-model el.__vue__.value;
             // v-model vnode.data.directives[0]

@@ -2,7 +2,7 @@
     <div>
         <validate-form ref="form" length-type="eng" :rule="rule">
             <input validate-name="input2" v-validate min="5" required trigger="blur;$sel.change"/>
-            <selects validate-name="sel" v-model="data" :options="options" v-validate trigger="change" v-if="a" v-bind:min="data"></selects>
+            <selects validate-name="sel" v-model="data" :options="options" v-validate v-if="a" v-bind:min="data" trigger=""></selects>
             <input validate-name="input" v-model="text" v-validate min="5" max="10" trigger="blur" />
             <span v-show="errors.input2">{{ errors.input2Error }}</span>
         </validate-form>
@@ -50,6 +50,11 @@
                                 text: '超过最大长度'
                             },
                             minlength: 'dd' // 错误的值
+                        },
+                        sel: {
+                            text: 'selectts的错误提示',
+                            //trigger: 'change;$input2.blur', // trigger 没有覆盖回去 bug！
+                            min: 0
                         }
                     },
                     data: {
@@ -57,7 +62,7 @@
                             text: '这是一句无关dom的错误提示',
                             trigger: '$input2.blur',
                             min: 5,
-                            max: 10,
+                            max: 9,
                         },
                         /*c: {
                             text: '关于c的错误提示',

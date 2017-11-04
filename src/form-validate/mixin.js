@@ -2,7 +2,7 @@ import Validator from './validator.js';
 
 export default (Vue, options = {}) => {
     const mixin = {};
-    console.log(Vue.util);
+    //console.log(Vue.util);
 
     mixin.beforeCreate = function () {
         // children中有validate-form才添加

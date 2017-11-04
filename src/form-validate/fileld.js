@@ -87,33 +87,36 @@ export default class Field {
         for (let i of this.item) {
             for (let j of i.trigger) {
                 if (j.eve === 'change') {
-                    this.addWatcher(i, j.el);
+                    this.addWatcher(i, j);
                 }
                 if (j.eve === 'blur' || j.eve === 'input') {
-                    //if (!j.el) {
-                        this.addInputWatcher(i, j.eve, j.el);
-                    //}
+                    this.addInputWatcher(i, j);
                 }
             }
         }
     };
 
-    addWatcher (item, el) {
+    addWatcher (item, trigger) {
         // change 事件
+        // item 要检验的对象
+        // trigger 触法的对象
         const $parent = this.el.$parent;
-        const element = this.find(el) || item;
-        $parent.$watch(element.model.expression, element.validate);
+        const element = this.find(trigger.el) || item;
+        //$parent.$watch(element.model.expression, item.validate);
+        $parent.$watch(element.model.expression, (val) => {
+            item.validate(item);
+        });
     };
 
-    addInputWatcher (item, eve, el) {
+    addInputWatcher (item, trigger) {
         // blur 事件触法条件 input textarea 或者contenteditable元素
-        const element = this.find(el) || item;
+        const element = this.find(trigger.el) || item;
         const elm = element.com.elm;
         const blurElm = check(elm);
+        const $parent = this.el.$parent;
         if (blurElm) {
-            blurElm.addEventListener(eve, function (e) {
-                //item.validate(this.value);
-                element.validate(item);
+            blurElm.addEventListener(trigger.eve, function (e) {
+                item.validate(item);
             });
         }
     };
@@ -125,7 +128,7 @@ export default class Field {
         console.log(validate);
         return (item) => {
             const value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
-            const error = judge(validate, value, item, this.el.$parent);
+            const error = judge(validate, value, item, $parent);
             if (error.detail.length > 0) {
                 $parent.$set($parent.errors, item.name, true);
                 $parent.$set($parent.errors, item.name + 'Error', error.detail[0].text);
