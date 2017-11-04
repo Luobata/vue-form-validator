@@ -36,7 +36,7 @@ export default (rule) => {
                 const value = item[j];
                 const key = covert(j, objStr);
 
-                if (key === 'text' || key === 'trigger') {
+                if (sysConfig.configKey.indexOf(key) ! == -1) {
                     rules[objStr][keyStr][key] = value;
                     continue;
                 }

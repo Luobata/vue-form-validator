@@ -138,7 +138,9 @@ var isFloat = function isFloat(val) {
 };
 
 var sysConfig = {
-    dataName: '$$data-'
+    dataName: '$$data-',
+    reservedWord: [],
+    configKey: ['text', 'trigger', 'config']
 };
 
 /*
@@ -146,6 +148,10 @@ var sysConfig = {
  */
 var userConfig = {
     lengthType: 'eng'
+};
+
+var setUserConfig = function setUserConfig(conf) {
+    return Object.assign(userConfig, conf);
 };
 
 var covert = function covert(str) {
@@ -895,13 +901,14 @@ var mixin = (function (Vue) {
     Vue.mixin(mixin);
 });
 
-function plugin(Vue) {
+function plugin(Vue, conf) {
     if (plugin.installed) {
         console.log('installed');
         return;
     }
     //console.log(Vue.options);
     //console.log(Vue.config);
+    setUserConfig(conf);
     directive(Vue);
     mixin(Vue);
     Vue.component(__$__vue_module__.name, __$__vue_module__);

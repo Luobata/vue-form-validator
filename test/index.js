@@ -10,7 +10,9 @@ import vueRouter from 'vue-router';
 vue.config.devtools = true;
 vue.use(vueResource);
 vue.use(vueRouter);
-vue.use(validate);
+vue.use(validate, {
+    lengthType: 'chi'
+});
 var routes = require('./route.js');
 
 var router = new vueRouter({

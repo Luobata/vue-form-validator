@@ -1,5 +1,7 @@
 export const sysConfig = {
     dataName: '$$data-',
+    reservedWord: [],
+    configKey: ['text', 'trigger', 'config'],
 };
 
 /*
@@ -8,3 +10,5 @@ export const sysConfig = {
 export const userConfig = {
     lengthType: 'eng',
 };
+
+export const setUserConfig = (conf) => (Object.assign(userConfig, conf));
