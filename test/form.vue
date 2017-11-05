@@ -1,6 +1,6 @@
 <template>
     <div>
-        <validate-form ref="form" length-type="eng" :rule="rule">
+        <validate-form ref="form" length-type="eng" :rule="rule" :config="config">
             <input validate-name="input2" v-validate min="5" required trigger="blur;$sel.change"/>
             <selects validate-name="sel" v-model="data" :options="options" v-validate v-if="a" v-bind:min="data"></selects>
             <input validate-name="input" v-model="text" v-validate min="5" max="10" trigger="blur" />
@@ -28,11 +28,17 @@
         data () {
             return {
                 errors: {},
+                config: {
+                    lengthType: 'chi',
+                },
                 rule: {
                     validate: {
                         input2: {
                             text: '这是一句默认的错误提示',
                             trigger: '$input.blur',
+                            config: {
+                                lengthType: 'eng'
+                            },
                             min: 6, // 可以是int or string
                             max: {
                                 text: '超过最大值',

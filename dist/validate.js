@@ -122,7 +122,7 @@ var getChineseLength = function getChineseLength(str) {
     if (typeof str != "string") {
         str += "";
     }
-    return str.replace(/[^\x00-\xff]/g, "01").length;
+    return str.replace(/[^\x00-\xff]/g, '01').length / 2;
 };
 
 var has = function has(obj, key) {
@@ -368,9 +368,10 @@ var createClass = function () {
 var getTarget = function getTarget(item) {
     return item.com.elm;
 };
+var config = userConfig;
 
 var getLength = function getLength(val) {
-    var type = userConfig.lengthType;
+    var type = config.lengthType;
     var len = 0;
 
     if (isStr(type)) {
@@ -389,7 +390,7 @@ var getLength = function getLength(val) {
     return len;
 };
 
-var judge = (function (validate, value, item, $parent) {
+var judge = (function (validate, value, item, $parent, Vue) {
     var type = void 0;
     var val = void 0;
     var length = void 0;
@@ -399,6 +400,8 @@ var judge = (function (validate, value, item, $parent) {
         detail: []
     };
     var text = validate.text || '';
+    Object.assign(config, Vue.config);
+    Object.assign(config, validate.config);
     var cal = function cal(val) {
         if (isFun(val.value)) {
             return val.value.call($parent);
@@ -738,13 +741,15 @@ var Field = function () {
     }, {
         key: 'getValidate',
         value: function getValidate(item, key) {
+            var _this = this;
+
             var validate = item.validateContext || {};
             var $parent = this.el.$parent;
             validate = Object.assign(this.rule[key][item.name] || {}, validate);
             console.log(validate);
             return function (item) {
                 var value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
-                var error = judge(validate, value, item, $parent);
+                var error = judge(validate, value, item, $parent, _this);
                 if (error.detail.length > 0) {
                     $parent.$set($parent.errors, item.name, true);
                     $parent.$set($parent.errors, item.name + 'Error', error.detail[0].text);
@@ -798,7 +803,7 @@ var __vue_module__ = {
     data: function data() {
         return {
             config: {
-                'length-type': 'eng'
+                //'length-type': 'eng'
             },
             field: '',
             rule: ''
@@ -807,8 +812,11 @@ var __vue_module__ = {
 
     methods: {
         configInit: function configInit(attrs) {
+            var config = attrs['config'];
             var lengthType = attrs['length-type'];
-            this.config['length-type'] = lengthType || this.config['length-type'];
+            //this.config['length-type'] = lengthType || this.config['length-type'];
+            config.lengthType = config.lengthType || lengthType;
+            this.config = config;
         },
         ruleInit: function ruleInit(attrs) {
             var rule = attrs.rule;
@@ -917,7 +925,6 @@ function plugin(Vue, conf) {
     Vue.component(__$__vue_module__.name, __$__vue_module__);
 }
 
-/* istanbul ignore if */
 if (typeof window !== 'undefined' && window.Vue) {
     window.Vue.use(plugin);
 }

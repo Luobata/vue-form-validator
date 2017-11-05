@@ -128,7 +128,7 @@ export default class Field {
         console.log(validate);
         return (item) => {
             const value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
-            const error = judge(validate, value, item, $parent);
+            const error = judge(validate, value, item, $parent, this);
             if (error.detail.length > 0) {
                 $parent.$set($parent.errors, item.name, true);
                 $parent.$set($parent.errors, item.name + 'Error', error.detail[0].text);

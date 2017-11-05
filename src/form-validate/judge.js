@@ -10,9 +10,10 @@ import { userConfig } from './conf.js';
 
 
 const getTarget = (item) => (item.com.elm);
+const config = userConfig;
 
 const getLength = (val) => {
-    const type = userConfig.lengthType;
+    const type = config.lengthType;
     let len = 0;
 
     if (isStr(type)) {
@@ -33,7 +34,7 @@ const getLength = (val) => {
 
 
 
-export default (validate, value, item, $parent) => {
+export default (validate, value, item, $parent, Vue) => {
     let type;
     let val;
     let length;
@@ -43,6 +44,8 @@ export default (validate, value, item, $parent) => {
         detail: []
     };
     let text = validate.text || '';
+    Object.assign(config, Vue.config);
+    Object.assign(config, validate.config);
     const cal = (val) => {
         if (isFun(val.value)) {
             return val.value.call($parent);

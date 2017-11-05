@@ -44,5 +44,5 @@ export const getChineseLength = (str) => {
     if (typeof str != "string"){  
         str += "";  
     }  
-    return str.replace(/[^\x00-\xff]/g,"01").length;  
+    return str.replace(/[^\x00-\xff]/g, '01').length / 2;  
 };

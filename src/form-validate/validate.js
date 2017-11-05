@@ -5,7 +5,7 @@ export default {
     data () {
         return {
             config: {
-                'length-type': 'eng'
+                //'length-type': 'eng'
             },
             field: '',
             rule: '',
@@ -13,8 +13,11 @@ export default {
     },
     methods: {
         configInit (attrs) {
+            const config = attrs['config'];
             const lengthType = attrs['length-type'];
-            this.config['length-type'] = lengthType || this.config['length-type'];
+            //this.config['length-type'] = lengthType || this.config['length-type'];
+            config.lengthType = config.lengthType || lengthType;
+            this.config = config;
         },
         ruleInit (attrs) {
             const rule = attrs.rule;
