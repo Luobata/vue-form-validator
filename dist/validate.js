@@ -115,6 +115,16 @@ var isFun = function isFun(val) {
     return Object.prototype.toString.call(val) === '[object Function]';
 };
 
+
+
+var getChineseLength = function getChineseLength(str) {
+    if (str == null) return 0;
+    if (typeof str != "string") {
+        str += "";
+    }
+    return str.replace(/[^\x00-\xff]/g, "01").length;
+};
+
 var has = function has(obj, key) {
     return obj.hasOwnProperty(key);
 };
@@ -186,7 +196,7 @@ var rule = (function (rule) {
                 var value = item[j];
                 var key = covert(j, objStr);
 
-                if (key === 'text' || key === 'trigger') {
+                if (sysConfig.configKey.indexOf(key) !== -1) {
                     rules[objStr][keyStr][key] = value;
                     continue;
                 }
@@ -362,13 +372,6 @@ var getTarget = function getTarget(item) {
 var getLength = function getLength(val) {
     var type = userConfig.lengthType;
     var len = 0;
-    var getL = function getL(str) {
-        if (str == null) return 0;
-        if (typeof str != "string") {
-            str += "";
-        }
-        return str.replace(/[^\x00-\xff]/g, "01").length;
-    };
 
     if (isStr(type)) {
         switch (type) {
@@ -376,7 +379,7 @@ var getLength = function getLength(val) {
                 len = val.length;
                 break;
             case 'chi':
-                len = getL(val);
+                len = getChineseLength(val);
                 break;
         }
     } else if (isFun(type)) {
@@ -914,6 +917,7 @@ function plugin(Vue, conf) {
     Vue.component(__$__vue_module__.name, __$__vue_module__);
 }
 
+/* istanbul ignore if */
 if (typeof window !== 'undefined' && window.Vue) {
     window.Vue.use(plugin);
 }
