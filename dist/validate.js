@@ -293,6 +293,7 @@ var anlyse = (function (vNode, obj) {
         };
     }
 
+    // 数字的可以考虑合在一起
     // 数字 可以是字符串数字
     // int or float
     if (has(attrs, 'number')) {
@@ -308,6 +309,31 @@ var anlyse = (function (vNode, obj) {
             value: attrs['Number'] || 'int',
             text: text
         };
+    }
+
+    // 正数 含0
+    if (has(attrs, 'positive')) {
+        validate['positive'] = true;
+    }
+
+    // 正数 不含0
+    if (has(attrs, 'Positive')) {
+        validate['Positive'] = true;
+    }
+
+    // 负数 含0
+    if (has(attrs, 'negative')) {
+        validate['negative'] = true;
+    }
+
+    // 负数 不含0
+    if (has(attrs, 'Negative')) {
+        validate['Negative'] = true;
+    }
+
+    // email
+    if (has(attrs, 'email')) {
+        validate['email'] = true;
     }
 
     if (has(attrs, 'max-float-length')) {
@@ -390,10 +416,22 @@ var getLength = function getLength(val) {
     return len;
 };
 
+var getFloatLength = function getFloatLength(val) {
+    var floatNum = val.match(/.*?[\.](\d)/);
+    var len = 0;
+    if (floatNum && floatNum.length && floatNum[1]) {
+        len = floatNum[1].length;
+    }
+
+    return len;
+};
+
 var judge = (function (validate, value, item, $parent, Vue) {
     var type = void 0;
     var val = void 0;
     var length = void 0;
+    var floatLen = void 0;
+    var key = void 0;
     var target = getTarget(item);
     var errors = {
         type: '',
@@ -437,6 +475,10 @@ var judge = (function (validate, value, item, $parent, Vue) {
         length = getLength(value);
     }
 
+    if (has(validate, 'min-float-length') || has(validate, 'max-float-length') || has(validate, 'Min-float-length') || has(validate, 'Max-float-length')) {
+        floatLen = getFloatLength(value);
+    }
+
     switch (type) {
         case 'number':
             val = parseFloat(value, 10);
@@ -452,36 +494,64 @@ var judge = (function (validate, value, item, $parent, Vue) {
         return errors;
     }
 
-    if (has(validate, 'min') && val <= cal(validate['min'])) {
-        errors.detail.push(new Error('min', cal(validate['min']), value, target));
+    key = 'min';
+    if (has(validate, key) && val <= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), value, target));
     }
 
-    if (has(validate, 'max') && val >= cal(validate['max'])) {
-        errors.detail.push(new Error('max', cal(validate['max']), value, target));
+    key = 'max';
+    if (has(validate, key) && val >= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), value, target));
     }
 
-    if (has(validate, 'Min') && val < cal(validate['Min'])) {
-        errors.detail.push(new Error('Min', cal(validate['Min']), value, target));
+    key = 'Min';
+    if (has(validate, key) && val < cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), value, target));
     }
 
-    if (has(validate, 'Max') && val > cal(validate['Max'])) {
-        errors.detail.push(new Error('Max', cal(validate['Max']), value, target));
+    key = 'Max';
+    if (has(validate, key) && val > cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), value, target));
     }
 
-    if (has(validate, 'min-length') && length <= cal(validate['min-length'])) {
-        errors.detail.push(new Error('min-length', cal(validate['min-length']), length, target));
+    key = 'min-length';
+    if (has(validate, key) && length <= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), length, target));
     }
 
-    if (has(validate, 'max-length') && length >= cal(validate['max-length'])) {
-        errors.detail.push(new Error('max-length', cal(validate['max-length']), length, target));
+    key = 'max-length';
+    if (has(validate, key) && length >= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), length, target));
     }
 
-    if (has(validate, 'Min-length') && length < cal(validate['Min-length'])) {
-        errors.detail.push(new Error('Min-length', cal(validate['Min-length']), length, target));
+    key = 'Min-length';
+    if (has(validate, key) && length < cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), length, target));
     }
 
-    if (has(validate, 'Max-length') && length > cal(validate['Max-length'])) {
-        errors.detail.push(new Error('Max-length', cal(validate['Max-length']), length, target));
+    key = 'Max-length';
+    if (has(validate, key) && length > cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), length, target));
+    }
+
+    key = 'min-float-length';
+    if (has(validate, key) && floatLen <= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), floatLen, target));
+    }
+
+    key = 'max-float-length';
+    if (has(validate, key) && floatLen >= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), floatLen, target));
+    }
+
+    key = 'Min-float-length';
+    if (has(validate, key) && floatLen < cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), floatLen, target));
+    }
+
+    key = 'Max-float-length';
+    if (has(validate, key) && floatLen > cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), floatLen, target));
     }
 
     if (has(validate, 'required') && (val === undefined || val === null || val === '' || isNaN(val))) {

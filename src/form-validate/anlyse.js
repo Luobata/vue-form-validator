@@ -73,6 +73,7 @@ export default (vNode, obj) => {
         };
     }
 
+    // 数字的可以考虑合在一起
     // 数字 可以是字符串数字
     // int or float
     if (has(attrs, 'number')) {
@@ -88,6 +89,31 @@ export default (vNode, obj) => {
             value: attrs['Number'] || 'int',
             text,
         };
+    }
+
+    // 正数 含0
+    if (has(attrs, 'positive')) {
+        validate['positive'] = true;
+    }
+
+    // 正数 不含0
+    if (has(attrs, 'Positive')) {
+        validate['Positive'] = true;
+    }
+
+    // 负数 含0
+    if (has(attrs, 'negative')) {
+        validate['negative'] = true;
+    }
+
+    // 负数 不含0
+    if (has(attrs, 'Negative')) {
+        validate['Negative'] = true;
+    }
+
+    // email
+    if (has(attrs, 'email')) {
+        validate['email'] = true;
     }
 
     if (has(attrs, 'max-float-length')) {

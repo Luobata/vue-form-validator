@@ -32,12 +32,24 @@ const getLength = (val) => {
     return len;
 };
 
+const getFloatLength = (val) => {
+    const floatNum = val.match(/.*?[\.](\d)/);
+    let len = 0;
+    if (floatNum && floatNum.length && floatNum[1]) {
+        len = floatNum[1].length;
+    }
+
+    return len;
+};
+
 
 
 export default (validate, value, item, $parent, Vue) => {
     let type;
     let val;
     let length;
+    let floatLen;
+    let key;
     let target = getTarget(item);
     let errors = {
         type: '',
@@ -86,6 +98,13 @@ export default (validate, value, item, $parent, Vue) => {
         length = getLength(value);
     }
 
+    if (has(validate, 'min-float-length') || 
+        has(validate, 'max-float-length') ||
+        has(validate, 'Min-float-length') ||
+        has(validate, 'Max-float-length')
+    ) {
+        floatLen = getFloatLength(value);
+    }
 
     switch (type) {
         case 'number':
@@ -104,36 +123,64 @@ export default (validate, value, item, $parent, Vue) => {
         return errors;
     }
 
-    if (has(validate, 'min') && val <= cal(validate['min'])) {
-        errors.detail.push(new Error('min', cal(validate['min']), value, target));
+    key = 'min';
+    if (has(validate, key) && val <= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), value, target));
     }
 
-    if (has(validate, 'max') && val >= cal(validate['max'])) {
-        errors.detail.push(new Error('max', cal(validate['max']), value, target));
+    key = 'max';
+    if (has(validate, key) && val >= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), value, target));
     }
 
-    if (has(validate, 'Min') && val < cal(validate['Min'])) {
-        errors.detail.push(new Error('Min', cal(validate['Min']), value, target));
+    key = 'Min';
+    if (has(validate, key) && val < cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), value, target));
     }
 
-    if (has(validate, 'Max') && val > cal(validate['Max'])) {
-        errors.detail.push(new Error('Max', cal(validate['Max']), value, target));
+    key = 'Max';
+    if (has(validate, key) && val > cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), value, target));
     }
 
-    if (has(validate, 'min-length') && length <= cal(validate['min-length'])) {
-        errors.detail.push(new Error('min-length', cal(validate['min-length']), length, target));
+    key = 'min-length';
+    if (has(validate, key) && length <= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), length, target));
     }
 
-    if (has(validate, 'max-length') && length >= cal(validate['max-length'])) {
-        errors.detail.push(new Error('max-length', cal(validate['max-length']), length, target));
+    key = 'max-length';
+    if (has(validate, key) && length >= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), length, target));
     }
 
-    if (has(validate, 'Min-length') && length < cal(validate['Min-length'])) {
-        errors.detail.push(new Error('Min-length', cal(validate['Min-length']), length, target));
+    key = 'Min-length';
+    if (has(validate, key) && length < cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), length, target));
     }
 
-    if (has(validate, 'Max-length') && length > cal(validate['Max-length'])) {
-        errors.detail.push(new Error('Max-length', cal(validate['Max-length']), length, target));
+    key = 'Max-length';
+    if (has(validate, key) && length > cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), length, target));
+    }
+
+    key = 'min-float-length';
+    if (has(validate, key) && floatLen <= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), floatLen, target));
+    }
+
+    key = 'max-float-length';
+    if (has(validate, key) && floatLen >= cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), floatLen, target));
+    }
+
+    key = 'Min-float-length';
+    if (has(validate, key) && floatLen < cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), floatLen, target));
+    }
+
+    key = 'Max-float-length';
+    if (has(validate, key) && floatLen > cal(validate[key])) {
+        errors.detail.push(new Error(key, cal(validate[key]), floatLen, target));
     }
 
     if (has(validate, 'required') &&
