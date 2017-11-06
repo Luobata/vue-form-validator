@@ -1,8 +1,8 @@
+/* eslint-disable */
 const init = (el) => {
     const name = el.getAttribute('validate-name');
 };
 
-/* eslint-disable */
 export default (Vue) => {
     Vue.directive('validate', {
         bind(el, binding, vnode, oldVnode) {

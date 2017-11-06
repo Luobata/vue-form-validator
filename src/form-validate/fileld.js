@@ -2,13 +2,16 @@ import bind from './bind';
 import rule from './rule';
 import anlyse from './anlyse';
 import judge from './judge';
-import { check } from './util/index';
+import {
+    check,
+    has,
+} from './util/index';
 import { sysConfig } from './conf';
 
 let globalId = 0;
 
 const finds = items => (name) => {
-    if (!name) return undefined;
+    if (!name) return false;
 
     for (const i of items) {
         if (i.name === name) {
@@ -68,6 +71,7 @@ export default class Field {
     dataInit() {
         const datas = this.rule.data;
         for (const i in datas) {
+            if (!has(datas, i)) continue;
             const item = {};
             const value = datas[i];
             item.name = i;
@@ -114,16 +118,7 @@ export default class Field {
     addInputWatcher(item, trigger) {
         // blur 事件触法条件 input textarea 或者contenteditable元素
         const element = this.find(trigger.el) || item;
-        // const [
-        //    //element,
-        //    elm,
-        //    blurElm,
-        // ] = [
-        //    //this.find(trigger.el) || item,
-        //    element.com.elm,
-        //    check(elm),
-        // ];
-        const elm = element.com.elm;
+        const { elm } = element.com;
         const blurElm = check(elm);
         if (blurElm) {
             blurElm.addEventListener(trigger.eve, () => {
@@ -134,7 +129,7 @@ export default class Field {
 
     getValidate(items, key) {
         let validate = items.validateContext || {};
-        const $parent = this.el.$parent;
+        const { $parent } = this.el;
         validate = Object.assign(this.rule[key][items.name] || {}, validate);
         return (item) => {
             const value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;

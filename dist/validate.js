@@ -130,7 +130,12 @@ var getChineseLength = function getChineseLength(str) {
     if (typeof str !== 'string') {
         str += '';
     }
-    return str.replace(/[^\x00-\xff]/g, '01').length / 2;
+    var min = /\\x00/;
+    var max = /\\xff/;
+    var regrex = new RegExp('/[^' + min + '-' + max + ']/g');
+    // const regrex = new RegExp(pattern);
+
+    return str.replace(regrex, '01').length / 2;
 };
 
 var isInt = function isInt(val) {
@@ -427,7 +432,7 @@ var getLength = function getLength(val) {
 };
 
 var getFloatLength = function getFloatLength(val) {
-    var reg = /.*?[\.](\d)/;
+    var reg = /.*?[.](\d*)/;
     var floatNum = val.match(reg);
     var len = 0;
     if (floatNum && floatNum.length && floatNum[1]) {
@@ -438,6 +443,7 @@ var getFloatLength = function getFloatLength(val) {
 };
 
 var isNaN = Number.isNaN;
+
 
 var judge = (function (validate, value, item, $parent, Vue) {
     var type = void 0;
@@ -454,10 +460,10 @@ var judge = (function (validate, value, item, $parent, Vue) {
     Object.assign(config, Vue.config);
     Object.assign(config, validate.config);
     var cal = function cal(vals) {
-        if (isFun(vals.valsue)) {
-            return vals.valsue.call($parent);
+        if (isFun(vals.value)) {
+            return vals.value.call($parent);
         }
-        return vals.valsue;
+        return vals.value;
     };
 
     var Error =
@@ -596,7 +602,7 @@ var globalId = 0;
 
 var finds = function finds(items) {
     return function (name) {
-        if (!name) return undefined;
+        if (!name) return false;
 
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -725,6 +731,7 @@ var Field = function () {
         value: function dataInit() {
             var datas = this.rule.data;
             for (var i in datas) {
+                if (!has(datas, i)) continue;
                 var item = {};
                 var value = datas[i];
                 item.name = i;
@@ -814,16 +821,8 @@ var Field = function () {
         value: function addInputWatcher(item, trigger) {
             // blur 事件触法条件 input textarea 或者contenteditable元素
             var element = this.find(trigger.el) || item;
-            // const [
-            //    //element,
-            //    elm,
-            //    blurElm,
-            // ] = [
-            //    //this.find(trigger.el) || item,
-            //    element.com.elm,
-            //    check(elm),
-            // ];
             var elm = element.com.elm;
+
             var blurElm = check(elm);
             if (blurElm) {
                 blurElm.addEventListener(trigger.eve, function () {
@@ -838,6 +837,7 @@ var Field = function () {
 
             var validate = items.validateContext || {};
             var $parent = this.el.$parent;
+
             validate = Object.assign(this.rule[key][items.name] || {}, validate);
             return function (item) {
                 var value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
@@ -904,14 +904,16 @@ var __vue_module__ = {
 
     methods: {
         configInit: function configInit(attrs) {
-            var config = attrs.config;
-            var lengthType = attrs['length-type'];
+            var config = attrs.config,
+                lengthType = attrs.lengthType;
             // this.config['length-type'] = lengthType || this.config['length-type'];
+
             config.lengthType = config.lengthType || lengthType;
             this.config = config;
         },
         ruleInit: function ruleInit(attrs) {
             var rule = attrs.rule;
+
             this.rule = rule;
         },
         validateAll: function validateAll() {
@@ -921,6 +923,8 @@ var __vue_module__ = {
     mounted: function mounted() {
         var components = this.$slots.default;
         var attrs = this.$vnode.data.attrs;
+        // const attrs = this.$vnode.data.attrs;
+
         this.configInit(attrs);
         this.ruleInit(attrs);
         this.field = new Field(components, this);
@@ -945,11 +949,11 @@ var __$__vue_module__ = Object.assign(__vue_module__, { render: function render(
     }, staticRenderFns: [] });
 __$__vue_module__.prototype = __vue_module__.prototype;
 
+/* eslint-disable */
 var init = function init(el) {
     var name = el.getAttribute('validate-name');
 };
 
-/* eslint-disable */
 var directive = (function (Vue) {
     Vue.directive('validate', {
         bind: function bind(el, binding, vnode, oldVnode) {

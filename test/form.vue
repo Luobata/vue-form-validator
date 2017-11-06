@@ -59,8 +59,8 @@
                         },
                         sel: {
                             text: 'selectts的错误提示',
-                            trigger: 'change;$input2.blur', // trigger 没有覆盖回去 bug！
-                            min: 0
+                            trigger: 'change;$input2.blur',
+                            min: 3
                         }
                     },
                     data: {

@@ -27,5 +27,10 @@ export const getChineseLength = (str) => {
     if (typeof str !== 'string') {
         str += '';
     }
-    return str.replace(/[^\x00-\xff]/g, '01').length / 2;
+    const min = /\\x00/;
+    const max = /\\xff/;
+    const regrex = new RegExp(`/[^${min}-${max}]/g`);
+    // const regrex = new RegExp(pattern);
+
+    return str.replace(regrex, '01').length / 2;
 };

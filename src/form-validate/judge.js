@@ -35,7 +35,7 @@ const getLength = (val) => {
 };
 
 const getFloatLength = (val) => {
-    const reg = /.*?[\.](\d)/;
+    const reg = /.*?[.](\d*)/;
     const floatNum = val.match(reg);
     let len = 0;
     if (floatNum && floatNum.length && floatNum[1]) {
@@ -45,7 +45,7 @@ const getFloatLength = (val) => {
     return len;
 };
 
-const isNaN = Number.isNaN;
+const { isNaN } = Number;
 
 
 export default (validate, value, item, $parent, Vue) => {
@@ -63,10 +63,10 @@ export default (validate, value, item, $parent, Vue) => {
     Object.assign(config, Vue.config);
     Object.assign(config, validate.config);
     const cal = (vals) => {
-        if (isFun(vals.valsue)) {
-            return vals.valsue.call($parent);
+        if (isFun(vals.value)) {
+            return vals.value.call($parent);
         }
-        return vals.valsue;
+        return vals.value;
     };
 
     class Error {
