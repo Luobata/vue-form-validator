@@ -1,14 +1,16 @@
-import { 
-    isEmptyObj,
+import {
     isObj,
-} from './util/index.js';
-import { sysConfig } from './conf.js';
+} from './util/index';
+import { sysConfig } from './conf';
 
 const covert = (str) => {
     let key;
     switch (str) {
-        case 'minlength':
+    case 'minlength':
         key = 'min-length';
+        break;
+    default:
+        break;
     }
     key = str.replace(/([min|max|Min|Max])(length)/, '$1-$2');
     return key;
@@ -17,22 +19,24 @@ const covert = (str) => {
 export default (rule) => {
     if (!isObj(rule)) return {};
 
-    let errorText; 
-    let validate = rule.validate || {};
-    let data = rule.data || {};
-    let trigger; 
-    let rules = {
+    let errorText;
+    // let trigger;
+    const validate = rule.validate || {};
+    const data = rule.data || {};
+    const rules = {
         validate: {},
         data: {},
     };
     const add = (obj, objStr) => {
-        for (let i in obj) {
+        for (const i in obj) {
+            if (!{}.hasOwnProperty.call(obj, i)) continue;
             const item = obj[i];
             const keyStr = (objStr === 'data') ? sysConfig.dataName + i : i;
             errorText = item.text || '';
-            trigger = item.trigger || '';
+            // trigger = item.trigger || '';
             rules[objStr][keyStr] = {};
-            for (let j in item) {
+            for (const j in item) {
+                if (!{}.hasOwnProperty.call(item, j)) continue;
                 const value = item[j];
                 const key = covert(j, objStr);
 
@@ -55,7 +59,6 @@ export default (rule) => {
 
     add(validate, 'validate');
     add(data, 'data');
-    console.log(rules);
 
     return rules;
 };

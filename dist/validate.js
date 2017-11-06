@@ -25,7 +25,9 @@ var triggerAnalyse = function triggerAnalyse(triggerStr) {
             var eve = regArr[2];
 
             if (eventType.indexOf(eve) === -1) {
+                /* eslint-disable no-console */
                 console.error(eve + ' is not a correct event type');
+                /* eslint-disable no-console */
                 continue;
             }
             arr.push({ el: el, eve: eve });
@@ -49,15 +51,19 @@ var triggerAnalyse = function triggerAnalyse(triggerStr) {
 };
 
 var trigger = (function (trigger) {
-    //const trigger = el.trigger;
+    // const trigger = el.trigger;
     var triggerArr = triggerAnalyse(trigger);
 
     return triggerArr;
 });
 
 var bind = (function (tri) {
-    return trigger(tri);
+  return trigger(tri);
 });
+
+var has = function has(obj, key) {
+    return {}.hasOwnProperty.call(obj, key);
+};
 
 var check = function check(elm) {
     var elements = ['input', 'textarea'];
@@ -93,7 +99,9 @@ var check = function check(elm) {
     }
 
     if (!dom) {
+        /* eslint-disable no-console */
         console.error('event blur must has input or textarea');
+        /* eslint-disable no-console */
     }
 
     return dom;
@@ -119,14 +127,10 @@ var isFun = function isFun(val) {
 
 var getChineseLength = function getChineseLength(str) {
     if (str == null) return 0;
-    if (typeof str != "string") {
-        str += "";
+    if (typeof str !== 'string') {
+        str += '';
     }
     return str.replace(/[^\x00-\xff]/g, '01').length / 2;
-};
-
-var has = function has(obj, key) {
-    return obj.hasOwnProperty(key);
 };
 
 var isInt = function isInt(val) {
@@ -169,6 +173,9 @@ var covert = function covert(str) {
     switch (str) {
         case 'minlength':
             key = 'min-length';
+            break;
+        default:
+            break;
     }
     key = str.replace(/([min|max|Min|Max])(length)/, '$1-$2');
     return key;
@@ -178,21 +185,23 @@ var rule = (function (rule) {
     if (!isObj(rule)) return {};
 
     var errorText = void 0;
+    // let trigger;
     var validate = rule.validate || {};
     var data = rule.data || {};
-    var trigger = void 0;
     var rules = {
         validate: {},
         data: {}
     };
     var add = function add(obj, objStr) {
         for (var i in obj) {
+            if (!{}.hasOwnProperty.call(obj, i)) continue;
             var item = obj[i];
             var keyStr = objStr === 'data' ? sysConfig.dataName + i : i;
             errorText = item.text || '';
-            trigger = item.trigger || '';
+            // trigger = item.trigger || '';
             rules[objStr][keyStr] = {};
             for (var j in item) {
+                if (!{}.hasOwnProperty.call(item, j)) continue;
                 var value = item[j];
                 var key = covert(j, objStr);
 
@@ -215,7 +224,6 @@ var rule = (function (rule) {
 
     add(validate, 'validate');
     add(data, 'data');
-    console.log(rules);
 
     return rules;
 });
@@ -223,34 +231,34 @@ var rule = (function (rule) {
 var anlyse = (function (vNode, obj) {
     var attrs = obj || vNode.data.attrs;
     var validate = {};
-    var text = attrs['text'] || '';
+    var text = attrs.text || '';
 
     // 最小值 必须是数字 大写为不包括边界值
     if (has(attrs, 'min')) {
-        validate['min'] = {
-            value: attrs['min'],
+        validate.min = {
+            value: attrs.min,
             text: text
         };
     }
 
     if (has(attrs, 'Min')) {
-        validate['Min'] = {
-            value: attrs['Min'],
+        validate.Min = {
+            value: attrs.Min,
             text: text
         };
     }
 
     // 最大值 必须是数字
     if (has(attrs, 'max')) {
-        validate['max'] = {
-            value: attrs['max'],
+        validate.max = {
+            value: attrs.max,
             text: text
         };
     }
 
     if (has(attrs, 'Max')) {
-        validate['Max'] = {
-            value: attrs['Max'],
+        validate.Max = {
+            value: attrs.Max,
             text: text
         };
     }
@@ -287,7 +295,7 @@ var anlyse = (function (vNode, obj) {
 
     // 必填
     if (has(attrs, 'required')) {
-        validate['required'] = {
+        validate.required = {
             value: true,
             text: text
         };
@@ -297,43 +305,43 @@ var anlyse = (function (vNode, obj) {
     // 数字 可以是字符串数字
     // int or float
     if (has(attrs, 'number')) {
-        validate['number'] = {
-            value: attrs['number'] || 'int',
+        validate.number = {
+            value: attrs.number || 'int',
             text: text
         };
     }
 
     // 数字 不能是字符串数字
     if (has(attrs, 'Number')) {
-        validate['Number'] = {
-            value: attrs['Number'] || 'int',
+        validate.Number = {
+            value: attrs.Number || 'int',
             text: text
         };
     }
 
     // 正数 含0
     if (has(attrs, 'positive')) {
-        validate['positive'] = true;
+        validate.positive = true;
     }
 
     // 正数 不含0
     if (has(attrs, 'Positive')) {
-        validate['Positive'] = true;
+        validate.Positive = true;
     }
 
     // 负数 含0
     if (has(attrs, 'negative')) {
-        validate['negative'] = true;
+        validate.negative = true;
     }
 
     // 负数 不含0
     if (has(attrs, 'Negative')) {
-        validate['Negative'] = true;
+        validate.Negative = true;
     }
 
     // email
     if (has(attrs, 'email')) {
-        validate['email'] = true;
+        validate.email = true;
     }
 
     if (has(attrs, 'max-float-length')) {
@@ -408,6 +416,8 @@ var getLength = function getLength(val) {
             case 'chi':
                 len = getChineseLength(val);
                 break;
+            default:
+                break;
         }
     } else if (isFun(type)) {
         len = type(val);
@@ -417,7 +427,8 @@ var getLength = function getLength(val) {
 };
 
 var getFloatLength = function getFloatLength(val) {
-    var floatNum = val.match(/.*?[\.](\d)/);
+    var reg = /.*?[\.](\d)/;
+    var floatNum = val.match(reg);
     var len = 0;
     if (floatNum && floatNum.length && floatNum[1]) {
         len = floatNum[1].length;
@@ -425,6 +436,8 @@ var getFloatLength = function getFloatLength(val) {
 
     return len;
 };
+
+var isNaN = Number.isNaN;
 
 var judge = (function (validate, value, item, $parent, Vue) {
     var type = void 0;
@@ -440,21 +453,21 @@ var judge = (function (validate, value, item, $parent, Vue) {
     var text = validate.text || '';
     Object.assign(config, Vue.config);
     Object.assign(config, validate.config);
-    var cal = function cal(val) {
-        if (isFun(val.value)) {
-            return val.value.call($parent);
-        } else {
-            return val.value;
+    var cal = function cal(vals) {
+        if (isFun(vals.valsue)) {
+            return vals.valsue.call($parent);
         }
+        return vals.valsue;
     };
 
     var Error =
-    //errorTpl = {
+    // errorTpl = {
     //    key: '', // error key like min max
     //    value: '', // key value
     //    actual: '', // actual value
-    //};
+    // };
 
+    /* eslint-disable no-shadow */
     function Error(key, value, actual, target) {
         classCallCheck(this, Error);
 
@@ -464,8 +477,6 @@ var judge = (function (validate, value, item, $parent, Vue) {
         this.target = target;
         this.text = validate[key].text || text;
     };
-
-    
 
     if (has(validate, 'min') || has(validate, 'max') || has(validate, 'Min') || has(validate, 'Max')) {
         type = 'number';
@@ -558,21 +569,21 @@ var judge = (function (validate, value, item, $parent, Vue) {
         errors.detail.push(new Error('required', '', value, target));
     }
 
-    if (validate['number'] === 'int') {
+    if (validate.number === 'int') {
         if (isNaN(parseInt(val, 10))) {
             errors.detail.push(new Error('number', '', val, target));
         }
-    } else if (validate['number'] === 'float') {
+    } else if (validate.number === 'float') {
         if (isNaN(parseFloat(val, 10))) {
             errors.detail.push(new Error('number', '', val, target));
         }
     }
 
-    if (validate['Number'] === 'int') {
+    if (validate.Number === 'int') {
         if (isInt(val)) {
             errors.detail.push(new Error('Number', '', val, target));
         }
-    } else if (validate['Number'] === 'float') {
+    } else if (validate.Number === 'float') {
         if (isFloat(val)) {
             errors.detail.push(new Error('Number', '', val, target));
         }
@@ -580,6 +591,8 @@ var judge = (function (validate, value, item, $parent, Vue) {
 
     return errors;
 });
+
+var globalId = 0;
 
 var finds = function finds(items) {
     return function (name) {
@@ -593,7 +606,7 @@ var finds = function finds(items) {
             for (var _iterator = items[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                 var i = _step.value;
 
-                if (i.name == name) {
+                if (i.name === name) {
                     return i;
                 }
             }
@@ -615,10 +628,10 @@ var finds = function finds(items) {
 };
 
 var Field = function () {
-    //item: Array;
-    //el: Vue;
-    //rule: Object;
-    //find: Function;
+    // item: Array;
+    // el: Vue;
+    // rule: Object;
+    // find: Function;
 
     function Field(components, el) {
         classCallCheck(this, Field);
@@ -656,12 +669,10 @@ var Field = function () {
                         for (var _iterator3 = dir[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
                             var j = _step3.value;
 
-
                             if (j.name === 'validate') {
                                 item.com = i;
                                 item.name = i.data.attrs['validate-name'];
-                                item.trigger = bind(i.data.attrs.trigger || this.rule['validate'][item.name].trigger);
-                                console.log(item.trigger);
+                                item.trigger = bind(i.data.attrs.trigger || this.rule.validate[item.name].trigger);
                                 item.validateContext = anlyse(i);
                             }
 
@@ -689,6 +700,8 @@ var Field = function () {
 
                     if (item.com) {
                         item.validate = this.getValidate(item, 'validate');
+                        item.id = globalId;
+                        globalId += 1;
                         this.item.push(item);
                     }
                 }
@@ -724,7 +737,6 @@ var Field = function () {
                 item.com = '';
                 item.validate = this.getValidate(item, 'data');
                 this.item.push(item);
-                console.log(item);
             }
         }
     }, {
@@ -787,10 +799,13 @@ var Field = function () {
         value: function addWatcher(item, trigger) {
             // change 事件
             // item 要检验的对象
-            // trigger 触法的对象
-            var $parent = this.el.$parent;
-            var element = this.find(trigger.el) || item;
-            $parent.$watch(element.model.expression, function (val) {
+            var _ref = [this.el.$parent, this.find(trigger.el) || item],
+                $parent = _ref[0],
+                element = _ref[1];
+            // const $parent = this.el.$parent;
+            // const element = this.find(trigger.el) || item;
+
+            $parent.$watch(element.model.expression, function () {
                 item.validate(item);
             });
         }
@@ -799,24 +814,31 @@ var Field = function () {
         value: function addInputWatcher(item, trigger) {
             // blur 事件触法条件 input textarea 或者contenteditable元素
             var element = this.find(trigger.el) || item;
+            // const [
+            //    //element,
+            //    elm,
+            //    blurElm,
+            // ] = [
+            //    //this.find(trigger.el) || item,
+            //    element.com.elm,
+            //    check(elm),
+            // ];
             var elm = element.com.elm;
             var blurElm = check(elm);
-            var $parent = this.el.$parent;
             if (blurElm) {
-                blurElm.addEventListener(trigger.eve, function (e) {
+                blurElm.addEventListener(trigger.eve, function () {
                     item.validate(item);
                 });
             }
         }
     }, {
         key: 'getValidate',
-        value: function getValidate(item, key) {
+        value: function getValidate(items, key) {
             var _this = this;
 
-            var validate = item.validateContext || {};
+            var validate = items.validateContext || {};
             var $parent = this.el.$parent;
-            validate = Object.assign(this.rule[key][item.name] || {}, validate);
-            console.log(validate);
+            validate = Object.assign(this.rule[key][items.name] || {}, validate);
             return function (item) {
                 var value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
                 var error = judge(validate, value, item, $parent, _this);
@@ -873,7 +895,7 @@ var __vue_module__ = {
     data: function data() {
         return {
             config: {
-                //'length-type': 'eng'
+                // 'length-type': 'eng'
             },
             field: '',
             rule: ''
@@ -882,9 +904,9 @@ var __vue_module__ = {
 
     methods: {
         configInit: function configInit(attrs) {
-            var config = attrs['config'];
+            var config = attrs.config;
             var lengthType = attrs['length-type'];
-            //this.config['length-type'] = lengthType || this.config['length-type'];
+            // this.config['length-type'] = lengthType || this.config['length-type'];
             config.lengthType = config.lengthType || lengthType;
             this.config = config;
         },
@@ -927,19 +949,20 @@ var init = function init(el) {
     var name = el.getAttribute('validate-name');
 };
 
+/* eslint-disable */
 var directive = (function (Vue) {
     Vue.directive('validate', {
         bind: function bind(el, binding, vnode, oldVnode) {
             var data = init(el);
-            //console.log(el);
-            //console.log(vnode.context.$validator);
+            // console.log(el);
+            // console.log(vnode.context.$validator);
             // v-model el.__vue__.value;
             // v-model vnode.data.directives[0]
-            //el.addEventListener('blur', function (e) {
+            // el.addEventListener('blur', function (e) {
             //    console.log(e.target.value);
-            //});
-            //console.log(el.__vue__);
-            //console.log(vnode.data.directives);
+            // });
+            // console.log(el.__vue__);
+            // console.log(vnode.data.directives);
         },
         componentUpdated: function componentUpdated(el) {
             // console.log(2, el);
@@ -949,28 +972,31 @@ var directive = (function (Vue) {
         }
     });
 });
+/* eslint-disable */
 
-var _class = function _class(el) {
+var _class = function _class() {
     classCallCheck(this, _class);
+
+    this.init = 1;
 };
 
 var mixin = (function (Vue) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     var mixin = {};
-    //console.log(Vue.util);
+    // console.log(Vue.util);
 
     mixin.beforeCreate = function () {
         // children中有validate-form才添加
         this.$validator = new _class(this);
-        //if (! this.$options.computed) {
+        // if (! this.$options.computed) {
         //    this.$options.computed = {};
-        //}
+        // }
 
-        //this.$options.computed['errors'] = function errorBagGetter () {
+        // this.$options.computed['errors'] = function errorBagGetter () {
         //    return new Set();
         //    return this.$validator.errors;
-        //};
+        // };
     };
 
     mixin.created = function () {
@@ -981,14 +1007,15 @@ var mixin = (function (Vue) {
 
     Vue.mixin(mixin);
 });
+/* eslint-disable */
 
 function plugin(Vue, conf) {
     if (plugin.installed) {
-        console.log('installed');
+        /* eslint-disable no-console */
+        console.warn('installed');
+        /* eslint-disable no-console */
         return;
     }
-    //console.log(Vue.options);
-    //console.log(Vue.config);
     setUserConfig(conf);
     directive(Vue);
     mixin(Vue);

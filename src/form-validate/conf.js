@@ -11,4 +11,4 @@ export const userConfig = {
     lengthType: 'eng',
 };
 
-export const setUserConfig = (conf) => (Object.assign(userConfig, conf));
+export const setUserConfig = conf => (Object.assign(userConfig, conf));

@@ -1,24 +1,25 @@
-import Validator from './validator.js';
+import Validator from './validator';
 
+/* eslint-disable */
 export default (Vue, options = {}) => {
     const mixin = {};
-    //console.log(Vue.util);
+    // console.log(Vue.util);
 
     mixin.beforeCreate = function () {
-        // children中有validate-form才添加
+    // children中有validate-form才添加
         this.$validator = new Validator(this);
-        //if (! this.$options.computed) {
-        //    this.$options.computed = {};
-        //}
+    // if (! this.$options.computed) {
+    //    this.$options.computed = {};
+    // }
 
-        //this.$options.computed['errors'] = function errorBagGetter () {
-        //    return new Set();
-        //    return this.$validator.errors;
-        //};
+    // this.$options.computed['errors'] = function errorBagGetter () {
+    //    return new Set();
+    //    return this.$validator.errors;
+    // };
     };
 
     mixin.created = function () {
-        // console.log(this.$options.name);
+    // console.log(this.$options.name);
     };
 
     mixin.beforeDestory = function () {
@@ -26,3 +27,4 @@ export default (Vue, options = {}) => {
 
     Vue.mixin(mixin);
 };
+/* eslint-disable */

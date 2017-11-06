@@ -1,7 +1,6 @@
 import {
     isNum,
-    isStr,
-} from './type.js';
+} from './type';
 
 export const isInt = (val) => {
     if (!isNum(val)) {

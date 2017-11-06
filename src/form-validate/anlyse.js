@@ -1,36 +1,36 @@
-import { has } from './util/index.js';
+import { has } from './util/index';
 
 export default (vNode, obj) => {
     const attrs = obj || vNode.data.attrs;
     const validate = {};
-    const text = attrs['text'] || '';
+    const text = attrs.text || '';
 
     // 最小值 必须是数字 大写为不包括边界值
     if (has(attrs, 'min')) {
-        validate['min'] = {
-            value: attrs['min'],
+        validate.min = {
+            value: attrs.min,
             text,
         };
     }
 
     if (has(attrs, 'Min')) {
-        validate['Min'] = {
-            value: attrs['Min'],
+        validate.Min = {
+            value: attrs.Min,
             text,
         };
     }
 
     // 最大值 必须是数字
     if (has(attrs, 'max')) {
-        validate['max'] = {
-            value: attrs['max'],
+        validate.max = {
+            value: attrs.max,
             text,
         };
     }
 
     if (has(attrs, 'Max')) {
-        validate['Max'] = {
-            value: attrs['Max'],
+        validate.Max = {
+            value: attrs.Max,
             text,
         };
     }
@@ -67,7 +67,7 @@ export default (vNode, obj) => {
 
     // 必填
     if (has(attrs, 'required')) {
-        validate['required'] = {
+        validate.required = {
             value: true,
             text,
         };
@@ -77,43 +77,43 @@ export default (vNode, obj) => {
     // 数字 可以是字符串数字
     // int or float
     if (has(attrs, 'number')) {
-        validate['number'] = {
-            value: attrs['number'] || 'int',
+        validate.number = {
+            value: attrs.number || 'int',
             text,
         };
     }
 
     // 数字 不能是字符串数字
     if (has(attrs, 'Number')) {
-        validate['Number'] = {
-            value: attrs['Number'] || 'int',
+        validate.Number = {
+            value: attrs.Number || 'int',
             text,
         };
     }
 
     // 正数 含0
     if (has(attrs, 'positive')) {
-        validate['positive'] = true;
+        validate.positive = true;
     }
 
     // 正数 不含0
     if (has(attrs, 'Positive')) {
-        validate['Positive'] = true;
+        validate.Positive = true;
     }
 
     // 负数 含0
     if (has(attrs, 'negative')) {
-        validate['negative'] = true;
+        validate.negative = true;
     }
 
     // 负数 不含0
     if (has(attrs, 'Negative')) {
-        validate['Negative'] = true;
+        validate.Negative = true;
     }
 
     // email
     if (has(attrs, 'email')) {
-        validate['email'] = true;
+        validate.email = true;
     }
 
     if (has(attrs, 'max-float-length')) {

@@ -1,33 +1,33 @@
-import Field from './fileld.js';
+import Field from './fileld';
 
 export default {
     name: 'validate-form',
-    data () {
+    data() {
         return {
             config: {
-                //'length-type': 'eng'
+                // 'length-type': 'eng'
             },
             field: '',
             rule: '',
         };
     },
     methods: {
-        configInit (attrs) {
-            const config = attrs['config'];
+        configInit(attrs) {
+            const config = attrs.config;
             const lengthType = attrs['length-type'];
-            //this.config['length-type'] = lengthType || this.config['length-type'];
+            // this.config['length-type'] = lengthType || this.config['length-type'];
             config.lengthType = config.lengthType || lengthType;
             this.config = config;
         },
-        ruleInit (attrs) {
+        ruleInit(attrs) {
             const rule = attrs.rule;
             this.rule = rule;
         },
-        validateAll () {
+        validateAll() {
             this.field.validateAll();
         },
     },
-    mounted () {
+    mounted() {
         const components = this.$slots.default;
         const attrs = this.$vnode.data.attrs;
         this.configInit(attrs);

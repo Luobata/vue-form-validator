@@ -5,11 +5,11 @@ import {
     isFun,
     isStr,
     getChineseLength,
-} from './util/index.js';
-import { userConfig } from './conf.js';
+} from './util/index';
+import { userConfig } from './conf';
 
 
-const getTarget = (item) => (item.com.elm);
+const getTarget = item => (item.com.elm);
 const config = userConfig;
 
 const getLength = (val) => {
@@ -18,11 +18,13 @@ const getLength = (val) => {
 
     if (isStr(type)) {
         switch (type) {
-            case 'eng':
+        case 'eng':
             len = val.length;
             break;
-            case 'chi':
+        case 'chi':
             len = getChineseLength(val);
+            break;
+        default:
             break;
         }
     } else if (isFun(type)) {
@@ -33,7 +35,8 @@ const getLength = (val) => {
 };
 
 const getFloatLength = (val) => {
-    const floatNum = val.match(/.*?[\.](\d)/);
+    const reg = /.*?[\.](\d)/;
+    const floatNum = val.match(reg);
     let len = 0;
     if (floatNum && floatNum.length && floatNum[1]) {
         len = floatNum[1].length;
@@ -42,6 +45,7 @@ const getFloatLength = (val) => {
     return len;
 };
 
+const isNaN = Number.isNaN;
 
 
 export default (validate, value, item, $parent, Vue) => {
@@ -50,39 +54,40 @@ export default (validate, value, item, $parent, Vue) => {
     let length;
     let floatLen;
     let key;
-    let target = getTarget(item);
-    let errors = {
+    const target = getTarget(item);
+    const errors = {
         type: '',
-        detail: []
+        detail: [],
     };
-    let text = validate.text || '';
+    const text = validate.text || '';
     Object.assign(config, Vue.config);
     Object.assign(config, validate.config);
-    const cal = (val) => {
-        if (isFun(val.value)) {
-            return val.value.call($parent);
-        } else {
-            return val.value;
+    const cal = (vals) => {
+        if (isFun(vals.valsue)) {
+            return vals.valsue.call($parent);
         }
+        return vals.valsue;
     };
 
     class Error {
-        //errorTpl = {
+        // errorTpl = {
         //    key: '', // error key like min max
         //    value: '', // key value
         //    actual: '', // actual value
-        //};
+        // };
 
-        constructor (key, value, actual, target) {
+        /* eslint-disable no-shadow */
+        constructor(key, value, actual, target) {
             this.key = key;
             this.value = value;
             this.actual = actual;
             this.target = target;
             this.text = validate[key].text || text;
-        };
-    };
+        }
+        /* eslint-disable no-shadow */
+    }
 
-    if (has(validate, 'min') || 
+    if (has(validate, 'min') ||
         has(validate, 'max') ||
         has(validate, 'Min') ||
         has(validate, 'Max')
@@ -90,7 +95,7 @@ export default (validate, value, item, $parent, Vue) => {
         type = 'number';
     }
 
-    if (has(validate, 'min-length') || 
+    if (has(validate, 'min-length') ||
         has(validate, 'max-length') ||
         has(validate, 'Min-length') ||
         has(validate, 'Max-length')
@@ -98,7 +103,7 @@ export default (validate, value, item, $parent, Vue) => {
         length = getLength(value);
     }
 
-    if (has(validate, 'min-float-length') || 
+    if (has(validate, 'min-float-length') ||
         has(validate, 'max-float-length') ||
         has(validate, 'Min-float-length') ||
         has(validate, 'Max-float-length')
@@ -107,17 +112,17 @@ export default (validate, value, item, $parent, Vue) => {
     }
 
     switch (type) {
-        case 'number':
+    case 'number':
         val = parseFloat(value, 10);
-            if (value !== '' 
+        if (value !== ''
                 && value !== undefined
                 && isNaN(val)) {
-                errors.type = 'wrong type';
-            }
-            break;
-        default:
+            errors.type = 'wrong type';
+        }
+        break;
+    default:
         val = value;
-    };
+    }
 
     if (errors.type) {
         return errors;
@@ -192,26 +197,25 @@ export default (validate, value, item, $parent, Vue) => {
         errors.detail.push(new Error('required', '', value, target));
     }
 
-    if (validate['number'] === 'int') {
+    if (validate.number === 'int') {
         if (isNaN(parseInt(val, 10))) {
             errors.detail.push(new Error('number', '', val, target));
         }
-    } else if (validate['number'] === 'float')  {
+    } else if (validate.number === 'float') {
         if (isNaN(parseFloat(val, 10))) {
             errors.detail.push(new Error('number', '', val, target));
         }
     }
 
-    if (validate['Number'] === 'int') {
+    if (validate.Number === 'int') {
         if (isInt(val)) {
             errors.detail.push(new Error('Number', '', val, target));
         }
-    } else if (validate['Number'] === 'float')  {
+    } else if (validate.Number === 'float') {
         if (isFloat(val)) {
             errors.detail.push(new Error('Number', '', val, target));
         }
     }
-
 
 
     return errors;

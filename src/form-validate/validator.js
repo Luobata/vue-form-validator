@@ -1,4 +1,5 @@
 export default class {
-    constructor (el) {
-    };
-};
+    constructor() {
+        this.init = 1;
+    }
+}
