@@ -630,6 +630,8 @@ var finds = function finds(items) {
                 }
             }
         }
+
+        return false;
     };
 };
 

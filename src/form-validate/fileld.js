@@ -18,6 +18,8 @@ const finds = items => (name) => {
             return i;
         }
     }
+
+    return false;
 };
 
 export default class Field {
