@@ -182,7 +182,17 @@ var covert = function covert(str) {
         default:
             break;
     }
-    key = str.replace(/([min|max|Min|Max])(length)/, '$1-$2');
+    // key = str.replace(/([min|max|Min|Max])(length)/, '$1-$2');
+    key = str.replace(/(min|max|Min|Max)(?:(float)|)(length)/, function () {
+        var s = void 0;
+        if (arguments.length <= 2 ? undefined : arguments[2]) {
+            // float
+            s = (arguments.length <= 1 ? undefined : arguments[1]) + '-' + (arguments.length <= 2 ? undefined : arguments[2]) + '-' + (arguments.length <= 3 ? undefined : arguments[3]);
+        } else {
+            s = (arguments.length <= 1 ? undefined : arguments[1]) + '-' + (arguments.length <= 3 ? undefined : arguments[3]);
+        }
+        return s;
+    });
     return key;
 };
 
@@ -199,14 +209,14 @@ var rule = (function (rule) {
     };
     var add = function add(obj, objStr) {
         for (var i in obj) {
-            if (!{}.hasOwnProperty.call(obj, i)) continue;
+            if (!has(obj, i)) continue;
             var item = obj[i];
             var keyStr = objStr === 'data' ? sysConfig.dataName + i : i;
             errorText = item.text || '';
             // trigger = item.trigger || '';
             rules[objStr][keyStr] = {};
             for (var j in item) {
-                if (!{}.hasOwnProperty.call(item, j)) continue;
+                if (!has(item, j)) continue;
                 var value = item[j];
                 var key = covert(j, objStr);
 
@@ -680,6 +690,7 @@ var Field = function () {
                             if (j.name === 'validate') {
                                 item.com = i;
                                 item.name = i.data.attrs['validate-name'];
+                                item.showName = i.data.attrs['validate-name'];
                                 item.trigger = bind(i.data.attrs.trigger || this.rule.validate[item.name].trigger);
                                 item.validateContext = anlyse(i);
                             }
@@ -736,11 +747,13 @@ var Field = function () {
                 if (!has(datas, i)) continue;
                 var item = {};
                 var value = datas[i];
+                var name = i.replace(sysConfig.dataName, '');
                 item.name = i;
+                item.showName = name;
                 item.trigger = bind(value.trigger);
                 item.model = {
                     value: '',
-                    expression: i.replace(sysConfig.dataName, '')
+                    expression: name
                 };
                 // 用于target选择不报错
                 item.com = '';
@@ -844,12 +857,14 @@ var Field = function () {
             return function (item) {
                 var value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
                 var error = judge(validate, value, item, $parent, _this);
+                var name = item.showName;
+
                 if (error.detail.length > 0) {
-                    $parent.$set($parent.errors, item.name, true);
-                    $parent.$set($parent.errors, item.name + 'Error', error.detail[0].text);
+                    $parent.$set($parent.errors, name, true);
+                    $parent.$set($parent.errors, name + 'Error', error.detail[0].text);
                 } else {
-                    $parent.$set($parent.errors, item.name, false);
-                    $parent.$set($parent.errors, item.name + 'Error', '');
+                    $parent.$set($parent.errors, name, false);
+                    $parent.$set($parent.errors, name + 'Error', '');
                 }
                 console.log(error);
             };

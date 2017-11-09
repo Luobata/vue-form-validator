@@ -49,6 +49,7 @@ export default class Field {
                 if (j.name === 'validate') {
                     item.com = i;
                     item.name = i.data.attrs['validate-name'];
+                    item.showName = i.data.attrs['validate-name'];
                     item.trigger = bind(i.data.attrs.trigger
                         || this.rule.validate[item.name].trigger);
                     item.validateContext = anlyse(i);
@@ -76,11 +77,13 @@ export default class Field {
             if (!has(datas, i)) continue;
             const item = {};
             const value = datas[i];
+            const name = i.replace(sysConfig.dataName, '');
             item.name = i;
+            item.showName = name;
             item.trigger = bind(value.trigger);
             item.model = {
                 value: '',
-                expression: i.replace(sysConfig.dataName, ''),
+                expression: name,
             };
             // 用于target选择不报错
             item.com = '';
@@ -136,12 +139,14 @@ export default class Field {
         return (item) => {
             const value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
             const error = judge(validate, value, item, $parent, this);
+            const name = item.showName;
+
             if (error.detail.length > 0) {
-                $parent.$set($parent.errors, item.name, true);
-                $parent.$set($parent.errors, `${item.name}Error`, error.detail[0].text);
+                $parent.$set($parent.errors, name, true);
+                $parent.$set($parent.errors, `${name}Error`, error.detail[0].text);
             } else {
-                $parent.$set($parent.errors, item.name, false);
-                $parent.$set($parent.errors, `${item.name}Error`, '');
+                $parent.$set($parent.errors, name, false);
+                $parent.$set($parent.errors, `${name}Error`, '');
             }
             console.log(error);
         };
