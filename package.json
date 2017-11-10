@@ -2,7 +2,7 @@
   "name": "vue-validator-help",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/validate.js",
   "scripts": {
     "dev": "rollup -w -c build/rollup.config.src.js",
     "build": "rollup -c build/rollup.config.src.js",
