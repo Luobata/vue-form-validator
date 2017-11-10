@@ -107,6 +107,11 @@ var check = function check(elm) {
     return dom;
 };
 
+var isTelphone = function isTelphone(val) {
+    var reg = /^1[34578]\d{9}$/;
+    return reg.test(val);
+};
+
 var isNum = function isNum(val) {
     return Object.prototype.toString.call(val) === '[object Number]';
 };
@@ -359,6 +364,11 @@ var anlyse = (function (vNode, obj) {
         validate.email = true;
     }
 
+    // email
+    if (has(attrs, 'phone')) {
+        validate.phone = true;
+    }
+
     if (has(attrs, 'max-float-length')) {
         validate['max-float-length'] = {
             value: attrs['max-float-length'],
@@ -583,6 +593,11 @@ var judge = (function (validate, value, item, $parent, Vue) {
 
     if (has(validate, 'required') && (val === undefined || val === null || val === '' || isNaN(val))) {
         errors.detail.push(new Error('required', '', value, target));
+    }
+
+    key = 'phone';
+    if (has(validate, key) && !isTelphone(value)) {
+        errors.detail.push(new Error(key, '', value, target));
     }
 
     if (validate.number === 'int') {

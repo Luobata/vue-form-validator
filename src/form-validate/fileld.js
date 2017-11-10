@@ -148,7 +148,7 @@ export default class Field {
                 $parent.$set($parent.errors, name, false);
                 $parent.$set($parent.errors, `${name}Error`, '');
             }
-            console.log(error);
+            // console.log(error);
         };
     }
 

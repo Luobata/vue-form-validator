@@ -21,3 +21,8 @@ export const check = (elm) => {
 
     return dom;
 };
+
+export const isTelphone = (val) => {
+    const reg = /^1[34578]\d{9}$/;
+    return reg.test(val);
+};

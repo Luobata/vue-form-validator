@@ -116,6 +116,11 @@ export default (vNode, obj) => {
         validate.email = true;
     }
 
+    // email
+    if (has(attrs, 'phone')) {
+        validate.phone = true;
+    }
+
     if (has(attrs, 'max-float-length')) {
         validate['max-float-length'] = {
             value: attrs['max-float-length'],

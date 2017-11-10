@@ -4,6 +4,7 @@ import {
     isFloat,
     isFun,
     isStr,
+    isTelphone,
     getChineseLength,
 } from './util/index';
 import { userConfig } from './conf';
@@ -195,6 +196,11 @@ export default (validate, value, item, $parent, Vue) => {
         isNaN(val))
     ) {
         errors.detail.push(new Error('required', '', value, target));
+    }
+
+    key = 'phone';
+    if (has(validate, key) && !isTelphone(value)) {
+        errors.detail.push(new Error(key, '', value, target));
     }
 
     if (validate.number === 'int') {
