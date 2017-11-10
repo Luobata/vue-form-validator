@@ -936,8 +936,10 @@ var __vue_module__ = {
 
     methods: {
         configInit: function configInit(attrs) {
-            var config = attrs.config,
-                lengthType = attrs.lengthType;
+            var _attrs$config = attrs.config,
+                config = _attrs$config === undefined ? {} : _attrs$config,
+                _attrs$lengthType = attrs.lengthType,
+                lengthType = _attrs$lengthType === undefined ? 'eng' : _attrs$lengthType;
             // this.config['length-type'] = lengthType || this.config['length-type'];
 
             config.lengthType = config.lengthType || lengthType;

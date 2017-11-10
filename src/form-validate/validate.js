@@ -14,8 +14,8 @@ export default {
     methods: {
         configInit(attrs) {
             const {
-                config,
-                lengthType,
+                config = {},
+                lengthType = 'eng',
             } = attrs;
             // this.config['length-type'] = lengthType || this.config['length-type'];
             config.lengthType = config.lengthType || lengthType;
