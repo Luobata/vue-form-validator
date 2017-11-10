@@ -112,6 +112,42 @@ var isTelphone = function isTelphone(val) {
     return reg.test(val);
 };
 
+var splitKeys = function splitKeys(key, vNode) {
+    var keyArr = key.split('.');
+    var name = vNode;
+    var str = 'that';
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+        for (var _iterator2 = keyArr[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var i = _step2.value;
+
+            name = name[i];
+            str += "['" + i + "']";
+        }
+    } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+            }
+        } finally {
+            if (_didIteratorError2) {
+                throw _iteratorError2;
+            }
+        }
+    }
+
+    return {
+        funStr: str,
+        value: name
+    };
+};
+
 var isNum = function isNum(val) {
     return Object.prototype.toString.call(val) === '[object Number]';
 };
@@ -683,76 +719,83 @@ var Field = function () {
     createClass(Field, [{
         key: 'init',
         value: function init(components) {
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
+            var _this = this;
 
-            try {
-                for (var _iterator2 = components[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var i = _step2.value;
+            var find = function find(components) {
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
 
-                    if (!i.data) continue;
-                    var dir = i.data.directives;
-                    var item = {};
-                    var _iteratorNormalCompletion3 = true;
-                    var _didIteratorError3 = false;
-                    var _iteratorError3 = undefined;
-
-                    try {
-                        for (var _iterator3 = dir[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                            var j = _step3.value;
-
-                            if (j.name === 'validate') {
-                                item.com = i;
-                                item.name = i.data.attrs['validate-name'];
-                                item.showName = i.data.attrs['validate-name'];
-                                item.trigger = bind(i.data.attrs.trigger || this.rule.validate[item.name].trigger);
-                                item.validateContext = anlyse(i);
-                            }
-
-                            if (j.name === 'model') {
-                                item.model = {
-                                    value: j.value,
-                                    expression: j.expression
-                                };
-                            }
-                        }
-                    } catch (err) {
-                        _didIteratorError3 = true;
-                        _iteratorError3 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                                _iterator3.return();
-                            }
-                        } finally {
-                            if (_didIteratorError3) {
-                                throw _iteratorError3;
-                            }
-                        }
-                    }
-
-                    if (item.com) {
-                        item.validate = this.getValidate(item, 'validate');
-                        item.id = globalId;
-                        globalId += 1;
-                        this.item.push(item);
-                    }
-                }
-            } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-            } finally {
                 try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
+                    for (var _iterator2 = components[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var i = _step2.value;
+
+                        if (i.children && i.children.length) find(i.children);
+                        if (!i.data) continue;
+                        var dir = i.data.directives || [];
+                        var item = {};
+                        var _iteratorNormalCompletion3 = true;
+                        var _didIteratorError3 = false;
+                        var _iteratorError3 = undefined;
+
+                        try {
+                            for (var _iterator3 = dir[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                                var j = _step3.value;
+
+                                if (j.name === 'validate') {
+                                    item.com = i;
+                                    item.name = i.data.attrs['validate-name'];
+                                    item.showName = i.data.attrs['validate-name'];
+                                    item.trigger = bind(i.data.attrs.trigger || _this.rule.validate[item.name].trigger);
+                                    item.validateContext = anlyse(i);
+                                }
+
+                                if (j.name === 'model') {
+                                    item.model = {
+                                        value: j.value,
+                                        expression: j.expression
+                                    };
+                                }
+                            }
+                        } catch (err) {
+                            _didIteratorError3 = true;
+                            _iteratorError3 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                                    _iterator3.return();
+                                }
+                            } finally {
+                                if (_didIteratorError3) {
+                                    throw _iteratorError3;
+                                }
+                            }
+                        }
+
+                        if (item.com) {
+                            item.validate = _this.getValidate(item, 'validate');
+                            item.id = globalId;
+                            globalId += 1;
+                            _this.item.push(item);
+                        }
                     }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
                 } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
+                        }
                     }
                 }
-            }
+            };
+
+            find(components);
         }
     }, {
         key: 'dataInit',
@@ -836,11 +879,8 @@ var Field = function () {
         value: function addWatcher(item, trigger) {
             // change 事件
             // item 要检验的对象
-            var _ref = [this.el.$parent, this.find(trigger.el) || item],
-                $parent = _ref[0],
-                element = _ref[1];
-            // const $parent = this.el.$parent;
-            // const element = this.find(trigger.el) || item;
+            var $parent = this.config.$parent || this.el.$parent,
+                element = this.find(trigger.el) || item;
 
             $parent.$watch(element.model.expression, function () {
                 item.validate(item);
@@ -863,15 +903,15 @@ var Field = function () {
     }, {
         key: 'getValidate',
         value: function getValidate(items, key) {
-            var _this = this;
+            var _this2 = this;
 
             var validate = items.validateContext || {};
-            var $parent = this.el.$parent;
-
+            var $parent = this.config.$parent || this.el.$parent;
+            //const { $parent } = this.el;
             validate = Object.assign(this.rule[key][items.name] || {}, validate);
             return function (item) {
-                var value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
-                var error = judge(validate, value, item, $parent, _this);
+                var value = item.model ? splitKeys(item.model.expression, $parent.$data).value : item.com.elm.value;
+                var error = judge(validate, value, item, $parent, _this2);
                 var name = item.showName;
 
                 if (error.detail.length > 0) {
@@ -881,7 +921,7 @@ var Field = function () {
                     $parent.$set($parent.errors, name, false);
                     $parent.$set($parent.errors, name + 'Error', '');
                 }
-                // console.log(error);
+                console.log(error);
             };
         }
     }, {
@@ -939,10 +979,11 @@ var __vue_module__ = {
             var _attrs$config = attrs.config,
                 config = _attrs$config === undefined ? {} : _attrs$config,
                 _attrs$lengthType = attrs.lengthType,
-                lengthType = _attrs$lengthType === undefined ? 'eng' : _attrs$lengthType;
-            // this.config['length-type'] = lengthType || this.config['length-type'];
+                lengthType = _attrs$lengthType === undefined ? 'eng' : _attrs$lengthType,
+                parent = attrs.parent;
 
             config.lengthType = config.lengthType || lengthType;
+            config.$parent = parent;
             this.config = config;
         },
         ruleInit: function ruleInit(attrs) {

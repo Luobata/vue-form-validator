@@ -16,9 +16,10 @@ export default {
             const {
                 config = {},
                 lengthType = 'eng',
+                parent,
             } = attrs;
-            // this.config['length-type'] = lengthType || this.config['length-type'];
             config.lengthType = config.lengthType || lengthType;
+            config.$parent = parent;
             this.config = config;
         },
         ruleInit(attrs) {

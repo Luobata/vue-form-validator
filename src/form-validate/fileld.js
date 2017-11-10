@@ -5,6 +5,7 @@ import judge from './judge';
 import {
     check,
     has,
+    splitKeys,
 } from './util/index';
 import { sysConfig } from './conf';
 
@@ -41,34 +42,39 @@ export default class Field {
     }
 
     init(components) {
-        for (const i of components) {
-            if (!i.data) continue;
-            const dir = i.data.directives;
-            const item = {};
-            for (const j of dir) {
-                if (j.name === 'validate') {
-                    item.com = i;
-                    item.name = i.data.attrs['validate-name'];
-                    item.showName = i.data.attrs['validate-name'];
-                    item.trigger = bind(i.data.attrs.trigger
-                        || this.rule.validate[item.name].trigger);
-                    item.validateContext = anlyse(i);
-                }
+        const find = (components) => {
+            for (const i of components) {
+                if (i.children && i.children.length) find(i.children);
+                if (!i.data) continue;
+                const dir = i.data.directives || [];
+                const item = {};
+                for (const j of dir) {
+                    if (j.name === 'validate') {
+                        item.com = i;
+                        item.name = i.data.attrs['validate-name'];
+                        item.showName = i.data.attrs['validate-name'];
+                        item.trigger = bind(i.data.attrs.trigger
+                            || this.rule.validate[item.name].trigger);
+                        item.validateContext = anlyse(i);
+                    }
 
-                if (j.name === 'model') {
-                    item.model = {
-                        value: j.value,
-                        expression: j.expression,
-                    };
+                    if (j.name === 'model') {
+                        item.model = {
+                            value: j.value,
+                            expression: j.expression,
+                        };
+                    }
+                }
+                if (item.com) {
+                    item.validate = this.getValidate(item, 'validate');
+                    item.id = globalId;
+                    globalId += 1;
+                    this.item.push(item);
                 }
             }
-            if (item.com) {
-                item.validate = this.getValidate(item, 'validate');
-                item.id = globalId;
-                globalId += 1;
-                this.item.push(item);
-            }
-        }
+        };
+
+        find(components);
     }
 
     dataInit() {
@@ -110,11 +116,9 @@ export default class Field {
         // item 要检验的对象
         // trigger 触法的对象
         const [$parent, element] = [
-            this.el.$parent,
+            this.config.$parent || this.el.$parent,
             this.find(trigger.el) || item,
         ];
-        // const $parent = this.el.$parent;
-        // const element = this.find(trigger.el) || item;
         $parent.$watch(element.model.expression, () => {
             item.validate(item);
         });
@@ -134,10 +138,11 @@ export default class Field {
 
     getValidate(items, key) {
         let validate = items.validateContext || {};
-        const { $parent } = this.el;
+        const $parent = this.config.$parent || this.el.$parent;
+        //const { $parent } = this.el;
         validate = Object.assign(this.rule[key][items.name] || {}, validate);
         return (item) => {
-            const value = item.model ? $parent.$data[item.model.expression] : item.com.elm.value;
+            const value = item.model ? splitKeys(item.model.expression, $parent.$data).value : item.com.elm.value;
             const error = judge(validate, value, item, $parent, this);
             const name = item.showName;
 
@@ -148,7 +153,7 @@ export default class Field {
                 $parent.$set($parent.errors, name, false);
                 $parent.$set($parent.errors, `${name}Error`, '');
             }
-            // console.log(error);
+            console.log(error);
         };
     }
 

@@ -26,3 +26,18 @@ export const isTelphone = (val) => {
     const reg = /^1[34578]\d{9}$/;
     return reg.test(val);
 };
+
+export const splitKeys = (key, vNode) => {
+    const keyArr = key.split('.');
+    let name = vNode;
+    let str = 'that';
+    for (let i of keyArr) {
+        name = name[i];
+        str += "['" + i + "']";
+    }
+
+    return {
+        funStr: str,
+        value: name
+    };
+};
