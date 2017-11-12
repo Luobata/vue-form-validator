@@ -8,6 +8,7 @@
     2. input (input textarea contenteditable only)
     3. change (v=model)
     4. handle by user
+    5. trigger by other element's rules
 
 2. rules
     1. min must number
@@ -18,3 +19,6 @@
     6. lengthtype global-config or rule in the validate-form or exact dom
     7. number
     8. float value is the length of the number
+
+3. config
+    1. lengthType: the length rule for property length
