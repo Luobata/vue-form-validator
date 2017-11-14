@@ -5,6 +5,7 @@ import judge from './judge';
 import {
     check,
     has,
+    hasValue,
     splitKeys,
 } from './util/index';
 import { sysConfig } from './conf';
@@ -47,24 +48,29 @@ export default class Field {
                 if (i.children && i.children.length) find(i.children);
                 if (!i.data) continue;
                 const dir = i.data.directives || [];
+                const name = hasValue(dir, 'name', 'validate');
+                const model = hasValue(dir, 'name', 'model');
                 const item = {};
-                for (const j of dir) {
-                    if (j.name === 'validate') {
-                        item.com = i;
-                        item.name = i.data.attrs['validate-name'];
-                        item.showName = i.data.attrs['validate-name'];
-                        item.trigger = bind(i.data.attrs.trigger
-                            || this.rule.validate[item.name].trigger);
-                        item.validateContext = anlyse(i);
-                    }
 
-                    if (j.name === 'model') {
-                        item.model = {
-                            value: j.value,
-                            expression: j.expression,
-                        };
-                    }
+                if (name ||
+                    (i.data.attrs &&
+                        has(i.data.attrs, 'validate-name'))
+                ) {
+                    item.com = i;
+                    item.name = i.data.attrs['validate-name'];
+                    item.showName = i.data.attrs['validate-name'];
+                    item.trigger = bind(i.data.attrs.trigger
+                        || this.rule.validate[item.name].trigger);
+                    item.validateContext = anlyse(i);
                 }
+
+                if (model) {
+                    item.model = {
+                        value: model.value,
+                        expression: model.expression,
+                    };
+                }
+
                 if (item.com) {
                     item.validate = this.getValidate(item, 'validate');
                     item.id = globalId;

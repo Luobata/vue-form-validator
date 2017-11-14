@@ -6,6 +6,8 @@ export const isStr = val => Object.prototype.toString.call(val) === '[object Str
 
 export const isObj = val => Object.prototype.toString.call(val) === '[object Object]';
 
+export const isArr = val => Object.prototype.toString.call(val) === '[object Array]';
+
 export const isFun = val => Object.prototype.toString.call(val) === '[object Function]';
 
 export const isEmptyObj = (obj) => {
