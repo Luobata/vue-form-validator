@@ -31,13 +31,13 @@ export const splitKeys = (key, vNode) => {
     const keyArr = key.split('.');
     let name = vNode;
     let str = 'that';
-    for (let i of keyArr) {
+    for (const i of keyArr) {
         name = name[i];
-        str += "['" + i + "']";
+        str += `['${i}']`;
     }
 
     return {
         funStr: str,
-        value: name
+        value: name,
     };
 };

@@ -19,7 +19,7 @@ export default {
                 parent,
             } = attrs;
             config.lengthType = config.lengthType || lengthType;
-            config.$parent = parent;
+            config.$parent = parent || this.$vnode.context;
             this.config = config;
         },
         ruleInit(attrs) {

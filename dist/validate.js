@@ -125,7 +125,7 @@ var splitKeys = function splitKeys(key, vNode) {
             var i = _step2.value;
 
             name = name[i];
-            str += "['" + i + "']";
+            str += '[\'' + i + '\']';
         }
     } catch (err) {
         _didIteratorError2 = true;
@@ -721,13 +721,13 @@ var Field = function () {
         value: function init(components) {
             var _this = this;
 
-            var find = function find(components) {
+            var find = function find(component) {
                 var _iteratorNormalCompletion2 = true;
                 var _didIteratorError2 = false;
                 var _iteratorError2 = undefined;
 
                 try {
-                    for (var _iterator2 = components[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    for (var _iterator2 = component[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                         var i = _step2.value;
 
                         if (i.children && i.children.length) find(i.children);
@@ -907,7 +907,7 @@ var Field = function () {
 
             var validate = items.validateContext || {};
             var $parent = this.config.$parent || this.el.$parent;
-            //const { $parent } = this.el;
+            // const { $parent } = this.el;
             validate = Object.assign(this.rule[key][items.name] || {}, validate);
             return function (item) {
                 var value = item.model ? splitKeys(item.model.expression, $parent.$data).value : item.com.elm.value;
@@ -983,7 +983,7 @@ var __vue_module__ = {
                 parent = attrs.parent;
 
             config.lengthType = config.lengthType || lengthType;
-            config.$parent = parent;
+            config.$parent = parent || this.$vnode.context;
             this.config = config;
         },
         ruleInit: function ruleInit(attrs) {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <validate-form ref="form" length-type="eng" :rule="rule" :config="config" :parent="this">
+        <validate-form ref="form" length-type="eng" :rule="rule" :config="config">
             <div> 
                 <input validate-name="input2" v-validate min="5" required trigger="blur;$sel.change"/>
                 <selects validate-name="sel" v-model="test.data" :options="options" v-validate v-if="a" v-bind:min="data"></selects>
@@ -19,6 +19,7 @@
     import selects from './selects/selecter.vue';
 
     export default {
+        name: 'abc',
         watch: {
             data: function (val) {
                 console.log(val);
@@ -29,6 +30,7 @@
         },
         data () {
             return {
+                name: 'abcd',
                 errors: {},
                 config: {
                     lengthType: 'chi',

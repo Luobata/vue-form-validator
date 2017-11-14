@@ -42,8 +42,8 @@ export default class Field {
     }
 
     init(components) {
-        const find = (components) => {
-            for (const i of components) {
+        const find = (component) => {
+            for (const i of component) {
                 if (i.children && i.children.length) find(i.children);
                 if (!i.data) continue;
                 const dir = i.data.directives || [];
@@ -139,10 +139,12 @@ export default class Field {
     getValidate(items, key) {
         let validate = items.validateContext || {};
         const $parent = this.config.$parent || this.el.$parent;
-        //const { $parent } = this.el;
+        // const { $parent } = this.el;
         validate = Object.assign(this.rule[key][items.name] || {}, validate);
         return (item) => {
-            const value = item.model ? splitKeys(item.model.expression, $parent.$data).value : item.com.elm.value;
+            const value = item.model ?
+                splitKeys(item.model.expression, $parent.$data).value :
+                item.com.elm.value;
             const error = judge(validate, value, item, $parent, this);
             const name = item.showName;
 
