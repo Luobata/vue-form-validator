@@ -7,7 +7,7 @@
     <div>
         <validate-form ref="form">
             <input validate-name="input2" min="5" required trigger="blur;$sel.change"/>
-            <selects validate-name="sel" v-model="test.data" :options="options" v-validate v-if="a" v-bind:min="data"></selects>
+            <selects validate-name="sel" v-model="test.data" :options="options" v-bind:min="data"></selects>
             <input v-model="text" v-validate min="5" max="10" trigger="blur" phone/>
             <span v-show="errors.input2">{{ errors.input2Error }}</span>
         </validate-form>
