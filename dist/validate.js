@@ -151,6 +151,11 @@ var isTelphone = function isTelphone(val) {
     return reg.test(val);
 };
 
+var isEmail = function isEmail(val) {
+    var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+    return reg.test(val);
+};
+
 var splitKeys = function splitKeys(key, vNode) {
     var keyArr = key.split('.');
     var name = vNode;
@@ -443,7 +448,7 @@ var anlyse = (function (vNode, obj) {
         validate.email = true;
     }
 
-    // email
+    // phone
     if (has(attrs, 'phone')) {
         validate.phone = true;
     }
@@ -676,6 +681,11 @@ var judge = (function (validate, value, item, $parent, Vue) {
 
     key = 'phone';
     if (has(validate, key) && !isTelphone(value)) {
+        errors.detail.push(new Error(key, '', value, target));
+    }
+
+    key = 'email';
+    if (has(validate, key) && !isEmail(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 

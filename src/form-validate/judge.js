@@ -5,6 +5,7 @@ import {
     isFun,
     isStr,
     isTelphone,
+    isEmail,
     getChineseLength,
 } from './util/index';
 import { userConfig } from './conf';
@@ -200,6 +201,11 @@ export default (validate, value, item, $parent, Vue) => {
 
     key = 'phone';
     if (has(validate, key) && !isTelphone(value)) {
+        errors.detail.push(new Error(key, '', value, target));
+    }
+
+    key = 'email';
+    if (has(validate, key) && !isEmail(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 

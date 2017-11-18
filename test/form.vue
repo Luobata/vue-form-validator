@@ -6,6 +6,7 @@
                 <selects validate-name="sel" v-model="test.data" :options="options" v-bind:min="data"></selects>
                 <input v-model="text" v-validate min="5" max="10" trigger="blur" phone/>
                 <span v-show="errors.input2">{{ errors.input2Error }}</span>
+                <input v-model="text" v-validate trigger="blur" email/>
             </div>
         </validate-form>
     </div>

@@ -50,6 +50,11 @@ export const isTelphone = (val) => {
     return reg.test(val);
 };
 
+export const isEmail = (val) => {
+    const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+    return reg.test(val);
+};
+
 export const splitKeys = (key, vNode) => {
     const keyArr = key.split('.');
     let name = vNode;

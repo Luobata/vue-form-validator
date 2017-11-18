@@ -116,7 +116,7 @@ export default (vNode, obj) => {
         validate.email = true;
     }
 
-    // email
+    // phone
     if (has(attrs, 'phone')) {
         validate.phone = true;
     }
