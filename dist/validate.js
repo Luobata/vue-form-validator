@@ -156,6 +156,26 @@ var isEmail = function isEmail(val) {
     return reg.test(val);
 };
 
+var ispositive = function ispositive(val) {
+    var reg = /^\d+\.?\d*$/;
+    return reg.test(val);
+};
+
+var isPositive = function isPositive(val) {
+    var reg = /^([1-9]+\d*\.?\d*)|(0\.\d+)$/;
+    return reg.test(val);
+};
+
+var isnegative = function isnegative(val) {
+    var reg = /^((-\d+\.?\d*)|(0+))$/;
+    return reg.test(val);
+};
+
+var isNegative = function isNegative(val) {
+    var reg = /^-\d+\.?\d*$/;
+    return reg.test(val);
+};
+
 var splitKeys = function splitKeys(key, vNode) {
     var keyArr = key.split('.');
     var name = vNode;
@@ -686,6 +706,26 @@ var judge = (function (validate, value, item, $parent, Vue) {
 
     key = 'email';
     if (has(validate, key) && !isEmail(value)) {
+        errors.detail.push(new Error(key, '', value, target));
+    }
+
+    key = 'positive';
+    if (has(validate, key) && !ispositive(value)) {
+        errors.detail.push(new Error(key, '', value, target));
+    }
+
+    key = 'Positive';
+    if (has(validate, key) && !isPositive(value)) {
+        errors.detail.push(new Error(key, '', value, target));
+    }
+
+    key = 'negative';
+    if (has(validate, key) && !isnegative(value)) {
+        errors.detail.push(new Error(key, '', value, target));
+    }
+
+    key = 'Negative';
+    if (has(validate, key) && !isNegative(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 

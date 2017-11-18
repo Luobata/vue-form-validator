@@ -55,6 +55,26 @@ export const isEmail = (val) => {
     return reg.test(val);
 };
 
+export const ispositive = (val) => {
+    const reg = /^\d+\.?\d*$/;
+    return reg.test(val);
+};
+
+export const isPositive = (val) => {
+    const reg = /^([1-9]+\d*\.?\d*)|(0\.\d+)$/;
+    return reg.test(val);
+};
+
+export const isnegative = (val) => {
+    const reg = /^((-\d+\.?\d*)|(0+))$/;
+    return reg.test(val);
+};
+
+export const isNegative = (val) => {
+    const reg = /^-\d+\.?\d*$/;
+    return reg.test(val);
+};
+
 export const splitKeys = (key, vNode) => {
     const keyArr = key.split('.');
     let name = vNode;

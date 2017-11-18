@@ -7,6 +7,10 @@
                 <input v-model="text" v-validate min="5" max="10" trigger="blur" phone/>
                 <span v-show="errors.input2">{{ errors.input2Error }}</span>
                 <input v-model="text" v-validate trigger="blur" email/>
+                <input v-model="positive" v-validate trigger="blur" positive/>
+                <input v-model="Positive" v-validate trigger="blur" Positive/>
+                <input v-model="negative" v-validate trigger="blur" negative/>
+                <input v-model="Negative" v-validate trigger="blur" Negative/>
             </div>
         </validate-form>
     </div>
@@ -87,6 +91,10 @@
                 b: 11,
                 c: 22,
                 d: 33,
+                positive: '测试positvie(含0正数)',
+                Positive: '测试Positive(不含0正数)',
+                negative: '测试negative(含0负数)',
+                Negative: '测试Negative(不含0负数)',
                 options: [
                     {
                         key: 1,

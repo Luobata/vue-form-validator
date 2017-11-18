@@ -6,6 +6,10 @@ import {
     isStr,
     isTelphone,
     isEmail,
+    ispositive,
+    isPositive,
+    isnegative,
+    isNegative,
     getChineseLength,
 } from './util/index';
 import { userConfig } from './conf';
@@ -206,6 +210,26 @@ export default (validate, value, item, $parent, Vue) => {
 
     key = 'email';
     if (has(validate, key) && !isEmail(value)) {
+        errors.detail.push(new Error(key, '', value, target));
+    }
+
+    key = 'positive';
+    if (has(validate, key) && !ispositive(value)) {
+        errors.detail.push(new Error(key, '', value, target));
+    }
+
+    key = 'Positive';
+    if (has(validate, key) && !isPositive(value)) {
+        errors.detail.push(new Error(key, '', value, target));
+    }
+
+    key = 'negative';
+    if (has(validate, key) && !isnegative(value)) {
+        errors.detail.push(new Error(key, '', value, target));
+    }
+
+    key = 'Negative';
+    if (has(validate, key) && !isNegative(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
