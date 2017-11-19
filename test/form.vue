@@ -2,7 +2,7 @@
     <div>
         <validate-form ref="form" length-type="eng" :rule="rule" :config="config">
             <div> 
-                <input validate-name="input2" min="5" required trigger="blur;$sel.change"/>
+                <input validate-name="input2" min="5" required trigger="blur;$sel.change;keycode=13"/>
                 <selects validate-name="sel" v-model="test.data" :options="options" v-bind:min="data"></selects>
                 <input v-model="text" v-validate min="5" max="10" trigger="blur" phone/>
                 <span v-show="errors.input2">{{ errors.input2Error }}</span>
@@ -11,6 +11,7 @@
                 <input v-model="Positive" v-validate trigger="blur" Positive/>
                 <input v-model="negative" v-validate trigger="blur" negative/>
                 <input v-model="Negative" v-validate trigger="blur" Negative/>
+                <input v-model="Negative" v-validate trigger="blur"/>
             </div>
         </validate-form>
     </div>

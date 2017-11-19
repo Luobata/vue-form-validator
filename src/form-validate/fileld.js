@@ -7,6 +7,7 @@ import {
     has,
     hasValue,
     splitKeys,
+    keycode,
 } from './util/index';
 import { sysConfig } from './conf';
 
@@ -110,7 +111,12 @@ export default class Field {
                 if (j.eve === 'change') {
                     this.addWatcher(i, j);
                 }
-                if (j.eve === 'blur' || j.eve === 'input') {
+                if (j.eve === 'blur'
+                    || j.eve === 'input'
+                    || j.eve === 'focus'
+                    || j.eve === 'keydown'
+                    || j.eve === 'keyup'
+                    || keycode.test(j.eve)) {
                     this.addInputWatcher(i, j);
                 }
             }
@@ -136,9 +142,18 @@ export default class Field {
         const { elm } = element.com;
         const blurElm = check(elm);
         if (blurElm) {
-            blurElm.addEventListener(trigger.eve, () => {
-                item.validate(item);
-            });
+            if (keycode.test(trigger.eve)) {
+                const code = parseInt(trigger.eve.match(keycode)[1], 10) || 13;
+                blurElm.addEventListener('keydown', (e) => {
+                    if (e.keyCode === code) {
+                        item.validate(item);
+                    }
+                });
+            } else {
+                blurElm.addEventListener(trigger.eve, () => {
+                    item.validate(item);
+                });
+            }
         }
     }
 

@@ -4,63 +4,6 @@
 	(factory());
 }(this, (function () { 'use strict';
 
-var eventType = ['blur', 'change', 'input'];
-
-var triggerAnalyse = function triggerAnalyse(triggerStr) {
-    if (!triggerStr) return [];
-
-    var triggerArr = triggerStr.split(';');
-    var arr = [];
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-        for (var _iterator = triggerArr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var i = _step.value;
-
-            var rurl = /(?:\$(.*)\.|)(.*)$/;
-            var regArr = rurl.exec(i);
-            var el = regArr[1];
-            var eve = regArr[2];
-
-            if (eventType.indexOf(eve) === -1) {
-                /* eslint-disable no-console */
-                console.error(eve + ' is not a correct event type');
-                /* eslint-disable no-console */
-                continue;
-            }
-            arr.push({ el: el, eve: eve });
-        }
-    } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-            }
-        } finally {
-            if (_didIteratorError) {
-                throw _iteratorError;
-            }
-        }
-    }
-
-    return arr;
-};
-
-var trigger = (function (trigger) {
-    // const trigger = el.trigger;
-    var triggerArr = triggerAnalyse(trigger);
-
-    return triggerArr;
-});
-
-var bind = (function (tri) {
-  return trigger(tri);
-});
-
 var has = function has(obj, key) {
     return {}.hasOwnProperty.call(obj, key);
 };
@@ -264,6 +207,66 @@ var isFloat = function isFloat(val) {
     return (/^(-?\d+)(\.\d+)?$/.test(val)
     );
 };
+
+var keycode = /^keycode(?:=(\d+))?$/;
+
+var eventType = ['blur', 'change', 'input', 'focus', 'keydown', 'keyup'];
+
+var triggerAnalyse = function triggerAnalyse(triggerStr) {
+    if (!triggerStr) return [];
+
+    var triggerArr = triggerStr.split(';');
+    var arr = [];
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = triggerArr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var i = _step.value;
+
+            var rurl = /(?:\$(.*)\.|)(.*)$/;
+            var regArr = rurl.exec(i);
+            var el = regArr[1];
+            var eve = regArr[2];
+
+            // keycode 特殊处理
+            if (eventType.indexOf(eve) === -1 && !keycode.test(eve)) {
+                /* eslint-disable no-console */
+                console.error(eve + ' is not a correct event type');
+                /* eslint-disable no-console */
+                continue;
+            }
+            arr.push({ el: el, eve: eve });
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+
+    return arr;
+};
+
+var trigger = (function (trigger) {
+    // const trigger = el.trigger;
+    var triggerArr = triggerAnalyse(trigger);
+
+    return triggerArr;
+});
+
+var bind = (function (tri) {
+  return trigger(tri);
+});
 
 var sysConfig = {
     dataName: '$$data-',
@@ -913,7 +916,7 @@ var Field = function () {
                             if (j.eve === 'change') {
                                 this.addWatcher(i, j);
                             }
-                            if (j.eve === 'blur' || j.eve === 'input') {
+                            if (j.eve === 'blur' || j.eve === 'input' || j.eve === 'focus' || j.eve === 'keydown' || j.eve === 'keyup' || keycode.test(j.eve)) {
                                 this.addInputWatcher(i, j);
                             }
                         }
@@ -968,9 +971,18 @@ var Field = function () {
 
             var blurElm = check(elm);
             if (blurElm) {
-                blurElm.addEventListener(trigger.eve, function () {
-                    item.validate(item);
-                });
+                if (keycode.test(trigger.eve)) {
+                    var code = parseInt(trigger.eve.match(keycode)[1], 10) || 13;
+                    blurElm.addEventListener('keydown', function (e) {
+                        if (e.keyCode === code) {
+                            item.validate(item);
+                        }
+                    });
+                } else {
+                    blurElm.addEventListener(trigger.eve, function () {
+                        item.validate(item);
+                    });
+                }
             }
         }
     }, {
