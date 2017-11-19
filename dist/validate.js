@@ -834,7 +834,7 @@ var Field = function () {
                             item.com = i;
                             item.name = i.data.attrs['validate-name'];
                             item.showName = i.data.attrs['validate-name'];
-                            item.trigger = bind(i.data.attrs.trigger || _this.rule.validate[item.name].trigger);
+                            item.trigger = bind(i.data.attrs.trigger || (_this.rule.validate[item.name] || {})['trigger']);
                             item.validateContext = anlyse(i);
                         }
 
@@ -980,8 +980,8 @@ var Field = function () {
 
             var validate = items.validateContext || {};
             var $parent = this.config.$parent || this.el.$parent;
-            // const { $parent } = this.el;
             validate = Object.assign(this.rule[key][items.name] || {}, validate);
+
             return function (item) {
                 var value = item.model ? splitKeys(item.model.expression, $parent.$data).value : item.com.elm.value;
                 var error = judge(validate, value, item, $parent, _this2);
@@ -1045,9 +1045,7 @@ var __vue_module__ = {
     name: 'validate-form',
     data: function data() {
         return {
-            config: {
-                // 'length-type': 'eng'
-            },
+            config: {},
             field: '',
             rule: ''
         };
@@ -1066,7 +1064,8 @@ var __vue_module__ = {
             this.config = config;
         },
         ruleInit: function ruleInit(attrs) {
-            var rule = attrs.rule;
+            var _attrs$rule = attrs.rule,
+                rule = _attrs$rule === undefined ? {} : _attrs$rule;
 
             this.rule = rule;
         },
@@ -1077,7 +1076,7 @@ var __vue_module__ = {
     mounted: function mounted() {
         var components = this.$slots.default;
         var attrs = this.$vnode.data.attrs;
-        // const attrs = this.$vnode.data.attrs;
+
 
         this.configInit(attrs);
         this.ruleInit(attrs);

@@ -60,7 +60,7 @@ export default class Field {
                     item.name = i.data.attrs['validate-name'];
                     item.showName = i.data.attrs['validate-name'];
                     item.trigger = bind(i.data.attrs.trigger
-                        || this.rule.validate[item.name].trigger);
+                        || (this.rule.validate[item.name] || {})['trigger']);
                     item.validateContext = anlyse(i);
                 }
 
@@ -145,8 +145,8 @@ export default class Field {
     getValidate(items, key) {
         let validate = items.validateContext || {};
         const $parent = this.config.$parent || this.el.$parent;
-        // const { $parent } = this.el;
         validate = Object.assign(this.rule[key][items.name] || {}, validate);
+
         return (item) => {
             const value = item.model ?
                 splitKeys(item.model.expression, $parent.$data).value :

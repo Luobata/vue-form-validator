@@ -5,7 +5,6 @@ export default {
     data() {
         return {
             config: {
-                // 'length-type': 'eng'
             },
             field: '',
             rule: '',
@@ -23,7 +22,7 @@ export default {
             this.config = config;
         },
         ruleInit(attrs) {
-            const { rule } = attrs;
+            const { rule = {} } = attrs;
             this.rule = rule;
         },
         validateAll() {
@@ -33,7 +32,7 @@ export default {
     mounted() {
         const components = this.$slots.default;
         const { attrs } = this.$vnode.data;
-        // const attrs = this.$vnode.data.attrs;
+
         this.configInit(attrs);
         this.ruleInit(attrs);
         this.field = new Field(components, this);
