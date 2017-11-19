@@ -162,17 +162,21 @@ export default class Field {
                 $parent.$set($parent.errors, `${name}Error`, '');
             }
             console.log(error);
+            return !error.detail.length;
         };
     }
 
     validateAll() {
+        let flag = true;
         for (const i of this.item) {
-            i.validate();
+            flag = i.validate(i) && flag;
         }
+
+        return flag;
     }
 
     validateItem(name) {
         const item = this.find(name);
-        if (item) item.validate();
+        if (item) return item.validate(item);
     }
 }

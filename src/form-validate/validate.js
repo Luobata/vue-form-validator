@@ -27,7 +27,7 @@ export default {
             this.rule = rule;
         },
         validateAll() {
-            this.field.validateAll();
+            return this.field.validateAll();
         },
     },
     mounted() {
@@ -37,5 +37,6 @@ export default {
         this.configInit(attrs);
         this.ruleInit(attrs);
         this.field = new Field(components, this);
+        console.log(this.validateAll());
     },
 };

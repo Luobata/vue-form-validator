@@ -995,11 +995,13 @@ var Field = function () {
                     $parent.$set($parent.errors, name + 'Error', '');
                 }
                 console.log(error);
+                return !error.detail.length;
             };
         }
     }, {
         key: 'validateAll',
         value: function validateAll() {
+            var flag = true;
             var _iteratorNormalCompletion5 = true;
             var _didIteratorError5 = false;
             var _iteratorError5 = undefined;
@@ -1008,7 +1010,7 @@ var Field = function () {
                 for (var _iterator5 = this.item[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
                     var i = _step5.value;
 
-                    i.validate();
+                    flag = i.validate(i) && flag;
                 }
             } catch (err) {
                 _didIteratorError5 = true;
@@ -1024,12 +1026,14 @@ var Field = function () {
                     }
                 }
             }
+
+            return flag;
         }
     }, {
         key: 'validateItem',
         value: function validateItem(name) {
             var item = this.find(name);
-            if (item) item.validate();
+            if (item) return item.validate(item);
         }
     }]);
     return Field;
@@ -1065,7 +1069,7 @@ var __vue_module__ = {
             this.rule = rule;
         },
         validateAll: function validateAll() {
-            this.field.validateAll();
+            return this.field.validateAll();
         }
     },
     mounted: function mounted() {
@@ -1076,6 +1080,7 @@ var __vue_module__ = {
         this.configInit(attrs);
         this.ruleInit(attrs);
         this.field = new Field(components, this);
+        console.log(this.validateAll());
     }
 };
 
