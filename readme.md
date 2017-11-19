@@ -8,7 +8,7 @@
         <validate-form ref="form">
             <input validate-name="input2" min="5" required trigger="blur;$sel.change"/>
             <selects validate-name="sel" v-model="test.data" :options="options" v-bind:min="data"></selects>
-            <input v-model="text" v-validate min="5" max="10" trigger="blur" phone/>
+            <input v-model="text" v-validate min="5" max="10" trigger="blur;keycode=13" phone/>
             <span v-show="errors.input2">{{ errors.input2Error }}</span>
         </validate-form>
     </div>
@@ -18,8 +18,8 @@
 ## API
 
 1. events trigger
-    1. blur (input textarea contenteditable only)
-    2. input (input textarea contenteditable only)
+    1. blur / input / focus / keydown / keyup  (input textarea contenteditable only)
+    2. keycode keycode=13 or keycode(默认绑定13 回车)
     3. change (v=model)
     4. ref.validate('validate-name') ref.validateAll();
     5. trigger by other element's rules like $sel.change;(由其他元素节点的值变化时触法)
