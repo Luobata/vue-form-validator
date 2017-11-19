@@ -37,6 +37,5 @@ export default {
         this.configInit(attrs);
         this.ruleInit(attrs);
         this.field = new Field(components, this);
-        console.log(this.validateAll());
     },
 };

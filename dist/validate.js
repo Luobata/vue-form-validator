@@ -994,7 +994,7 @@ var Field = function () {
                     $parent.$set($parent.errors, name, false);
                     $parent.$set($parent.errors, name + 'Error', '');
                 }
-                console.log(error);
+                // console.log(error);
                 return !error.detail.length;
             };
         }
@@ -1034,6 +1034,8 @@ var Field = function () {
         value: function validateItem(name) {
             var item = this.find(name);
             if (item) return item.validate(item);
+
+            return true;
         }
     }]);
     return Field;
@@ -1080,7 +1082,6 @@ var __vue_module__ = {
         this.configInit(attrs);
         this.ruleInit(attrs);
         this.field = new Field(components, this);
-        console.log(this.validateAll());
     }
 };
 
