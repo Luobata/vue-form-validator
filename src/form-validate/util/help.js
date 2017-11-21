@@ -77,12 +77,10 @@ export const isNegative = (val) => {
     return reg.test(val);
 };
 
-export const isRequired = (val) => {
-    return !(val === undefined ||
+export const isRequired = val => !(val === undefined ||
      val === null ||
      val === '' ||
      isNaN(val));
-};
 
 export const splitKeys = (key, vNode) => {
     const keyArr = key.split('.');

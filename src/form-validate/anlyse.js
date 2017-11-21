@@ -68,7 +68,7 @@ export default (vNode, obj) => {
     // 必填
     if (has(attrs, 'required')) {
         validate.required = {
-            value: attrs['required'],
+            value: attrs.required,
             text,
         };
     }
@@ -94,7 +94,7 @@ export default (vNode, obj) => {
     // 正数 含0
     if (has(attrs, 'positive')) {
         validate.positive = {
-            value: attrs['positive'],
+            value: attrs.positive,
             text,
         };
     }
@@ -102,7 +102,7 @@ export default (vNode, obj) => {
     // 正数 不含0
     if (has(attrs, 'Positive')) {
         validate.Positive = {
-            value: attrs['Positive'],
+            value: attrs.Positive,
             text,
         };
     }
@@ -110,7 +110,7 @@ export default (vNode, obj) => {
     // 负数 含0
     if (has(attrs, 'negative')) {
         validate.negative = {
-            value: attrs['negative'],
+            value: attrs.negative,
             text,
         };
     }
@@ -118,7 +118,7 @@ export default (vNode, obj) => {
     // 负数 不含0
     if (has(attrs, 'Negative')) {
         validate.Negative = {
-            value: attrs['Negative'],
+            value: attrs.Negative,
             text,
         };
     }
@@ -126,7 +126,7 @@ export default (vNode, obj) => {
     // email
     if (has(attrs, 'email')) {
         validate.email = {
-            value: attrs['email'],
+            value: attrs.email,
             text,
         };
     }
@@ -134,7 +134,7 @@ export default (vNode, obj) => {
     // phone
     if (has(attrs, 'phone')) {
         validate.phone = {
-            value: attrs['phone'],
+            value: attrs.phone,
             text,
         };
     }

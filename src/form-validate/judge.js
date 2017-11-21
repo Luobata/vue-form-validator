@@ -71,12 +71,12 @@ export default (validate, value, item, $parent, Vue) => {
     Object.assign(config, Vue.config);
     Object.assign(config, validate.config);
     const cal = (vals) => {
-        const value = has(vals, 'value') ? vals.value : vals;
-        if (isFun(value)) {
-            return value.call($parent);
+        const v = has(vals, 'value') ? vals.value : vals;
+        if (isFun(v)) {
+            return v.call($parent);
         }
 
-        return value;
+        return v;
     };
 
     class Error {

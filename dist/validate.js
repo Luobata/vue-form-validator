@@ -434,7 +434,7 @@ var anlyse = (function (vNode, obj) {
     // 必填
     if (has(attrs, 'required')) {
         validate.required = {
-            value: attrs['required'],
+            value: attrs.required,
             text: text
         };
     }
@@ -460,7 +460,7 @@ var anlyse = (function (vNode, obj) {
     // 正数 含0
     if (has(attrs, 'positive')) {
         validate.positive = {
-            value: attrs['positive'],
+            value: attrs.positive,
             text: text
         };
     }
@@ -468,7 +468,7 @@ var anlyse = (function (vNode, obj) {
     // 正数 不含0
     if (has(attrs, 'Positive')) {
         validate.Positive = {
-            value: attrs['Positive'],
+            value: attrs.Positive,
             text: text
         };
     }
@@ -476,7 +476,7 @@ var anlyse = (function (vNode, obj) {
     // 负数 含0
     if (has(attrs, 'negative')) {
         validate.negative = {
-            value: attrs['negative'],
+            value: attrs.negative,
             text: text
         };
     }
@@ -484,7 +484,7 @@ var anlyse = (function (vNode, obj) {
     // 负数 不含0
     if (has(attrs, 'Negative')) {
         validate.Negative = {
-            value: attrs['Negative'],
+            value: attrs.Negative,
             text: text
         };
     }
@@ -492,7 +492,7 @@ var anlyse = (function (vNode, obj) {
     // email
     if (has(attrs, 'email')) {
         validate.email = {
-            value: attrs['email'],
+            value: attrs.email,
             text: text
         };
     }
@@ -500,7 +500,7 @@ var anlyse = (function (vNode, obj) {
     // phone
     if (has(attrs, 'phone')) {
         validate.phone = {
-            value: attrs['phone'],
+            value: attrs.phone,
             text: text
         };
     }
@@ -616,12 +616,12 @@ var judge = (function (validate, value, item, $parent, Vue) {
     Object.assign(config, Vue.config);
     Object.assign(config, validate.config);
     var cal = function cal(vals) {
-        var value = has(vals, 'value') ? vals.value : vals;
-        if (isFun(value)) {
-            return value.call($parent);
+        var v = has(vals, 'value') ? vals.value : vals;
+        if (isFun(v)) {
+            return v.call($parent);
         }
 
-        return value;
+        return v;
     };
 
     var Error =
