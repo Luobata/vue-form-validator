@@ -100,7 +100,7 @@ var isEmail = function isEmail(val) {
 };
 
 var ispositive = function ispositive(val) {
-    var reg = /^\d+\.?\d*$/;
+    var reg = /^\d+(?:\.\d+)?$/;
     return reg.test(val);
 };
 
@@ -837,7 +837,7 @@ var Field = function () {
                             item.com = i;
                             item.name = i.data.attrs['validate-name'];
                             item.showName = i.data.attrs['validate-name'];
-                            item.trigger = bind(i.data.attrs.trigger || (_this.rule.validate[item.name] || {})['trigger']);
+                            item.trigger = bind(i.data.attrs.trigger || (_this.rule.validate[item.name] || {}).trigger);
                             item.validateContext = anlyse(i);
                         }
 
@@ -1006,7 +1006,7 @@ var Field = function () {
                     $parent.$set($parent.errors, name, false);
                     $parent.$set($parent.errors, name + 'Error', '');
                 }
-                console.log(error);
+                // console.log(error);
                 return !error.detail.length;
             };
         }

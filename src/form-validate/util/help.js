@@ -56,7 +56,7 @@ export const isEmail = (val) => {
 };
 
 export const ispositive = (val) => {
-    const reg = /^\d+\.?\d*$/;
+    const reg = /^\d+(?:\.\d+)?$/;
     return reg.test(val);
 };
 

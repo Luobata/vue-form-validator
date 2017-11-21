@@ -1,6 +1,7 @@
 import {
     keycode,
 } from './util/index';
+
 const eventType = [
     'blur', 'change', 'input', 'focus', 'keydown', 'keyup',
 ];

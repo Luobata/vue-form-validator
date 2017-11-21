@@ -61,7 +61,7 @@ export default class Field {
                     item.name = i.data.attrs['validate-name'];
                     item.showName = i.data.attrs['validate-name'];
                     item.trigger = bind(i.data.attrs.trigger
-                        || (this.rule.validate[item.name] || {})['trigger']);
+                        || (this.rule.validate[item.name] || {}).trigger);
                     item.validateContext = anlyse(i);
                 }
 
@@ -176,7 +176,7 @@ export default class Field {
                 $parent.$set($parent.errors, name, false);
                 $parent.$set($parent.errors, `${name}Error`, '');
             }
-            console.log(error);
+            // console.log(error);
             return !error.detail.length;
         };
     }
