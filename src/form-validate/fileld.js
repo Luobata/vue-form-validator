@@ -131,7 +131,11 @@ export default class Field {
             this.config.$parent || this.el.$parent,
             this.find(trigger.el) || item,
         ];
-        $parent.$watch(element.model.expression, () => {
+        const expression = trigger.type === 'validateDom' ?
+            element.model.expression :
+            trigger.el;
+
+        $parent.$watch(expression, () => {
             item.validate(item);
         });
     }

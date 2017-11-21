@@ -6,16 +6,18 @@ const eventType = [
     'blur', 'change', 'input', 'focus', 'keydown', 'keyup',
 ];
 
+
 const triggerAnalyse = (triggerStr) => {
     if (!triggerStr) return [];
 
     const triggerArr = triggerStr.split(';');
     const arr = [];
     for (const i of triggerArr) {
-        const rurl = /(?:\$(.*)\.|)(.*)$/;
+        const rurl = /(?:(\$*)(.*)\.|)(.*)$/;
         const regArr = rurl.exec(i);
-        const el = regArr[1];
-        const eve = regArr[2];
+        const type = regArr[1] === undefined || regArr[1] === '$' ? 'validateDom' : 'data';
+        const el = regArr[2];
+        const eve = regArr[3];
 
         // keycode 特殊处理
         if (eventType.indexOf(eve) === -1 && !keycode.test(eve)) {
@@ -24,7 +26,7 @@ const triggerAnalyse = (triggerStr) => {
             /* eslint-disable no-console */
             continue;
         }
-        arr.push({ el, eve });
+        arr.push({ el, eve, type });
     }
 
 

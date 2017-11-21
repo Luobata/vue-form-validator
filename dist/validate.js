@@ -236,10 +236,11 @@ var triggerAnalyse = function triggerAnalyse(triggerStr) {
         for (var _iterator = triggerArr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var i = _step.value;
 
-            var rurl = /(?:\$(.*)\.|)(.*)$/;
+            var rurl = /(?:(\$*)(.*)\.|)(.*)$/;
             var regArr = rurl.exec(i);
-            var el = regArr[1];
-            var eve = regArr[2];
+            var type = regArr[1] === undefined || regArr[1] === '$' ? 'validateDom' : 'data';
+            var el = regArr[2];
+            var eve = regArr[3];
 
             // keycode 特殊处理
             if (eventType.indexOf(eve) === -1 && !keycode.test(eve)) {
@@ -248,7 +249,7 @@ var triggerAnalyse = function triggerAnalyse(triggerStr) {
                 /* eslint-disable no-console */
                 continue;
             }
-            arr.push({ el: el, eve: eve });
+            arr.push({ el: el, eve: eve, type: type });
         }
     } catch (err) {
         _didIteratorError = true;
@@ -990,7 +991,9 @@ var Field = function () {
             var $parent = this.config.$parent || this.el.$parent,
                 element = this.find(trigger.el) || item;
 
-            $parent.$watch(element.model.expression, function () {
+            var expression = trigger.type === 'validateDom' ? element.model.expression : trigger.el;
+
+            $parent.$watch(expression, function () {
                 item.validate(item);
             });
         }
