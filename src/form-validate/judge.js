@@ -4,6 +4,8 @@ import {
     isFloat,
     isFun,
     isStr,
+    isFalse,
+    isRequired,
     isTelphone,
     isEmail,
     ispositive,
@@ -69,10 +71,12 @@ export default (validate, value, item, $parent, Vue) => {
     Object.assign(config, Vue.config);
     Object.assign(config, validate.config);
     const cal = (vals) => {
-        if (isFun(vals.value)) {
-            return vals.value.call($parent);
+        const value = has(vals, 'value') ? vals.value : vals;
+        if (isFun(value)) {
+            return value.call($parent);
         }
-        return vals.value;
+
+        return value;
     };
 
     class Error {
@@ -194,42 +198,38 @@ export default (validate, value, item, $parent, Vue) => {
         errors.detail.push(new Error(key, cal(validate[key]), floatLen, target));
     }
 
-    if (has(validate, 'required') &&
-        (val === undefined ||
-        val === null ||
-        val === '' ||
-        isNaN(val))
-    ) {
+    key = 'required';
+    if (has(validate, 'required') && !isFalse(cal(validate[key])) && !isRequired(value)) {
         errors.detail.push(new Error('required', '', value, target));
     }
 
     key = 'phone';
-    if (has(validate, key) && !isTelphone(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !isTelphone(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
     key = 'email';
-    if (has(validate, key) && !isEmail(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !isEmail(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
     key = 'positive';
-    if (has(validate, key) && !ispositive(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !ispositive(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
     key = 'Positive';
-    if (has(validate, key) && !isPositive(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !isPositive(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
     key = 'negative';
-    if (has(validate, key) && !isnegative(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !isnegative(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
     key = 'Negative';
-    if (has(validate, key) && !isNegative(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !isNegative(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 

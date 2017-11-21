@@ -11,7 +11,7 @@
                 <input v-model="Positive" v-validate trigger="blur" Positive/>
                 <input v-model="negative" v-validate trigger="blur" negative/>
                 <input v-model="Negative" v-validate trigger="blur" Negative/>
-                <input v-model="Negative" v-validate trigger="blur"/>
+                <input v-model="testFun" validate-name="testFun" trigger="blur"/>
             </div>
         </validate-form>
     </div>
@@ -71,6 +71,20 @@
                             text: 'selectts的错误提示',
                             trigger: 'change;$input2.blur',
                             min: 3
+                        },
+                        testFun: {
+                            text: '自定义校验',
+                            trigger: 'blur',
+                            positive: function () {
+                                if (this.d > 40) {
+                                    return false;
+                                }
+                            },
+                            fun: function (val) {
+                                if (this.d > 30) {
+                                    return 'required';
+                                }
+                            }
                         }
                     },
                     data: {
@@ -88,6 +102,7 @@
                     }
                 },
                 text: 123,
+                testFun: '',
                 a: true,
                 b: 11,
                 c: 22,

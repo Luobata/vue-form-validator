@@ -68,7 +68,7 @@ export default (vNode, obj) => {
     // 必填
     if (has(attrs, 'required')) {
         validate.required = {
-            value: true,
+            value: attrs['required'],
             text,
         };
     }
@@ -93,32 +93,50 @@ export default (vNode, obj) => {
 
     // 正数 含0
     if (has(attrs, 'positive')) {
-        validate.positive = true;
+        validate.positive = {
+            value: attrs['positive'],
+            text,
+        };
     }
 
     // 正数 不含0
     if (has(attrs, 'Positive')) {
-        validate.Positive = true;
+        validate.Positive = {
+            value: attrs['Positive'],
+            text,
+        };
     }
 
     // 负数 含0
     if (has(attrs, 'negative')) {
-        validate.negative = true;
+        validate.negative = {
+            value: attrs['negative'],
+            text,
+        };
     }
 
     // 负数 不含0
     if (has(attrs, 'Negative')) {
-        validate.Negative = true;
+        validate.Negative = {
+            value: attrs['Negative'],
+            text,
+        };
     }
 
     // email
     if (has(attrs, 'email')) {
-        validate.email = true;
+        validate.email = {
+            value: attrs['email'],
+            text,
+        };
     }
 
     // phone
     if (has(attrs, 'phone')) {
-        validate.phone = true;
+        validate.phone = {
+            value: attrs['phone'],
+            text,
+        };
     }
 
     if (has(attrs, 'max-float-length')) {

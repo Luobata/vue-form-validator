@@ -3,6 +3,8 @@ import {
     isArr,
 } from './type';
 
+const { isNaN } = Number;
+
 export const has = (obj, key) => ({}.hasOwnProperty.call(obj, key));
 
 export const hasValue = (arr, key, value) => {
@@ -75,6 +77,13 @@ export const isNegative = (val) => {
     return reg.test(val);
 };
 
+export const isRequired = (val) => {
+    return !(val === undefined ||
+     val === null ||
+     val === '' ||
+     isNaN(val));
+};
+
 export const splitKeys = (key, vNode) => {
     const keyArr = key.split('.');
     let name = vNode;
@@ -89,3 +98,4 @@ export const splitKeys = (key, vNode) => {
         value: name,
     };
 };
+

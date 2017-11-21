@@ -4,6 +4,9 @@
 	(factory());
 }(this, (function () { 'use strict';
 
+var isNaN = Number.isNaN;
+
+
 var has = function has(obj, key) {
     return {}.hasOwnProperty.call(obj, key);
 };
@@ -119,6 +122,10 @@ var isNegative = function isNegative(val) {
     return reg.test(val);
 };
 
+var isRequired = function isRequired(val) {
+    return !(val === undefined || val === null || val === '' || isNaN(val));
+};
+
 var splitKeys = function splitKeys(key, vNode) {
     var keyArr = key.split('.');
     var name = vNode;
@@ -188,6 +195,10 @@ var getChineseLength = function getChineseLength(str) {
     // const regrex = new RegExp(pattern);
 
     return str.replace(regrex, '01').length / 2;
+};
+
+var isFalse = function isFalse(val) {
+    return val === false;
 };
 
 var isInt = function isInt(val) {
@@ -423,7 +434,7 @@ var anlyse = (function (vNode, obj) {
     // 必填
     if (has(attrs, 'required')) {
         validate.required = {
-            value: true,
+            value: attrs['required'],
             text: text
         };
     }
@@ -448,32 +459,50 @@ var anlyse = (function (vNode, obj) {
 
     // 正数 含0
     if (has(attrs, 'positive')) {
-        validate.positive = true;
+        validate.positive = {
+            value: attrs['positive'],
+            text: text
+        };
     }
 
     // 正数 不含0
     if (has(attrs, 'Positive')) {
-        validate.Positive = true;
+        validate.Positive = {
+            value: attrs['Positive'],
+            text: text
+        };
     }
 
     // 负数 含0
     if (has(attrs, 'negative')) {
-        validate.negative = true;
+        validate.negative = {
+            value: attrs['negative'],
+            text: text
+        };
     }
 
     // 负数 不含0
     if (has(attrs, 'Negative')) {
-        validate.Negative = true;
+        validate.Negative = {
+            value: attrs['Negative'],
+            text: text
+        };
     }
 
     // email
     if (has(attrs, 'email')) {
-        validate.email = true;
+        validate.email = {
+            value: attrs['email'],
+            text: text
+        };
     }
 
     // phone
     if (has(attrs, 'phone')) {
-        validate.phone = true;
+        validate.phone = {
+            value: attrs['phone'],
+            text: text
+        };
     }
 
     if (has(attrs, 'max-float-length')) {
@@ -569,7 +598,7 @@ var getFloatLength = function getFloatLength(val) {
     return len;
 };
 
-var isNaN = Number.isNaN;
+var isNaN$1 = Number.isNaN;
 
 
 var judge = (function (validate, value, item, $parent, Vue) {
@@ -587,10 +616,12 @@ var judge = (function (validate, value, item, $parent, Vue) {
     Object.assign(config, Vue.config);
     Object.assign(config, validate.config);
     var cal = function cal(vals) {
-        if (isFun(vals.value)) {
-            return vals.value.call($parent);
+        var value = has(vals, 'value') ? vals.value : vals;
+        if (isFun(value)) {
+            return value.call($parent);
         }
-        return vals.value;
+
+        return value;
     };
 
     var Error =
@@ -626,7 +657,7 @@ var judge = (function (validate, value, item, $parent, Vue) {
     switch (type) {
         case 'number':
             val = parseFloat(value, 10);
-            if (value !== '' && value !== undefined && isNaN(val)) {
+            if (value !== '' && value !== undefined && isNaN$1(val)) {
                 errors.type = 'wrong type';
             }
             break;
@@ -698,46 +729,47 @@ var judge = (function (validate, value, item, $parent, Vue) {
         errors.detail.push(new Error(key, cal(validate[key]), floatLen, target));
     }
 
-    if (has(validate, 'required') && (val === undefined || val === null || val === '' || isNaN(val))) {
+    key = 'required';
+    if (has(validate, 'required') && !isFalse(cal(validate[key])) && !isRequired(value)) {
         errors.detail.push(new Error('required', '', value, target));
     }
 
     key = 'phone';
-    if (has(validate, key) && !isTelphone(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !isTelphone(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
     key = 'email';
-    if (has(validate, key) && !isEmail(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !isEmail(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
     key = 'positive';
-    if (has(validate, key) && !ispositive(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !ispositive(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
     key = 'Positive';
-    if (has(validate, key) && !isPositive(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !isPositive(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
     key = 'negative';
-    if (has(validate, key) && !isnegative(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !isnegative(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
     key = 'Negative';
-    if (has(validate, key) && !isNegative(value)) {
+    if (has(validate, key) && !isFalse(cal(validate[key])) && !isNegative(value)) {
         errors.detail.push(new Error(key, '', value, target));
     }
 
     if (validate.number === 'int') {
-        if (isNaN(parseInt(val, 10))) {
+        if (isNaN$1(parseInt(val, 10))) {
             errors.detail.push(new Error('number', '', val, target));
         }
     } else if (validate.number === 'float') {
-        if (isNaN(parseFloat(val, 10))) {
+        if (isNaN$1(parseFloat(val, 10))) {
             errors.detail.push(new Error('number', '', val, target));
         }
     }
@@ -1006,7 +1038,7 @@ var Field = function () {
                     $parent.$set($parent.errors, name, false);
                     $parent.$set($parent.errors, name + 'Error', '');
                 }
-                // console.log(error);
+                console.log(error);
                 return !error.detail.length;
             };
         }

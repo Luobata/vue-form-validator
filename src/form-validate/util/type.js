@@ -36,3 +36,5 @@ export const getChineseLength = (str) => {
 
     return str.replace(regrex, '01').length / 2;
 };
+
+export const isFalse = val => val === false;
