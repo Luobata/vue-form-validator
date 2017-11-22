@@ -534,6 +534,20 @@ var anlyse = (function (vNode, obj) {
         };
     }
 
+    // phone
+    if (has(attrs, 'fun')) {
+        if (!isFun(attrs.fun)) {
+            /* eslint-disable no-console */
+            console.error('wrone fun type');
+            /* eslint-disable no-console */
+        } else {
+            validate.fun = {
+                value: attrs.fun,
+                text: text
+            };
+        }
+    }
+
     return validate;
 });
 
@@ -602,7 +616,7 @@ var getFloatLength = function getFloatLength(val) {
 var isNaN$1 = Number.isNaN;
 
 
-var judge = (function (validate, value, item, $parent, Vue) {
+var judge = function judge(validate, value, item, $parent, Vue) {
     var type = void 0;
     var val = void 0;
     var length = void 0;
@@ -619,7 +633,7 @@ var judge = (function (validate, value, item, $parent, Vue) {
     var cal = function cal(vals) {
         var v = has(vals, 'value') ? vals.value : vals;
         if (isFun(v)) {
-            return v.call($parent);
+            return v.call($parent, value);
         }
 
         return v;
@@ -668,6 +682,17 @@ var judge = (function (validate, value, item, $parent, Vue) {
 
     if (errors.type) {
         return errors;
+    }
+
+    key = 'fun';
+    if (has(validate, key)) {
+        var fnR = validate[key].value.call($parent, value);
+        if (isFalse(fnR)) {
+            errors.detail.push(new Error(key, fnR, value, target));
+        } else if (isObj(fnR)) {
+            var any = anlyse('', fnR);
+            judge(any, value, item, $parent, Vue);
+        }
     }
 
     key = 'min';
@@ -786,7 +811,7 @@ var judge = (function (validate, value, item, $parent, Vue) {
     }
 
     return errors;
-});
+};
 
 var globalId = 0;
 

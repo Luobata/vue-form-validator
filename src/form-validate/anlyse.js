@@ -1,4 +1,7 @@
-import { has } from './util/index';
+import {
+    has,
+    isFun,
+} from './util/index';
 
 export default (vNode, obj) => {
     const attrs = obj || vNode.data.attrs;
@@ -165,6 +168,20 @@ export default (vNode, obj) => {
             value: attrs['Min-float-length'],
             text,
         };
+    }
+
+    // phone
+    if (has(attrs, 'fun')) {
+        if (!isFun(attrs.fun)) {
+            /* eslint-disable no-console */
+            console.error('wrone fun type');
+            /* eslint-disable no-console */
+        } else {
+            validate.fun = {
+                value: attrs.fun,
+                text,
+            };
+        }
     }
 
     return validate;

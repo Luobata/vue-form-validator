@@ -83,13 +83,17 @@
                             text: '自定义校验',
                             trigger: 'blur',
                             positive: function () {
-                                if (this.d > 40) {
+                                if (this.d > 50) {
                                     return false;
                                 }
                             },
                             fun: function (val) {
-                                if (this.d > 30) {
-                                    return 'required';
+                                if (this.d > 40) {
+                                    return {
+                                        required: '',
+                                    };
+                                } else {
+                                    return false;
                                 }
                             }
                         }

@@ -2,6 +2,7 @@ import {
     has,
     isInt,
     isFloat,
+    isObj,
     isFun,
     isStr,
     isFalse,
@@ -15,6 +16,7 @@ import {
     getChineseLength,
 } from './util/index';
 import { userConfig } from './conf';
+import anlyse from './anlyse';
 
 
 const getTarget = item => (item.com.elm);
@@ -56,7 +58,7 @@ const getFloatLength = (val) => {
 const { isNaN } = Number;
 
 
-export default (validate, value, item, $parent, Vue) => {
+const judge = (validate, value, item, $parent, Vue) => {
     let type;
     let val;
     let length;
@@ -73,7 +75,7 @@ export default (validate, value, item, $parent, Vue) => {
     const cal = (vals) => {
         const v = has(vals, 'value') ? vals.value : vals;
         if (isFun(v)) {
-            return v.call($parent);
+            return v.call($parent, value);
         }
 
         return v;
@@ -136,6 +138,17 @@ export default (validate, value, item, $parent, Vue) => {
 
     if (errors.type) {
         return errors;
+    }
+
+    key = 'fun';
+    if (has(validate, key)) {
+        const fnR = validate[key].value.call($parent, value);
+        if (isFalse(fnR)) {
+            errors.detail.push(new Error(key, fnR, value, target));
+        } else if (isObj(fnR)) {
+            const any = anlyse('', fnR);
+            judge(any, value, item, $parent, Vue);
+        }
     }
 
     key = 'min';
@@ -256,3 +269,5 @@ export default (validate, value, item, $parent, Vue) => {
 
     return errors;
 };
+
+export default judge;
