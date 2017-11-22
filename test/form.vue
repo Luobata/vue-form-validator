@@ -93,7 +93,7 @@
                                         required: '',
                                     };
                                 } else {
-                                    return false;
+                                    return {required: ''};
                                 }
                             }
                         }

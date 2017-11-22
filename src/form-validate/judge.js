@@ -147,7 +147,9 @@ const judge = (validate, value, item, $parent, Vue) => {
             errors.detail.push(new Error(key, fnR, value, target));
         } else if (isObj(fnR)) {
             const any = anlyse('', fnR);
-            judge(any, value, item, $parent, Vue);
+            any.text = text;
+            // 重新考虑type
+            errors.detail = errors.detail.concat(judge(any, value, item, $parent, Vue).detail);
         }
     }
 
