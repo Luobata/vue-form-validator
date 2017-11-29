@@ -53,13 +53,13 @@ errors: {
 };
 ```
 
-## (API)[https://luobata.github.io/luobata-wiki/vue-validator-help-wiki/]
+## [API](https://luobata.github.io/luobata-wiki/vue-validator-help-wiki/)
 
-### events trigger
+### [events trigger](https://luobata.github.io/luobata-wiki/vue-validator-help-wiki/trigger.html)
 1. blur / input / focus / keydown / keyup  (input textarea contenteditable only)
 2. keycode keycode=13 or keycode(默认绑定13 回车)
 3. change (v=model)
 4. ref.validate('validate-name') ref.validateAll();
 5. trigger by other element's rules like $sel.change;(由其他元素节点的值变化时触法)
 
-### (rules)[https://luobata.github.io/luobata-wiki/vue-validator-help-wiki/rule.html]
+### [rules](https://luobata.github.io/luobata-wiki/vue-validator-help-wiki/rule.html)
