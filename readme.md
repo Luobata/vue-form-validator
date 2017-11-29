@@ -62,4 +62,5 @@ errors: {
 4. ref.validate('validate-name') ref.validateAll();
 5. trigger by other element's rules like $sel.change;(由其他元素节点的值变化时触法)
 
-### [rules](https://luobata.github.io/luobata-wiki/vue-validator-help-wiki/rule.html)
+### [rules with validatation](https://luobata.github.io/luobata-wiki/vue-validator-help-wiki/rule.html)
+### [config](https://luobata.github.io/luobata-wiki/vue-validator-help-wiki/config.html)
