@@ -37,4 +37,9 @@ export default {
         this.ruleInit(attrs);
         this.field = new Field(components, this);
     },
+    destroyed() {
+        this.field.removeListener();
+    },
+    deactivated() {
+    },
 };

@@ -868,6 +868,7 @@ var Field = function () {
         this.init(components);
         this.dataInit();
         this.find = finds(this.item);
+        this.eventStacks = []; // 绑定事件队列 用于解绑
 
         this.events();
     }
@@ -1032,18 +1033,51 @@ var Field = function () {
             var elm = element.com.elm;
 
             var blurElm = check(elm);
+            var fn = void 0;
             if (blurElm) {
                 if (keycode.test(trigger.eve)) {
                     var code = parseInt(trigger.eve.match(keycode)[1], 10) || 13;
-                    blurElm.addEventListener('keydown', function (e) {
+                    fn = function fn(e) {
                         if (e.keyCode === code) {
                             item.validate(item);
                         }
-                    });
+                    };
+                    blurElm.addEventListener('keydown', fn);
+                    this.eventStacks.push({ dom: blurElm, eve: 'keydown', fn: fn });
                 } else {
-                    blurElm.addEventListener(trigger.eve, function () {
+                    fn = function fn() {
                         item.validate(item);
-                    });
+                    };
+                    blurElm.addEventListener(trigger.eve, fn);
+                    this.eventStacks.push({ dom: blurElm, eve: trigger.eve, fn: fn });
+                }
+            }
+        }
+    }, {
+        key: 'removeListener',
+        value: function removeListener() {
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
+
+            try {
+                for (var _iterator5 = this.eventStacks[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var i = _step5.value;
+
+                    i.dom.removeEventListener(i.eve, i.fn);
+                }
+            } catch (err) {
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
+                    }
+                } finally {
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
+                    }
                 }
             }
         }
@@ -1076,27 +1110,27 @@ var Field = function () {
         key: 'validateAll',
         value: function validateAll() {
             var flag = true;
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
 
             try {
-                for (var _iterator5 = this.item[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var i = _step5.value;
+                for (var _iterator6 = this.item[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var i = _step6.value;
 
                     flag = i.validate(i) && flag;
                 }
             } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
                     }
                 } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
                     }
                 }
             }
@@ -1155,7 +1189,11 @@ var __vue_module__ = {
         this.configInit(attrs);
         this.ruleInit(attrs);
         this.field = new Field(components, this);
-    }
+    },
+    destroyed: function destroyed() {
+        this.field.removeListener();
+    },
+    deactivated: function deactivated() {}
 };
 
 (function () {

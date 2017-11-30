@@ -39,6 +39,7 @@ export default class Field {
         this.init(components);
         this.dataInit();
         this.find = finds(this.item);
+        this.eventStacks = []; // 绑定事件队列 用于解绑
 
         this.events();
     }
@@ -145,19 +146,30 @@ export default class Field {
         const element = this.find(trigger.el) || item;
         const { elm } = element.com;
         const blurElm = check(elm);
+        let fn;
         if (blurElm) {
             if (keycode.test(trigger.eve)) {
                 const code = parseInt(trigger.eve.match(keycode)[1], 10) || 13;
-                blurElm.addEventListener('keydown', (e) => {
+                fn = (e) => {
                     if (e.keyCode === code) {
                         item.validate(item);
                     }
-                });
+                };
+                blurElm.addEventListener('keydown', fn);
+                this.eventStacks.push({ dom: blurElm, eve: 'keydown', fn });
             } else {
-                blurElm.addEventListener(trigger.eve, () => {
+                fn = () => {
                     item.validate(item);
-                });
+                };
+                blurElm.addEventListener(trigger.eve, fn);
+                this.eventStacks.push({ dom: blurElm, eve: trigger.eve, fn });
             }
+        }
+    }
+
+    removeListener() {
+        for (const i of this.eventStacks) {
+            i.dom.removeEventListener(i.eve, i.fn);
         }
     }
 
