@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
-var htmlWebpackPlugin = require('html-webpack-plugin')
+var htmlWebpackPlugin = require('html-webpack-plugin');
 
 var root = path.resolve(__dirname, '../');
 var utils = require('./util.js')
