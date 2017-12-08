@@ -31,7 +31,7 @@ export default {
     },
     mounted() {
         const components = this.$slots.default;
-        const { attrs } = this.$vnode.data;
+        const { attrs = {} } = this.$vnode.data;
 
         this.configInit(attrs);
         this.ruleInit(attrs);

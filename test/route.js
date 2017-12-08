@@ -11,7 +11,7 @@ var routers = [{
                 component: require('./form.vue')
             },
             {
-                path: '/index2',
+                path: 'index2',
                 component: require('./form2.vue')
             },
         ]
