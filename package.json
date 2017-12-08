@@ -72,12 +72,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Luobata/vue-form-validator.git"
+    "url": "git+https://github.com/Luobata/vue-validator-help.git"
   },
   "author": "luobata",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Luobata/vue-form-validator/issues"
+    "url": "https://github.com/Luobata/vue-validator-help/issues"
   },
-  "homepage": "https://github.com/Luobata/vue-form-validator#readme"
+  "homepage": "https://github.com/Luobata/vue-validator-help#readme"
 }
