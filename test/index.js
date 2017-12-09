@@ -1,7 +1,8 @@
 import vue from 'vue';
 import vueResource from 'vue-resource';
 import app from './app.vue';
-import validate from '../dist/validate';
+//import validate from '../dist/validate';
+import validate from '../src/index_global';
 import VeeValidate from 'vee-validate';
 import vueRouter from 'vue-router';
 
