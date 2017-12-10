@@ -9,6 +9,9 @@ export const sysConfig = {
  */
 export const userConfig = {
     lengthType: 'eng',
+    errorName: 'errors',
 };
 
-export const setUserConfig = conf => (Object.assign(userConfig, conf));
+export const setUserConfig = (conf) => {
+    Object.assign(userConfig, conf);
+};

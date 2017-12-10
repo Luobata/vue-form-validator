@@ -15,9 +15,11 @@ export default {
             const {
                 config = {},
                 lengthType = 'eng',
+                errorName = '',
                 parent,
             } = attrs;
             config.lengthType = config.lengthType || lengthType;
+            config.errorName = config.errorName || errorName;
             config.$parent = parent || this.$vnode.context;
             this.config = config;
         },

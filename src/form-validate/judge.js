@@ -20,7 +20,7 @@ import anlyse from './anlyse';
 
 
 const getTarget = item => (item.com.elm);
-const config = userConfig;
+const config = Object.assign({}, userConfig);
 
 const getLength = (val) => {
     const type = config.lengthType;

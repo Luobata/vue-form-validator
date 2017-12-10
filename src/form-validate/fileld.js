@@ -9,7 +9,7 @@ import {
     splitKeys,
     keycode,
 } from './util/index';
-import { sysConfig } from './conf';
+import { sysConfig, userConfig } from './conf';
 
 let globalId = 0;
 
@@ -184,13 +184,17 @@ export default class Field {
                 item.com.elm.value;
             const error = judge(validate, value, item, $parent, this);
             const name = item.showName;
+            const errorName = this.config.errorName || userConfig.errorName;
+            if (!has($parent, errorName)) {
+                throw new Error(`There is no error object ${errorName}`);
+            }
 
             if (error.detail.length > 0) {
-                $parent.$set($parent.errors, name, true);
-                $parent.$set($parent.errors, `${name}Error`, error.detail[0].text);
+                $parent.$set($parent[errorName], name, true);
+                $parent.$set($parent[errorName], `${name}Error`, error.detail[0].text);
             } else {
-                $parent.$set($parent.errors, name, false);
-                $parent.$set($parent.errors, `${name}Error`, '');
+                $parent.$set($parent[errorName], name, false);
+                $parent.$set($parent[errorName], `${name}Error`, '');
             }
             console.log(error);
             return !error.detail.length;

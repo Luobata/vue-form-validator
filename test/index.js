@@ -12,7 +12,8 @@ vue.config.devtools = true;
 vue.use(vueResource);
 vue.use(vueRouter);
 vue.use(validate, {
-    lengthType: 'chi'
+    lengthType: 'chi',
+    errorName: 'errors',
 });
 var routes = require('./route.js');
 
