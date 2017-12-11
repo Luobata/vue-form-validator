@@ -66,6 +66,10 @@ export default class Field {
                     item.validateContext = anlyse(i);
                 }
 
+                if (!item.trigger.length) {
+                    throw new Error(`${item.name ? `${item.name} ` : ''}doesn't have a trigger`);
+                }
+
                 if (model) {
                     item.model = {
                         value: model.value,
