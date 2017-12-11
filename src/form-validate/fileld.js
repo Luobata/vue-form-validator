@@ -109,7 +109,8 @@ export default class Field {
     events() {
         for (const i of this.item) {
             for (const j of i.trigger) {
-                if (j.eve === 'change') {
+                if (j.eve === 'change'
+                    || j.eve === 'length') {
                     this.addWatcher(i, j);
                 }
                 if (j.eve === 'blur'

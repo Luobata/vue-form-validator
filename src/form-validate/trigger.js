@@ -3,7 +3,8 @@ import {
 } from './util/index';
 
 const eventType = [
-    'blur', 'change', 'input', 'focus', 'keydown', 'keyup',
+    'blur', 'change', 'input', 'focus', 'keydown', 'keyup', // event
+    'length', // Array protototype
 ];
 
 
