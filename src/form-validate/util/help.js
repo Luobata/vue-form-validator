@@ -11,7 +11,9 @@ export const hasValue = (arr, key, value) => {
     if (!isObj(arr) && !isArr(arr)) return false;
 
     if (isArr(arr)) {
-        for (const i of arr) {
+        // for (const i of arr) {
+        for (let j = 0; j < arr.length; j++) {
+            const i = arr[j];
             if (i[key] === value) {
                 return i;
             }
@@ -29,7 +31,9 @@ export const check = (elm) => {
     const elements = ['input', 'textarea'];
     let dom = null;
 
-    for (const i of elements) {
+    // for (const i of elements) {
+    for (let j = 0; j < elements.length; j++) {
+        const i = elements[j];
         const els = (elm.tagName.toLowerCase(i) === i) ? elm
             : elm.querySelectorAll(i)[0];
         if (els) {
@@ -86,7 +90,9 @@ export const splitKeys = (key, vNode) => {
     const keyArr = key.split('.');
     let name = vNode;
     let str = 'that';
-    for (const i of keyArr) {
+    // for (const i of keyArr) {
+    for (let j = 0; j < keyArr.length; j++) {
+        const i = keyArr[j];
         name = name[i];
         str += `['${i}']`;
     }

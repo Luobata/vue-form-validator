@@ -13,7 +13,9 @@ const triggerAnalyse = (triggerStr) => {
 
     const triggerArr = triggerStr.split(';');
     const arr = [];
-    for (const i of triggerArr) {
+    // for (const i of triggerArr) {
+    for (let j = 0; j < triggerArr.length; j++) {
+        const i = triggerArr[j];
         const rurl = /(?:(\$*)(.*)\.|)(.*)$/;
         const regArr = rurl.exec(i);
         const type = regArr[1] === undefined || regArr[1] === '$' ? 'validateDom' : 'data';

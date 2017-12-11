@@ -16,7 +16,9 @@ let globalId = 0;
 const finds = items => (name) => {
     if (!name) return false;
 
-    for (const i of items) {
+    // for (const i of items) {
+    for (let j = 0; j < items.length; j++) {
+        const i = items[j];
         if (i.name === name) {
             return i;
         }
@@ -26,10 +28,10 @@ const finds = items => (name) => {
 };
 
 export default class Field {
-    // item: Array;
+    item: Array;
     // el: Vue;
-    // rule: Object;
-    // find: Function;
+    rule: Object;
+    find: Function;
 
     constructor(components, el) {
         this.item = [];
@@ -45,8 +47,10 @@ export default class Field {
     }
 
     init(components) {
-        const find = (component) => {
-            for (const i of component) {
+        const find = (component: Array) => {
+            // for (const i of component) {
+            for (let j = 0; j < component.length; j++) {
+                const i = component[j];
                 if (i.children && i.children.length) find(i.children);
                 if (!i.data) continue;
                 const dir = i.data.directives || [];
@@ -116,8 +120,12 @@ export default class Field {
     }
 
     events() {
-        for (const i of this.item) {
-            for (const j of i.trigger) {
+        // for (const i of this.item) {
+        for (let q = 0; q < this.item.length; q++) {
+            const i = this.item[q];
+            // for (const j of i.trigger) {
+            for (let w = 0; w < i.trigger.length; w++) {
+                const j = i.trigger[w];
                 if (j.eve === 'change'
                     || j.eve === 'length') {
                     this.addWatcher(i, j);
@@ -178,7 +186,9 @@ export default class Field {
     }
 
     removeListener() {
-        for (const i of this.eventStacks) {
+        // for (const i of this.eventStacks) {
+        for (let j = 0; j < this.eventStacks.length; j++) {
+            const i = this.eventStacks[j];
             i.dom.removeEventListener(i.eve, i.fn);
         }
     }
@@ -220,7 +230,9 @@ export default class Field {
 
     validateAll() {
         let flag = true;
-        for (const i of this.item) {
+        // for (const i of this.item) {
+        for (let j = 0; j < this.item.length; j++) {
+            const i = this.item[j];
             flag = i.validate(i) && flag;
         }
 
