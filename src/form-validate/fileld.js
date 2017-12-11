@@ -64,11 +64,12 @@ export default class Field {
                     item.trigger = bind(i.data.attrs.trigger
                         || (this.rule.validate[item.name] || {}).trigger);
                     item.validateContext = anlyse(i);
+
+                    if (!item.trigger.length) {
+                        throw new Error(`${item.name ? `${item.name} ` : ''}doesn't have a trigger`);
+                    }
                 }
 
-                if (!item.trigger.length) {
-                    throw new Error(`${item.name ? `${item.name} ` : ''}doesn't have a trigger`);
-                }
 
                 if (model) {
                     item.model = {
@@ -194,12 +195,19 @@ export default class Field {
                 throw new Error(`There is no error object ${errorName}`);
             }
 
-            if (error.detail.length > 0) {
-                $parent.$set($parent[errorName], name, true);
-                $parent.$set($parent[errorName], `${name}Error`, error.detail[0].text);
+            if (name) {
+                // 存在validate-name
+                if (error.detail.length > 0) {
+                    $parent.$set($parent[errorName], name, true);
+                    $parent.$set($parent[errorName], `${name}Error`, error.detail[0].text);
+                    $parent.$set($parent[errorName], `${name}Target`, error.detail[0].target);
+                } else {
+                    $parent.$set($parent[errorName], name, false);
+                    $parent.$set($parent[errorName], `${name}Error`, '');
+                    $parent.$set($parent[errorName], `${name}Target`, '');
+                }
             } else {
-                $parent.$set($parent[errorName], name, false);
-                $parent.$set($parent[errorName], `${name}Error`, '');
+                // 不存在validate-name的时候 有没有简化的交互 暂定
             }
             console.log(error);
             return !error.detail.length;
