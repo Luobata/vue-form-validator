@@ -104,6 +104,10 @@ export default class Field {
                 value: '',
                 expression: name,
             };
+
+            if (!item.trigger.length) {
+                throw new Error(`data ${item.showName} in config doesn't have a trigger`);
+            }
             // 用于target选择不报错
             item.com = '';
             item.validate = this.getValidate(item, 'data');

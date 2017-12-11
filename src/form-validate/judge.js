@@ -5,6 +5,7 @@ import {
     isObj,
     isFun,
     isStr,
+    isArr,
     isFalse,
     isRequired,
     isTelphone,
@@ -23,11 +24,16 @@ const getTarget = item => (item.com.elm);
 const config = Object.assign({}, userConfig);
 
 const getLength = (val) => {
-    const type = config.lengthType;
+    let type = config.lengthType;
     let len = 0;
+
+    if (isArr(val)) {
+        type = 'arr';
+    }
 
     if (isStr(type)) {
         switch (type) {
+        case 'arr':
         case 'eng':
             len = val.length;
             break;

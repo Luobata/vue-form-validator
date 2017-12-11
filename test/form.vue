@@ -105,11 +105,16 @@
                             min: 5,
                             max: 9,
                         },
-                        /*c: {
+                        c: {
                             text: '关于c的错误提示',
                             trigger: '$$data.change',
                             max: 20,
-                        },*/
+                        },
+                        d: {
+                            text: '关于d的错误提示',
+                            trigger: '$$arr.length',
+                            max: 20,
+                        },
                     }
                 },
                 text: 123,
@@ -135,7 +140,8 @@
                 data: 2,
                 test: {
                     data: 1
-                }
+                },
+                arr: [],
             }
         },
         methods: {
@@ -144,6 +150,8 @@
             },
             changeD () {
                 this.d = 44;
+                this.data = this.data + 1;
+                this.arr.push(1);
             }
         },
         mounted () {

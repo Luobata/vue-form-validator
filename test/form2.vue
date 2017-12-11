@@ -2,7 +2,7 @@
     div
         validate-form(errorName="error2")
             input(type="text" v-validate required trigger="$$obj.arr.length")
-            input(type="text" validate-name="a" required trigger="$$obj.arr.length")
+            input(type="text" v-model="obj.arr" max-length="2" validate-name="a" required trigger="$$obj.arr.length")
             selects(v-validate v-model="test" :options="options" trigger="change" min="5")
         validate-form(errorName="error3" :config="config")
             input(type="text" validate-name="a" required trigger="$$obj.arr.length")

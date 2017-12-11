@@ -37,7 +37,7 @@ export default {
 
         this.configInit(attrs);
         this.ruleInit(attrs);
-        this.field = new Field(components, this);
+        if (components) this.field = new Field(components, this);
     },
     destroyed() {
         this.field.removeListener();
