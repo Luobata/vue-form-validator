@@ -1,6 +1,7 @@
 var webpackConfig = require('./webpack.config-test.js');
 var webpack = require('webpack');
 var compiler = webpack(webpackConfig);
+var opn = require('opn')
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
     publicPath: webpackConfig.output.publicPath,
@@ -37,6 +38,7 @@ module.exports = app.listen(port, function (err) {
         console.log(err)
         return
     }
-    var uri = 'http://127.0.0.1:' + port
-    console.log('Listening at ' + uri + '\n')
+    var uri = 'http://127.0.0.1:' + port;
+    console.log('Listening at ' + uri + '\n');
+    opn(`http://127.0.0.1:${port}`);
 });
