@@ -7,8 +7,8 @@
                 <input v-model="text" v-validate min="5" max="10" trigger="blur" phone/>
                 <span v-show="errors.input2">{{ errors.input2Error }}</span>
                 <input v-model="text" v-validate trigger="blur" email/>
-                <input v-model="positive" v-validate trigger="blur" positive/>
-                <input v-model="Positive" v-validate trigger="blur" Positive/>
+                <input v-model="positive" v-validate trigger="blur" positive number/>
+                <input v-model="Positive" v-validate trigger="blur" Positive number="float"/>
                 <input v-model="negative" v-validate trigger="blur" negative/>
                 <input v-model="Negative" v-validate trigger="blur" Negative/>
                 <input v-model="testFun" validate-name="testFun" trigger="blur"/>

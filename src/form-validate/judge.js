@@ -254,23 +254,29 @@ const judge = (validate, value, item, $parent, Vue) => {
         errors.detail.push(new Error(key, '', value, target));
     }
 
-    if (validate.number === 'int') {
-        if (isNaN(parseInt(val, 10))) {
-            errors.detail.push(new Error('number', '', val, target));
-        }
-    } else if (validate.number === 'float') {
-        if (isNaN(parseFloat(val, 10))) {
-            errors.detail.push(new Error('number', '', val, target));
+    key = 'number';
+    if (has(validate, key)) {
+        if (validate.number.value === 'int') {
+            if (!isInt(val, false)) {
+                errors.detail.push(new Error('number', '', val, target));
+            }
+        } else if (validate.number.value === 'float') {
+            if (!isFloat(val, false)) {
+                errors.detail.push(new Error('number', '', val, target));
+            }
         }
     }
 
-    if (validate.Number === 'int') {
-        if (isInt(val)) {
-            errors.detail.push(new Error('Number', '', val, target));
-        }
-    } else if (validate.Number === 'float') {
-        if (isFloat(val)) {
-            errors.detail.push(new Error('Number', '', val, target));
+    key = 'Number';
+    if (has(validate, key)) {
+        if (validate.Number.value === 'int') {
+            if (isInt(val)) {
+                errors.detail.push(new Error('Number', '', val, target));
+            }
+        } else if (validate.Number.value === 'float') {
+            if (isFloat(val)) {
+                errors.detail.push(new Error('Number', '', val, target));
+            }
         }
     }
 
