@@ -53,9 +53,14 @@ const getLength = (val) => {
 const getFloatLength = (val) => {
     const reg = /.*?[.](\d*)/;
     const floatNum = val.match(reg);
+    const type = config.floatLengthType;
     let len = 0;
-    if (floatNum && floatNum.length && floatNum[1]) {
-        len = floatNum[1].length;
+    if (type === 'normal') {
+        if (floatNum && floatNum.length && floatNum[1]) {
+            len = floatNum[1].length;
+        }
+    } else if (isFun(type)) {
+        len = type(val);
     }
 
     return len;

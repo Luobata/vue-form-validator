@@ -9,6 +9,7 @@ export const sysConfig = {
  */
 export const userConfig = {
     lengthType: 'eng',
+    floatLengthType: 'normal',
     errorName: 'errors',
 };
 
