@@ -285,6 +285,11 @@ const judge = (validate, value, item, $parent, Vue) => {
         }
     }
 
+    key = 'regexp';
+    if (has(validate, key) && !(new RegExp(validate[key].value).test(value))) {
+        errors.detail.push(new Error(key, '', value, target));
+    }
+
 
     return errors;
 };

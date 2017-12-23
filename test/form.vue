@@ -11,6 +11,7 @@
                 <input v-model="Positive" v-validate trigger="blur" Positive number="float"/>
                 <input v-model="negative" v-validate trigger="blur" negative/>
                 <input v-model="Negative" v-validate trigger="blur" Negative/>
+                <input v-model="regexp" v-validate trigger="blur" regexp="\d"/>
                 <input v-model="testFun" validate-name="testFun" trigger="blur"/>
 
                 <div class="a" @click="changeD"></div>
@@ -48,6 +49,7 @@
                 config: {
                     lengthType: 'chi',
                 },
+                regexp: 's',
                 rule: {
                     validate: {
                         input2: {

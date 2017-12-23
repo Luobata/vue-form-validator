@@ -8,6 +8,14 @@ export default (vNode, obj) => {
     const validate = {};
     const text = attrs.text || '';
 
+    // 正则表达式
+    if (has(attrs, 'regexp')) {
+        validate.regexp = {
+            value: attrs.regexp,
+            text,
+        };
+    }
+
     // 最小值 必须是数字 大写为不包括边界值
     if (has(attrs, 'min')) {
         validate.min = {
